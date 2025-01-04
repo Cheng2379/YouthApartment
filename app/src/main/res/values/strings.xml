@@ -9,6 +9,22 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="price_ranges">
+        <item>不限</item>
+        <item>0–1500元</item>
+        <item>1500–3000元</item>
+        <item>3000–6000元</item>
+        <item>6000–9000元</item>
+        <item>9000–12000元</item>
+    </string-array>
+    <string-array name="payment_method">
+        <item>月付</item>
+        <item>季付</item>
+        <item>半年付</item>
+        <item>年付</item>
+    </string-array>
+    <string-array name="sort">
+        <item>高价优先</item>
+        <item>低价优先</item>
+    </string-array>
 </resources>

@@ -1,14 +1,15 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace 'com.cheng.youthapartment'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.cheng.youthapartment"
-        minSdk 31
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -29,6 +30,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 }
 
 dependencies {
@@ -42,15 +46,17 @@ dependencies {
     implementation libs.annotation
     implementation libs.lifecycle.livedata.ktx
     implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.core.ktx
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
 
-    implementation(libs.okhttp)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.core)
     implementation libs.gson
     implementation libs.retrofit2
+    implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
-
-//    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-//    implementation 'com.squareup.retrofit2:retrofit:(2.11.0)'
+    implementation (libs.glide)
+    implementation(libs.androidx.swiperefreshlayout)
 }

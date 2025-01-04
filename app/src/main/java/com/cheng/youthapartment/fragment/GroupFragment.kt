@@ -1,28 +1,32 @@
-package com.cheng.youthapartment.fragment;
+package com.cheng.youthapartment.fragment
 
-import androidx.fragment.app.Fragment;
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.cheng.youthapartment.R
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+/**
+ *
+ * @author Cheng
+ * @since 2025/1/4
+ */
+class GroupFragment : Fragment() {
+    private lateinit var view: View
 
-import com.cheng.youthapartment.R;
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        view = inflater.inflate(R.layout.fragment_group, container, false)
 
-
-public class GroupFragment extends Fragment {
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        return view
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_group, container, false);
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        return view;
     }
-
-
 }
