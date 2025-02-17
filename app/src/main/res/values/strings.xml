@@ -9,6 +9,15 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="login_btn">登录</string>
+    
+    <string name="search_rv_room_default">温都水城社区 101房间</string>
+    <string name="search_rv_region_default">北京市 市辖区 昌平区</string>
+    <string name="search_rv_time_default">2025–01–01 00:00:00</string>
+    <string name="search_rv_rent_default">$ 2500</string>
+    
+    <string name="browse_history_text">浏览历史</string>
+    <string name="exit_login_btn">退出登录</string>
     <string-array name="price_ranges">
         <item>不限</item>
         <item>0–1500元</item>

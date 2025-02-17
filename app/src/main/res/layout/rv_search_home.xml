@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="140dp"
     android:layout_marginHorizontal="20dp"
     android:layout_marginBottom="10dp"
     android:background="@drawable/rv_search_home_style"
     android:elevation="2dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingLeft="10dp">
+    android:paddingStart="10dp"
+    tools:ignore="RtlSymmetry">
     
     <ImageView
         android:id="@+id/room_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         android:layout_gravity="center" />
     
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginLeft="10dp"
@@ -26,28 +28,40 @@
             android:id="@+id/room_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="温都水城社区 101房间"
+            android:text="@string/search_rv_room_default"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
         
         <TextView
             android:id="@+id/room_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="北京市 市辖区 昌平区"
+            android:text="@string/search_rv_region_default"
+            android:layout_marginTop="25dp"
             android:textColor="#BFAEA5"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
+        
+        <TextView
+            android:id="@+id/room_history_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/search_rv_time_default"
+            android:layout_marginTop="50dp"
+            android:textColor="#BFAEA5"
+            android:visibility="gone"
+            android:textSize="13sp" />
         
         <TextView
             android:id="@+id/room_rent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="$ 2500"
+            android:text="@string/search_rv_rent_default"
+            android:layout_gravity="bottom"
             android:textColor="@color/red"
-            android:textSize="17sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
-    </LinearLayout>
+    </FrameLayout>
     
 </LinearLayout>

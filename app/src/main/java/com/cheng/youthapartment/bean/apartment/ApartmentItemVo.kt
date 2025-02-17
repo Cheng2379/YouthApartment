@@ -1,12 +1,17 @@
 package com.cheng.youthapartment.bean.apartment
 
 
-import com.cheng.youthapartment.bean.FacilityInfo
 import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.LabelInfo
 import com.google.gson.annotations.SerializedName
 
-data class ApartmentBean(
+data class ApartmentItemVo(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("introduction")
+    val introduction: String,
     @SerializedName("addressDetail")
     val addressDetail: String,
     @SerializedName("cityId")
@@ -17,14 +22,9 @@ data class ApartmentBean(
     val districtId: Int,
     @SerializedName("districtName")
     val districtName: String,
-    @SerializedName("facilityInfoList")
-    val facilityInfoList: List<FacilityInfo>,
+    // 公寓图片列表
     @SerializedName("graphVoList")
     val graphVoList: List<GraphVo>,
-    @SerializedName("id")
-    val id: Int,
-    @SerializedName("introduction")
-    val introduction: String,
     @SerializedName("isRelease")
     val isRelease: Int,
     @SerializedName("labelInfoList")
@@ -35,8 +35,6 @@ data class ApartmentBean(
     val longitude: String,
     @SerializedName("minRent")
     val minRent: Int,
-    @SerializedName("name")
-    val name: String,
     @SerializedName("phone")
     val phone: String,
     @SerializedName("provinceId")

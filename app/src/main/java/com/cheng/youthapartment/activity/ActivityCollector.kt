@@ -1,4 +1,4 @@
-package com.cheng.youthapartment
+package com.cheng.youthapartment.activity
 
 import android.app.Activity
 

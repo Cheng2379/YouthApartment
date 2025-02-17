@@ -1,6 +1,7 @@
-package com.cheng.youthapartment
+package com.cheng.youthapartment.activity
 
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.bean.user.UserBean
@@ -14,6 +15,7 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         ActivityCollector.addActivity(this)
     }
 

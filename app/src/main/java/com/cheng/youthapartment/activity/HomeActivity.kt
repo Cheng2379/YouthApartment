@@ -1,21 +1,22 @@
-package com.cheng.youthapartment
+package com.cheng.youthapartment.activity
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.edit
-import androidx.fragment.app.Fragment
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
+import com.cheng.youthapartment.App
+import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.FragmentAdapter
-import com.cheng.youthapartment.bean.user.UserBean
 import com.cheng.youthapartment.fragment.GroupFragment
 import com.cheng.youthapartment.fragment.MessageFragment
 import com.cheng.youthapartment.fragment.MyRoomFragment
 import com.cheng.youthapartment.fragment.SearchFragment
 import com.cheng.youthapartment.fragment.UserCenterFragment
+import com.cheng.youthapartment.util.Logger
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -29,45 +30,34 @@ import kotlinx.coroutines.withContext
  * @since 2024/12/09
  */
 class HomeActivity : BaseActivity() {
-    private val TAG: String = javaClass.name.split(".").last()
     private val mViewPager2: ViewPager2 by lazy { findViewById(R.id.vp_home) }
     private val mBottomNavigationView: BottomNavigationView by lazy { findViewById(R.id.bottom_nv) }
 
-    private var userBean: UserBean? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
+        isFirst()
         setFragments()
     }
 
-    override fun onStart() {
-        super.onStart()
-        isFirst()
-    }
-
     private fun isFirst() {
-        val spf = getSharedPreferences("user_info", MODE_PRIVATE)
-        val firstRun = spf.getBoolean("firstOpen", true)
+        val firstRun = getSharedPreferences("lease", MODE_PRIVATE).getBoolean("firstOpen", true)
         if (firstRun) {
-            getSharedPreferences("user_info", MODE_PRIVATE).edit {
+            getSharedPreferences("lease", MODE_PRIVATE).edit {
                 putBoolean("firstOpen", false)
             }
-            val intent = Intent(this@HomeActivity, LoginActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
             finish()
         } else {
-            val token = spf.getString("token", "")!!
-            lifecycleScope.launch {
-                withContext(Dispatchers.Main) {
-                    userBean = getLoginUserInfo(token, Gson())
-                    //Log.d(TAG, "userBean: $userBean")
-                    if (userBean == null) {
-                        ActivityCollector.finishAll()
-                        startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
-                    }
+            // 检查token是否过期
+            val token = App.getToken()
+            Logger.d("App token: $token")
+            lifecycleScope.launch(Dispatchers.Main) {
+                val resultUser = getLoginUserInfo(token, Gson())
+                if (resultUser == null) {
+                    ActivityCollector.finishAll()
+                    startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
                 }
             }
         }
@@ -125,10 +115,5 @@ class HomeActivity : BaseActivity() {
 
             4 -> mBottomNavigationView.selectedItemId = R.id.fragment_user_center
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        lifecycleScope.cancel()
     }
 }

@@ -1,6 +1,7 @@
 package com.cheng.youthapartment.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,11 +17,13 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.cheng.youthapartment.HomeActivity
+import com.cheng.youthapartment.App
+import com.cheng.youthapartment.activity.HomeActivity
 import com.cheng.youthapartment.R
+import com.cheng.youthapartment.activity.RoomActivity
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.room.Record
+import com.cheng.youthapartment.bean.room.RoomRecord
 import com.cheng.youthapartment.bean.room.RoomBean
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +31,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.concurrent.thread
 
 /**
  *
@@ -43,10 +44,10 @@ class SearchFragment : Fragment() {
     private val mSR: SwipeRefreshLayout by lazy { view.findViewById(R.id.refresh_layout) }
     private val mRv: RecyclerView by lazy { view.findViewById(R.id.rv_search_home) }
     private val mDataEmpty: TextView by lazy { view.findViewById(R.id.data_empty) }
-    private var rvAdapter: RvAdapter<Record>? = null
-    private var roomList = ArrayList<Record>()
+    private var rvAdapter: RvAdapter<RoomRecord>? = null
+    private var roomList = ArrayList<RoomRecord>()
 
-    private var token: String = ""
+    private var token: String = App.getToken()
     private var currentRequestJob: Job? = null
     private var currentPage = 1
     private var pageSize = 6
@@ -73,9 +74,6 @@ class SearchFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        activity.getSharedPreferences("user_info", MODE_PRIVATE).getString("token", "")?.let {
-            token = it
-        }
         mDataEmpty.visibility = TextView.GONE
         rvAdapter =
             RvAdapter(requireContext(), roomList, R.layout.rv_search_home) { holder, position ->
@@ -93,12 +91,19 @@ class SearchFragment : Fragment() {
                         .apply(
                             RequestOptions.bitmapTransform(SquareCrop(20))
                         )
+                        .error(R.drawable.img_fail)
                         .into(mRoomImg)
                 }
                 mRoomName.text = roomItem.apartmentInfo.name + " " + roomItem.roomNumber + "号房间"
                 mRoomLocation.text =
                     roomItem.apartmentInfo.provinceName + "  " + roomItem.apartmentInfo.cityName + "  " + roomItem.apartmentInfo.districtName
                 mRoomRent.text = "$ " + roomItem.rent.stripTrailingZeros().toPlainString()
+
+                itemView.setOnClickListener {
+                    val intent = Intent(activity, RoomActivity::class.java)
+                    intent.putExtra("room_id", roomItem.id)
+                    startActivity(intent)
+                }
             }
         mRv.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -189,7 +194,7 @@ class SearchFragment : Fragment() {
             mapOf("current" to currentPage, "size" to size)
         ) { _, response ->
             response?.let {
-                val newData = it.records
+                val newData = it.roomRecords
                 if (newData.isEmpty()) {
                     //Log.d(TAG, "已加载完毕")
                     rvAdapter?.setAllDataLoaded(true)

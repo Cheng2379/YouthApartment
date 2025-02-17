@@ -1,4 +1,4 @@
-package com.cheng.youthapartment
+package com.cheng.youthapartment.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -9,8 +9,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.core.content.edit
 import com.cheng.youthapartment.util.OkHttpUtil
 import com.google.gson.Gson
@@ -20,7 +18,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 import androidx.lifecycle.lifecycleScope
+import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
+import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.showToast
 import kotlinx.coroutines.delay
 
@@ -30,25 +30,23 @@ import kotlinx.coroutines.delay
  * @since 2024/12/10
  */
 class LoginActivity : BaseActivity() {
-    private val phone: EditText by lazy { findViewById(R.id.phone) }
-    private val captcha: EditText by lazy { findViewById(R.id.captcha) }
-    private val hidePhoneText: TextView by lazy { findViewById(R.id.hidePhoneText) }
-    private val hideCaptchaText: TextView by lazy { findViewById(R.id.hideCaptchaText) }
-    private val sendCaptcha: Button by lazy { findViewById(R.id.sendCaptcha) }
-    private val login: Button by lazy { findViewById(R.id.login) }
-    private var phoneStr: String? = null
-    private var captchaStr: String? = null
-    private val phoneFormat: String =
+    private val mPhone: EditText by lazy { findViewById(R.id.phone) }
+    private val mCaptcha: EditText by lazy { findViewById(R.id.captcha) }
+    private val mHidePhoneText: TextView by lazy { findViewById(R.id.hidePhoneText) }
+    private val mHideCaptchaText: TextView by lazy { findViewById(R.id.hideCaptchaText) }
+    private val mSendCaptcha: Button by lazy { findViewById(R.id.sendCaptcha) }
+    private val mLogin: Button by lazy { findViewById(R.id.login_btn) }
+    private var mPhoneStr: String? = null
+    private var mCaptchaStr: String? = null
+    private val mPhoneFormat: String =
         "^(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57]|19[89]|166)[0-9]{8}"
-    private val TAG: String = javaClass.name.split(".").last()
-    private val gson: Gson = Gson()
-    private var token: String = ""
+    private val mGson: Gson = Gson()
+    private var mToken: String = ""
     //private val testToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVU0VSX0lORk8iLCJleHAiOjE3NjMxMzk1MDcsInVzZXJJZCI6MiwidXNlcm5hbWUiOiIxNTY3OTIxNjE2MiJ9" +
     //            ".mXZvDp-73_natBlclYEDSfjBtMqz9iwNsl5wCmzDCmE";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.enableEdgeToEdge()
         setContentView(R.layout.activity_login)
 
         editTextListener()
@@ -57,10 +55,10 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun editTextListener() {
-        phoneStr = phone.text.toString()
-        captchaStr = captcha.getText().toString()
+        mPhoneStr = mPhone.text.toString()
+        mCaptchaStr = mCaptcha.getText().toString()
 
-        phone.addTextChangedListener(object : TextWatcher {
+        mPhone.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 charSequence: CharSequence,
                 start: Int,
@@ -75,11 +73,11 @@ class LoginActivity : BaseActivity() {
                 before: Int,
                 count: Int
             ) {
-                phoneStr = charSequence.toString()
+                mPhoneStr = charSequence.toString()
                 if (!phoneCheck()) {
-                    hidePhoneText.visibility = TextView.VISIBLE
+                    mHidePhoneText.visibility = TextView.VISIBLE
                 } else {
-                    hidePhoneText.visibility = TextView.GONE
+                    mHidePhoneText.visibility = TextView.GONE
                 }
             }
 
@@ -87,7 +85,7 @@ class LoginActivity : BaseActivity() {
             }
         })
 
-        captcha.addTextChangedListener(object : TextWatcher {
+        mCaptcha.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 charSequence: CharSequence,
                 start: Int,
@@ -102,11 +100,11 @@ class LoginActivity : BaseActivity() {
                 before: Int,
                 count: Int
             ) {
-                captchaStr = charSequence.toString()
-                if (captchaStr!!.isEmpty()) {
-                    hideCaptchaText.visibility = TextView.VISIBLE
+                mCaptchaStr = charSequence.toString()
+                if (mCaptchaStr!!.isEmpty()) {
+                    mHideCaptchaText.visibility = TextView.VISIBLE
                 } else {
-                    hideCaptchaText.visibility = TextView.GONE
+                    mHideCaptchaText.visibility = TextView.GONE
                 }
             }
 
@@ -119,11 +117,11 @@ class LoginActivity : BaseActivity() {
      * 号码校验
      */
     fun phoneCheck(): Boolean {
-        if (phoneStr!!.isEmpty()) {
+        if (mPhoneStr!!.isEmpty()) {
             return false
         } else {
-            val pattern = Pattern.compile(phoneFormat)
-            val matcher = phoneStr?.let {
+            val pattern = Pattern.compile(mPhoneFormat)
+            val matcher = mPhoneStr?.let {
                 pattern.matcher(it)
             }
             return matcher?.matches()!!
@@ -132,91 +130,83 @@ class LoginActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun sendCaptcha() {
-        sendCaptcha.setOnClickListener { v: View? ->
+        mSendCaptcha.setOnClickListener { v: View? ->
             if (phoneCheck()) {
-                OkHttpUtil.get("/app/login/getCode?phone=$phoneStr") { _, response ->
-                    val baseBean = gson.fromJson(
+                OkHttpUtil.get("/app/login/getCode?phone=$mPhoneStr") { _, response ->
+                    val baseBean = mGson.fromJson(
                         response,
                         BaseBean::class.java
                     )
                     lifecycleScope.launch {
                         withContext(Dispatchers.Main) {
                             if (baseBean.code == 200) {
-                                "发送成功".showToast(applicationContext)
-                                sendCaptcha.text = "已发送"
-                                sendCaptcha.isEnabled = false
+                                "发送成功".showToast()
+                                mSendCaptcha.text = "已发送"
+                                mSendCaptcha.isEnabled = false
 
                                 // 倒计时
                                 var remainingTime = 60
                                 while (remainingTime > 0) {
-                                    sendCaptcha.text = "$remainingTime 秒后可重新获取"
-                                    sendCaptcha.textSize = 12f
+                                    mSendCaptcha.text = "$remainingTime 秒后可重新获取"
+                                    mSendCaptcha.textSize = 12f
                                     delay(1000)
                                     remainingTime--
                                 }
 
-                                sendCaptcha.isEnabled = true
-                                sendCaptcha.text = "发送验证码"
+                                mSendCaptcha.isEnabled = true
+                                mSendCaptcha.text = "发送验证码"
                             } else {
-                                baseBean.message?.showToast(this@LoginActivity)
+                                baseBean.message?.showToast()
                             }
                         }
                     }
                 }
             } else {
-                "请输入正确手机号".showToast(this)
+                "请输入正确手机号".showToast()
             }
         }
     }
 
     private fun login() {
-        login.setOnClickListener {
-            if (phoneCheck() && captchaStr?.isNotEmpty() != false) {
-                val map = mapOf<String, Any>("phone" to phoneStr!!, "code" to captchaStr!!)
+        mLogin.setOnClickListener {
+            if (phoneCheck() && mCaptchaStr?.isNotEmpty() != false) {
+                val map = mapOf<String, Any>("phone" to mPhoneStr!!, "code" to mCaptchaStr!!)
                 OkHttpUtil.post("/app/login", params = map) { _, response ->
                     response?.let {
-                        val bodyBean = gson.fromJson(it, BaseBean::class.java)
+                        val bodyBean = mGson.fromJson(it, BaseBean::class.java)
                         if (bodyBean.code == 200) {
                             // 存储token，后续进行加密
-                            token = bodyBean.data.toString()
+                            mToken = bodyBean.data.toString()
 
-                            getSharedPreferences("user_info", MODE_PRIVATE).edit {
-                                putString("token", token)
-                            }
                             // 获取用户信息
-                            lifecycleScope.launch {
-                                withContext(Dispatchers.Main) {
-                                    val userBean = getLoginUserInfo(token, gson)
-                                    userBean?.let {
-                                        "登录成功".showToast(applicationContext)
-                                        getSharedPreferences("user_info", MODE_PRIVATE).edit {
-                                            putString("nickname", it.nickname)
-                                            putString("avatarUrl", it.avatarUrl)
-                                        }
-
-                                        val intent =
-                                            Intent(this@LoginActivity, HomeActivity::class.java)
-                                        startActivity(intent)
-                                        // 销毁页面
-                                        finish()
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                val userBean = getLoginUserInfo(mToken, mGson)
+                                Logger.d("userBean: $userBean")
+                                userBean?.let {
+                                    "登录成功".showToast()
+                                    getSharedPreferences("user_info", MODE_PRIVATE).edit {
+                                        putString("token", mToken)
+                                        putString("nickname", it.nickname)
+                                        putString("avatarUrl", it.avatarUrl ?: "")
                                     }
+
+                                    val intent =
+                                        Intent(this@LoginActivity, HomeActivity::class.java)
+                                    intent.putExtra("user", userBean)
+                                    startActivity(intent)
+                                    finish()
                                 }
                             }
                         } else {
                             lifecycleScope.launch(Dispatchers.Main) {
-                                bodyBean.message?.showToast(this@LoginActivity)
+                                bodyBean.message?.showToast()
                             }
                         }
                     }
                 }
             } else {
-                "请输入正确的手机号或验证码".showToast(this)
+                "请输入正确的手机号或验证码".showToast()
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        lifecycleScope.cancel()
     }
 }

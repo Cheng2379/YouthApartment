@@ -4,26 +4,26 @@
     <item
         android:id="@+id/fragment_search"
         android:title="找房"
-        android:icon="@drawable/search"/>
+        android:icon="@drawable/img_search"/>
 
     <item
         android:id="@+id/fragment_group"
         android:title="圈子"
-        android:icon="@drawable/group"/>
+        android:icon="@drawable/img_group"/>
 
     <item
         android:id="@+id/fragment_my_room"
         android:title="我的房间"
-        android:icon="@drawable/my_room"/>
+        android:icon="@drawable/img_my_room"/>
 
     <item
         android:id="@+id/fragment_message"
         android:title="消息"
-        android:icon="@drawable/message"/>
+        android:icon="@drawable/img_message"/>
 
     <item
         android:id="@+id/fragment_user_center"
         android:title="个人中心"
-        android:icon="@drawable/user_center"/>
+        android:icon="@drawable/img_user_center"/>
 
 </menu>
