@@ -3,7 +3,6 @@ package com.cheng.youthapartment.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +24,7 @@ import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.room.RoomRecord
 import com.cheng.youthapartment.bean.room.RoomBean
+import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -153,7 +153,6 @@ class SearchFragment : Fragment() {
                 val isNearBottom = lastVisibleItemPosition >= totalItemCount - 1
 
                 // 滑动到底部且累计滑动距离超过阈值
-                Log.d(TAG, "rvAdapter: ${rvAdapter?.getAllDataLoaded()}")
                 val shouldLoadMore =
                     isNearBottom && isScrollingUp && totalScrollDistance >= loadMoreThreshold && !scrollStabilization()
 
@@ -163,7 +162,7 @@ class SearchFragment : Fragment() {
                 if (rvAdapter?.getAllDataLoaded() == true) return
 
                 currentPage++
-                Log.d(TAG, "上滑加载触发, 当前页码: $currentPage")
+                Logger.d("上滑加载触发, 当前页码: $currentPage")
                 getRoomList(false, currentPage, pageSize)
                 totalScrollDistance = 0
 
@@ -196,7 +195,6 @@ class SearchFragment : Fragment() {
             response?.let {
                 val newData = it.roomRecords
                 if (newData.isEmpty()) {
-                    //Log.d(TAG, "已加载完毕")
                     rvAdapter?.setAllDataLoaded(true)
                 } else {
                     currentRequestJob = lifecycleScope.launch {
@@ -208,7 +206,7 @@ class SearchFragment : Fragment() {
                             }
                             mRv.visibility = RecyclerView.VISIBLE
                             mDataEmpty.visibility = TextView.GONE
-                            Log.d(TAG, "currentPage: $currentPage Response RoomListSize: ${newData.size}")
+                            Logger.d("currentPage: $currentPage Response RoomListSize: ${newData.size}")
                         }
                     }
                 }

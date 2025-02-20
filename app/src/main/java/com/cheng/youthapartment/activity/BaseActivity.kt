@@ -3,11 +3,9 @@ package com.cheng.youthapartment.activity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.bean.user.UserBean
-import com.cheng.youthapartment.util.OkHttpUtil
+import com.cheng.youthapartment.util.RetrofitUtil
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -29,20 +27,10 @@ open class BaseActivity : AppCompatActivity() {
      */
     suspend fun getLoginUserInfo(token: String?, gson: Gson): UserBean? {
         return suspendCoroutine { coroutine ->
-            OkHttpUtil.get("/app/info", token) { _, response ->
+            RetrofitUtil.get<UserBean>("/app/info", token) { _, response ->
                 response?.let {
-                    val baseBean = gson.fromJson(
-                        it,
-                        object : TypeToken<BaseBean<UserBean>>() {}.type
-                    ) as BaseBean<UserBean>
-                    if (baseBean.code == 200) {
-                        coroutine.resume(baseBean.data)
-                    } else {
-                        coroutine.resume(null)
-                    }
-                } ?: run {
-                    coroutine.resume(null)
-                }
+                    coroutine.resume(it)
+                } ?: coroutine.resume(null)
             }
         }
     }

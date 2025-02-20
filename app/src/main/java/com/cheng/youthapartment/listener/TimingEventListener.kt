@@ -1,6 +1,7 @@
 package com.cheng.youthapartment.listener
 
 import android.util.Log
+import com.cheng.youthapartment.util.Logger
 import okhttp3.Call
 import okhttp3.EventListener
 
@@ -18,6 +19,6 @@ class TimingEventListener : EventListener()  {
 
     override fun callEnd(call: Call) {
         val timeMs = (System.nanoTime() - startNs) / 1000000
-        Log.d("TimingEventListener", "Request Time spent: $timeMs ms")
+        Logger.d("Request Time spent: ${timeMs}ms for ${call.request().url}")
     }
 }

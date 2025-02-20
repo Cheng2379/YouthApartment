@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -13,7 +12,6 @@ import androidx.core.content.edit
 import com.cheng.youthapartment.util.OkHttpUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
@@ -21,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.util.Logger
+import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
 import kotlinx.coroutines.delay
 
@@ -130,9 +129,9 @@ class LoginActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun sendCaptcha() {
-        mSendCaptcha.setOnClickListener { v: View? ->
+        mSendCaptcha.setOnClickListener {
             if (phoneCheck()) {
-                OkHttpUtil.get("/app/login/getCode?phone=$mPhoneStr") { _, response ->
+                /*OkHttpUtil.get("/app/login/getCode?phone=$mPhoneStr") { _, response ->
                     val baseBean = mGson.fromJson(
                         response,
                         BaseBean::class.java
@@ -160,6 +159,33 @@ class LoginActivity : BaseActivity() {
                             }
                         }
                     }
+                }*/
+                RetrofitUtil.get<BaseBean<Any>>("/app/login/getCode?phone=$mPhoneStr") { _, response ->
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.Main) {
+                            response?.let {
+                                if (it.code == 200) {
+                                    "发送成功".showToast()
+                                    mSendCaptcha.text = "已发送"
+                                    mSendCaptcha.isEnabled = false
+
+                                    // 倒计时
+                                    var remainingTime = 60
+                                    while (remainingTime > 0) {
+                                        mSendCaptcha.text = "$remainingTime 秒后可重新获取"
+                                        mSendCaptcha.textSize = 12f
+                                        delay(1000)
+                                        remainingTime--
+                                    }
+
+                                    mSendCaptcha.isEnabled = true
+                                    mSendCaptcha.text = "发送验证码"
+                                } else {
+                                    it.message?.showToast()
+                                }
+                            }
+                        }
+                    }
                 }
             } else {
                 "请输入正确手机号".showToast()
@@ -171,12 +197,11 @@ class LoginActivity : BaseActivity() {
         mLogin.setOnClickListener {
             if (phoneCheck() && mCaptchaStr?.isNotEmpty() != false) {
                 val map = mapOf<String, Any>("phone" to mPhoneStr!!, "code" to mCaptchaStr!!)
-                OkHttpUtil.post("/app/login", params = map) { _, response ->
+                RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
                     response?.let {
-                        val bodyBean = mGson.fromJson(it, BaseBean::class.java)
-                        if (bodyBean.code == 200) {
+                        if (response.code == 200) {
                             // 存储token，后续进行加密
-                            mToken = bodyBean.data.toString()
+                            mToken = response.data.toString()
 
                             // 获取用户信息
                             lifecycleScope.launch(Dispatchers.Main) {
@@ -199,7 +224,7 @@ class LoginActivity : BaseActivity() {
                             }
                         } else {
                             lifecycleScope.launch(Dispatchers.Main) {
-                                bodyBean.message?.showToast()
+                                response.message?.showToast()
                             }
                         }
                     }

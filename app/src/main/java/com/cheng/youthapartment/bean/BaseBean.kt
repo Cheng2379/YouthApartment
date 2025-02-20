@@ -13,7 +13,7 @@ data class BaseBean<T>(
     @SerializedName("message")
     val message: String?,
     @SerializedName("data")
-    val data: T
+    val data: T?
 ) {
     override fun toString(): String {
         return "BaseBean: { " +

@@ -54,11 +54,6 @@ class RoomActivity : BaseActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getApartmentById() {
-        /*val widthPixels = resources.displayMetrics.widthPixels
-        val heightPixels = resources.displayMetrics.heightPixels
-        Logger.d("widthPixels: $widthPixels")
-        Logger.d("heightPixels: $heightPixels")*/
-
         mAdapter = ViewPagerAdapter(mGraphVoList, this)
         mViewPager.adapter = mAdapter
         RetrofitUtil.get<RoomDetailBean>(
@@ -86,6 +81,9 @@ class RoomActivity : BaseActivity() {
 
     }
 
+    /**
+     * 监听滑动图片
+     */
     private fun setupViewPager() {
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {

@@ -35,7 +35,7 @@ object OkHttpUtil {
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .connectionPool(ConnectionPool(5, 5, TimeUnit.MINUTES))
-            .eventListener(TimingEventListener())
+            //.eventListener(TimingEventListener())
             .build()
     }
 

@@ -14,6 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -33,16 +34,18 @@ object RetrofitUtil {
     val gson = Gson()
 
     init {
-        HttpLoggingInterceptor().apply {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         }
         val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
             .connectTimeout(10, TimeUnit.SECONDS)
             .writeTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .connectionPool(ConnectionPool(5, 5, TimeUnit.MINUTES))
-            .eventListener(TimingEventListener())
+            //.eventListener(TimingEventListener())
             .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -53,7 +56,7 @@ object RetrofitUtil {
 
     inline fun <reified T> get(
         suffixUrl: String,
-        headers: String?,
+        headers: String? = null,
         params: Map<String, Any>? = null,
         noinline callBack: (call: Call<ResponseBody>?, response: T?) -> Unit
     ) {
@@ -63,7 +66,7 @@ object RetrofitUtil {
 
     inline fun <reified T> post(
         suffixUrl: String,
-        headers: String?,
+        headers: String? = null,
         params: Map<String, Any>? = null,
         noinline callBack: (call: Call<ResponseBody>?, response: T?) -> Unit
     ) {
@@ -73,17 +76,18 @@ object RetrofitUtil {
     inline fun <reified T> execute(
         httpMethod: HttpMethod,
         suffixUrl: String,
-        headers: String?,
+        headers: String? = null,
         params: Map<String, Any>? = null,
         noinline callBack: (call: Call<ResponseBody>?, response: T?) -> Unit
     ) {
+        val subParams = params ?: emptyMap()
         val call: Call<ResponseBody> = when (httpMethod) {
             HttpMethod.GET -> {
-                apiService.get(suffixUrl, headers, params)
+                apiService.get(suffixUrl, headers, subParams)
             }
 
             HttpMethod.POST -> {
-                apiService.post(suffixUrl, headers, params)
+                apiService.post(suffixUrl, headers, subParams)
             }
         }
         call.enqueue(object : Callback<ResponseBody> {
@@ -91,13 +95,19 @@ object RetrofitUtil {
                 if (response.isSuccessful && response.body() != null) {
                     val result = response.body()?.string() ?: ""
                     try {
-                        val parsedResponse =
-                            gson.fromJson(result, object : TypeToken<BaseBean<T>>() {})
-                        if (parsedResponse.code == 200) {
-                            callBack(call, parsedResponse.data)
+                        if (T::class == BaseBean::class) {
+                            val parsedResponse =
+                                gson.fromJson<BaseBean<Any>>(result, object : TypeToken<BaseBean<Any>>() {}.type)
+                            callBack(call, parsedResponse as? T)
                         } else {
-                            Log.d(TAG, "response code: $result")
-                            callBack(call, null)
+                            val parsedResponse =
+                                gson.fromJson(result, object : TypeToken<BaseBean<T>>() {})
+                            if (parsedResponse.code == 200) {
+                                callBack(call, parsedResponse.data)
+                            } else {
+                                Log.d(TAG, "response code: $result")
+                                callBack(call, null)
+                            }
                         }
                     } catch (e: Exception) {
                         Log.d(TAG, "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}")
@@ -123,15 +133,15 @@ object RetrofitUtil {
         @GET
         fun get(
             @Url suffixUrl: String,
-            @Header("access-token") headers: String?,
+            @Header("access-token") headers: String? = null,
             @QueryMap params: Map<String, @JvmSuppressWildcards Any>? = null,
         ): Call<ResponseBody>
 
         @POST
         fun post(
             @Url suffixUrl: String,
-            @Header("access-token") headers: String?,
-            @QueryMap params: Map<String, @JvmSuppressWildcards Any>? = null,
+            @Header("access-token") headers: String? = null,
+            @Body params: Map<String, @JvmSuppressWildcards Any>? = null,
         ): Call<ResponseBody>
     }
 }
