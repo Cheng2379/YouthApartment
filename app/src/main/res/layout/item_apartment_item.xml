@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="150dp"
     android:layout_marginHorizontal="20dp"
     android:layout_marginBottom="10dp"
-    android:background="@drawable/rv_search_home_style"
+    android:background="@drawable/shape_rv_search_home_style"
     android:elevation="2dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -14,13 +14,13 @@
     
     <ImageView
         android:id="@+id/room_img"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center" />
     
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_marginLeft="10dp"
         android:orientation="vertical">
         
@@ -52,8 +52,16 @@
             android:visibility="gone"
             android:textSize="13sp" />
         
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_apartment_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"/>
+        
         <TextView
-            android:id="@+id/room_rent"
+            android:id="@+id/search_item_room_rent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"

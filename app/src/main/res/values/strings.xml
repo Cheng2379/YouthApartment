@@ -36,4 +36,8 @@
         <item>高价优先</item>
         <item>低价优先</item>
     </string-array>
+    
+    <string name="room_rent_default">$2000/月起</string>
+    <string name="apartment_community_desc_default">这是一座现代化公寓，位于城市中心，拥有多种户 型，从舒适的一居室到宽的三居室。设施齐全，配 备现代厨房、设施完备的健身房和社交区。公寓内部 设计时尚精致，大窗户带来充足自然光线，俯瞰城市 美景。24小时安保、智能门禁系统和停车位，确保 居民安全与便利。步行可至购物中心、餐厅和公共交 通站点，提供舒适便捷的城市生活体验。</string>
+    <string name="btn_reserve_house">预约看房</string>
 </resources>

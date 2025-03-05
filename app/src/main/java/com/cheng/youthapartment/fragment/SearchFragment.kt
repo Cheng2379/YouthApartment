@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -38,52 +37,51 @@ import kotlinx.coroutines.withContext
  * @since 2024/12/20
  */
 class SearchFragment : Fragment() {
-    private val TAG: String = javaClass.name.split(".").last()
-    private lateinit var view: View
-    private val activity by lazy { requireActivity() as HomeActivity }
-    private val mSR: SwipeRefreshLayout by lazy { view.findViewById(R.id.refresh_layout) }
-    private val mRv: RecyclerView by lazy { view.findViewById(R.id.rv_search_home) }
-    private val mDataEmpty: TextView by lazy { view.findViewById(R.id.data_empty) }
-    private var rvAdapter: RvAdapter<RoomRecord>? = null
-    private var roomList = ArrayList<RoomRecord>()
+    private lateinit var mView: View
+    private val mActivity by lazy { requireActivity() as HomeActivity }
+    private val mSR: SwipeRefreshLayout by lazy { mView.findViewById(R.id.refresh_layout) }
+    private val mRv: RecyclerView by lazy { mView.findViewById(R.id.rv_search_home) }
+    private val mDataEmpty: TextView by lazy { mView.findViewById(R.id.data_empty) }
+    private var mRvAdapter: RvAdapter<RoomRecord>? = null
+    private var mRoomList = ArrayList<RoomRecord>()
 
-    private var token: String = App.getToken()
-    private var currentRequestJob: Job? = null
-    private var currentPage = 1
-    private var pageSize = 6
-    private var lastRequestTime = 0L
-    private val debounceTime = 1000L
-    private var totalScrollDistance = 0 // 累计滑动距离
-    private var isScrollingUp = false // 是否正在向上滑动
+    private var mToken: String = App.getToken()
+    private var mCurrentRequestJob: Job? = null
+    private var mCurrentPage = 1
+    private var mPageSize = 6
+    private var mLastRequestTime = 0L
+    private val mDebounceTime = 1000L
+    private var mTotalScrollDistance = 0 // 累计滑动距离
+    private var mIsScrollingUp = false // 是否正在向上滑动
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        view = inflater.inflate(R.layout.fragment_search, container, false)
-        return view
+        mView = inflater.inflate(R.layout.fragment_search, container, false)
+        return mView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
         initScrollListener()
-        getRoomList(false, currentPage, pageSize)
+        getRoomList(false, mCurrentPage, mPageSize)
     }
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
         mDataEmpty.visibility = TextView.GONE
-        rvAdapter =
-            RvAdapter(requireContext(), roomList, R.layout.rv_search_home) { holder, position ->
+        mRvAdapter =
+            RvAdapter(requireContext(), mRoomList, R.layout.item_apartment_item) { holder, position ->
                 val itemView = holder.itemView
                 val mRoomImg: ImageView = itemView.findViewById(R.id.room_img)
                 val mRoomName: TextView = itemView.findViewById(R.id.room_name)
                 val mRoomLocation: TextView = itemView.findViewById(R.id.room_location)
-                val mRoomRent: TextView = itemView.findViewById(R.id.room_rent)
+                val mRoomRent: TextView = itemView.findViewById(R.id.search_item_room_rent)
 
-                val roomItem = roomList[position]
+                val roomItem = mRoomList[position]
                 val graphVoList = roomItem.graphVoList
                 if (graphVoList.isNotEmpty()) {
                     Glide.with(this)
@@ -97,18 +95,18 @@ class SearchFragment : Fragment() {
                 mRoomName.text = roomItem.apartmentInfo.name + " " + roomItem.roomNumber + "号房间"
                 mRoomLocation.text =
                     roomItem.apartmentInfo.provinceName + "  " + roomItem.apartmentInfo.cityName + "  " + roomItem.apartmentInfo.districtName
-                mRoomRent.text = "$ " + roomItem.rent.stripTrailingZeros().toPlainString()
+                mRoomRent.text = "$ " + roomItem.rent.stripTrailingZeros().toPlainString() + "/月"
 
                 itemView.setOnClickListener {
-                    val intent = Intent(activity, RoomActivity::class.java)
+                    val intent = Intent(mActivity, RoomActivity::class.java)
                     intent.putExtra("room_id", roomItem.id)
                     startActivity(intent)
                 }
             }
         mRv.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        mRv.adapter = rvAdapter
-        if (roomList.isEmpty()) {
+        mRv.adapter = mRvAdapter
+        if (mRoomList.isEmpty()) {
             mDataEmpty.visibility = TextView.VISIBLE
             mRv.visibility = RecyclerView.GONE
         } else {
@@ -121,11 +119,11 @@ class SearchFragment : Fragment() {
         mSR.setOnRefreshListener {
             lifecycleScope.launch {
                 delay(1000)
-                currentPage = 1
-                totalScrollDistance = 0
-                getRoomList(true, currentPage, pageSize)
+                mCurrentPage = 1
+                mTotalScrollDistance = 0
+                getRoomList(true, mCurrentPage, mPageSize)
                 mSR.isRefreshing = false
-                rvAdapter?.setAllDataLoaded(false)
+                mRvAdapter?.setAllDataLoaded(false)
             }
         }
         mSR.setOnChildScrollUpCallback { _, _ ->
@@ -133,15 +131,15 @@ class SearchFragment : Fragment() {
             mRv.canScrollVertically(-1)
         }
 
-        mRv.addOnScrollListener(object : OnScrollListener() {
+        mRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             private val loadMoreThreshold = 100 // 滑动距离阈值（单位：像素）
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                isScrollingUp = dy > 0
+                mIsScrollingUp = dy > 0
                 if (dy > 0) {
-                    totalScrollDistance += dy
+                    mTotalScrollDistance += dy
                 }
 
                 // 获取布局管理器
@@ -154,17 +152,17 @@ class SearchFragment : Fragment() {
 
                 // 滑动到底部且累计滑动距离超过阈值
                 val shouldLoadMore =
-                    isNearBottom && isScrollingUp && totalScrollDistance >= loadMoreThreshold && !scrollStabilization()
+                    isNearBottom && mIsScrollingUp && mTotalScrollDistance >= loadMoreThreshold && !scrollStabilization()
 
                 if (!shouldLoadMore) return
 
                 // 若数据加载完毕，返回
-                if (rvAdapter?.getAllDataLoaded() == true) return
+                if (mRvAdapter?.getAllDataLoaded() == true) return
 
-                currentPage++
-                Logger.d("上滑加载触发, 当前页码: $currentPage")
-                getRoomList(false, currentPage, pageSize)
-                totalScrollDistance = 0
+                mCurrentPage++
+                Logger.d("上滑加载触发, 当前页码: $mCurrentPage")
+                getRoomList(false, mCurrentPage, mPageSize)
+                mTotalScrollDistance = 0
 
             }
         })
@@ -175,10 +173,10 @@ class SearchFragment : Fragment() {
      */
     private fun scrollStabilization(): Boolean {
         val currentTime = System.currentTimeMillis()
-        if (currentTime - lastRequestTime < debounceTime) {
+        if (currentTime - mLastRequestTime < mDebounceTime) {
             return true
         }
-        lastRequestTime = currentTime
+        mLastRequestTime = currentTime
         return false
     }
 
@@ -186,23 +184,23 @@ class SearchFragment : Fragment() {
      * @param isUpdate: 是否更新视图，不更新则为添加
      */
     private fun getRoomList(isUpdate: Boolean, currentPage: Int, size: Int) {
-        currentRequestJob?.cancel()
+        mCurrentRequestJob?.cancel()
         RetrofitUtil.get<RoomBean>(
             "/app/room/pageItem",
-            token,
+            mToken,
             mapOf("current" to currentPage, "size" to size)
         ) { _, response ->
             response?.let {
                 val newData = it.roomRecords
                 if (newData.isEmpty()) {
-                    rvAdapter?.setAllDataLoaded(true)
+                    mRvAdapter?.setAllDataLoaded(true)
                 } else {
-                    currentRequestJob = lifecycleScope.launch {
+                    mCurrentRequestJob = lifecycleScope.launch {
                         withContext(Dispatchers.Main) {
                             if (isUpdate) {
-                                rvAdapter?.updateDta(newData)
+                                mRvAdapter?.updateDta(newData)
                             } else {
-                                rvAdapter?.addData(newData)
+                                mRvAdapter?.addData(newData)
                             }
                             mRv.visibility = RecyclerView.VISIBLE
                             mDataEmpty.visibility = TextView.GONE

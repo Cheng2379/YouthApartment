@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:labelVisibilityMode="labeled"
-        android:theme="@style/footButton"
+        android:theme="@style/FootButton"
         app:itemBackground="@null"
         app:itemIconSize="26dp"
         app:layout_constraintBottom_toBottomOf="parent"

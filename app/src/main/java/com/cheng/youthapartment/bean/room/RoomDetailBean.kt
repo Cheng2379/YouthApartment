@@ -26,16 +26,22 @@ data class RoomDetailBean(
     // 房间图片列表
     @SerializedName("graphVoList")
     val graphVoList: List<GraphVo>,
+    // 基本信息
     @SerializedName("attrValueVoList")
     val attrValueVoList: List<AttrValueVo>,
+    // 配套信息
     @SerializedName("facilityInfoList")
     val facilityInfoList: List<FacilityInfo>,
+    // 标签信息
     @SerializedName("labelInfoList")
     val labelInfoList: List<LabelInfo>,
+    // 付款方式
     @SerializedName("paymentTypeList")
     val paymentTypeList: List<PaymentType>,
+    // 费用明细
     @SerializedName("feeValueVoList")
     val feeValueVoList: List<FeeValueVo>,
+    // 可选租期
     @SerializedName("leaseTermList")
     val leaseTermList: List<LeaseTerm>,
 )

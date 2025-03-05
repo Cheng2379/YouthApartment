@@ -2,4 +2,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="fragment_horizontal_margin">16dp</dimen>
     <dimen name="fragment_vertical_margin">16dp</dimen>
+    
+    <dimen name="label_grid_space">8dp</dimen>  <!-- 标签网格间距 -->
+    <dimen name="facility_grid_space">15dp</dimen>  <!-- 配套说明网格间距 -->
 </resources>

@@ -40,13 +40,13 @@ class BrowseHistoryActivity : BaseActivity() {
         mBack.setOnClickListener {
             finish()
         }
-        mRvAdapter = RvAdapter(this, mHistoryList, R.layout.rv_search_home) { holder, position ->
+        mRvAdapter = RvAdapter(this, mHistoryList, R.layout.item_apartment_item) { holder, position ->
             val itemView = holder.itemView
             val mRoomImg: ImageView = itemView.findViewById(R.id.room_img)
             val mRoomName: TextView = itemView.findViewById(R.id.room_name)
             val mRoomLocation: TextView = itemView.findViewById(R.id.room_location)
             val mRoomTime: TextView = itemView.findViewById(R.id.room_history_time)
-            val mRoomRent: TextView = itemView.findViewById(R.id.room_rent)
+            val mRoomRent: TextView = itemView.findViewById(R.id.search_item_room_rent)
 
             val history = mHistoryList[position]
             val graphVoList = history.roomGraphVoList

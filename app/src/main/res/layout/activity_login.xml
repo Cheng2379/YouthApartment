@@ -64,7 +64,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
-                android:background="@drawable/selector_btn_login_press"
+                android:background="@drawable/shape_btn_login_selector"
                 android:text="发送验证码"
                 android:textSize="13sp"
                 android:textColor="@color/white" />
@@ -86,7 +86,7 @@
         android:layout_height="50dp"
         android:layout_marginHorizontal="40dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/selector_btn_login_press"
+        android:background="@drawable/shape_btn_login_selector"
         android:text="@string/login_btn"
         android:textColor="@color/white"
         android:textSize="18dp" />
