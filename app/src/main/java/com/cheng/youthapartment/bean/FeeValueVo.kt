@@ -7,7 +7,7 @@ data class FeeValueVo(
     @SerializedName("feeKeyId")
     val feeKeyId: Int,
     @SerializedName("feeKeyName")
-    val feeKeyName: Any,
+    val feeKeyName: String,
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")

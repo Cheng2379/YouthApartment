@@ -158,7 +158,7 @@
             <!-- 费用明细 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
@@ -196,7 +196,7 @@
                     </LinearLayout>
                     
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="60sp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
                         
@@ -209,12 +209,18 @@
                             android:textColor="@color/white" />
                     </LinearLayout>
                 </LinearLayout>
+                
+                <com.cheng.youthapartment.view.YAGridLayout
+                    android:id="@+id/room_fee_value_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp" />
             </LinearLayout>
             
             <!-- 可选支付方式 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
@@ -226,7 +232,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="可选支付方式"
+                    android:text="可选付款方式"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -243,36 +249,41 @@
                         android:layout_weight="1">
                         
                         <TextView
-                            android:layout_width="70sp"
+                            android:layout_width="100sp"
                             android:layout_height="30sp"
                             android:background="@drawable/shape_btn_login"
                             android:gravity="center"
-                            android:text="支付方式"
+                            android:text="可选付款方式"
                             android:textColor="@color/white" />
                     </LinearLayout>
                     
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="60sp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
                         
                         <TextView
-                            android:layout_width="50sp"
+                            android:layout_width="70sp"
                             android:layout_height="30sp"
                             android:background="@drawable/shape_btn_login"
                             android:gravity="center"
                             android:text="说明"
                             android:textColor="@color/white" />
                     </LinearLayout>
-                    
                 </LinearLayout>
                 
+                
+                <com.cheng.youthapartment.view.YAGridLayout
+                    android:id="@+id/room_pay_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp" />
             </LinearLayout>
             
             <!-- 可选租期 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
@@ -305,26 +316,30 @@
                             android:layout_height="30sp"
                             android:background="@drawable/shape_btn_login"
                             android:gravity="center"
-                            android:text="租期"
+                            android:text="可选租期"
                             android:textColor="@color/white" />
                     </LinearLayout>
                     
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="60sp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1">
                         
                         <TextView
-                            android:layout_width="50sp"
+                            android:layout_width="70sp"
                             android:layout_height="30sp"
                             android:background="@drawable/shape_btn_login"
                             android:gravity="center"
                             android:text="说明"
                             android:textColor="@color/white" />
                     </LinearLayout>
-                    
                 </LinearLayout>
                 
+                <com.cheng.youthapartment.view.YAGridLayout
+                    android:id="@+id/room_lease_term"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp" />
             </LinearLayout>
             
             <!-- 所属公寓 -->
@@ -336,6 +351,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
+                android:layout_marginBottom="50dp"
                 android:paddingStart="15dp">
                 
                 <TextView
@@ -348,9 +364,9 @@
                     android:textStyle="bold" />
                 
                 <com.cheng.youthapartment.view.ApartmentItemView
+                    android:id="@+id/room_by_apartment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
             

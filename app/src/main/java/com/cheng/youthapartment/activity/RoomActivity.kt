@@ -19,6 +19,7 @@ import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
 import com.cheng.youthapartment.decoration.GridSpaceItemDecoration
+import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.view.GridLayoutStyle
 import kotlin.collections.ArrayList
@@ -104,7 +105,7 @@ class RoomActivity : BaseActivity() {
                 labelList,
                 R.layout.item_text_label
             ) { holder, position ->
-                val labelText: TextView = holder.itemView.findViewById(R.id.room_label)
+                val labelText: TextView = holder.itemView.findViewById(R.id.item_label)
                 labelText.text = labelList[position]?.name ?: ""
             }
         mRoomBinding.roomPageRent.text = "$${mRoomDetailBean?.rent.toString()}/月"
@@ -194,14 +195,34 @@ class RoomActivity : BaseActivity() {
         // 位置详情
 
         // 费用明细
-        //val attrList = mutableListOf<String>()
-        //mRoomDetailBean?.feeValueVoList?.forEach {
-        //    attrList.add(it.name)
-        //}
-        //mRoomBinding.roomBaseInfo.setStyle(GridLayoutStyle.OTHER_STYLE)
-        //mRoomBinding.roomBaseInfo.setData(attrList)
+        val freeMap = mutableMapOf<String, String>()
+        mRoomDetailBean?.feeValueVoList?.forEach {
+            freeMap[it.feeKeyName] = "￥${it.feeKeyId}${it.unit}"
+        }
+        Logger.d("freeMap: $freeMap")
+        mRoomBinding.roomFeeValueInfo.setGridLayoutStyle(GridLayoutStyle.OTHER_STYLE)
+        mRoomBinding.roomFeeValueInfo.setData(dataMap = freeMap)
 
         // 可选支付方式
+        val payTypeMap = mutableMapOf<String, String>()
+        mRoomDetailBean?.paymentTypeList?.forEach {
+            payTypeMap[it.name] = it.additionalInfo
+        }
+        mRoomBinding.roomPayType.setGridLayoutStyle(GridLayoutStyle.OTHER_STYLE)
+        mRoomBinding.roomPayType.setData(dataMap = payTypeMap)
+
+        // 可选租期
+        val leaseTermMap = mutableMapOf<String, String>()
+        mRoomDetailBean?.leaseTermList?.forEach {
+            leaseTermMap[it.monthCount.toString() + it.unit] = "到期可续"
+        }
+        mRoomBinding.roomLeaseTerm.setGridLayoutStyle(GridLayoutStyle.OTHER_STYLE)
+        mRoomBinding.roomLeaseTerm.setData(dataMap = leaseTermMap)
+
+        // 所属公寓
+        mRoomDetailBean?.apartmentItemVo?.let {
+            mRoomBinding.roomByApartment.setData(it)
+        }
 
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {

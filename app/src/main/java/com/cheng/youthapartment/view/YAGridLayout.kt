@@ -33,19 +33,22 @@ class YAGridLayout @JvmOverloads constructor(
         mStyle = style
     }
 
-    fun setData(dataList: List<String>) {
+    fun setData(
+        dataList: List<String>? = null,
+        dataMap: Map<String, String>? = null
+    ) {
         removeAllViews()
         when (mStyle) {
 
             GridLayoutStyle.ATTR_STYLE -> {
-                dataList.forEachIndexed { index: Int, value ->
+                dataList?.forEachIndexed { index: Int, value ->
                     addAttrText(index, value)
                 }
             }
 
             GridLayoutStyle.OTHER_STYLE -> {
-                dataList.forEach {  value ->
-                    addTwoText(value)
+                dataMap?.forEach { (key, value) ->
+                    addTwoText(key, value)
                 }
             }
 
@@ -74,16 +77,16 @@ class YAGridLayout @JvmOverloads constructor(
         }
     }
 
-    // todo 后续优化
-    private fun addTwoText(value: String) {
+    private fun addTwoText(key: String, value: String) {
         TextView(context).apply {
-            text = value
+            text = key
             textSize = 14f
-            gravity = Gravity.CENTER
+            gravity = Gravity.START
             setTextColor(Color.parseColor("#2D3338"))
             layoutParams = LayoutParams().apply {
-                setMargins(0, 8, 0, 8)
                 height = LayoutParams.WRAP_CONTENT
+                // 权重比
+                columnSpec = spec(0, 1f)
                 setMargins(0, 10, 0, 10)
             }
             addView(this)
@@ -91,11 +94,11 @@ class YAGridLayout @JvmOverloads constructor(
         TextView(context).apply {
             text = value
             textSize = 14f
-            gravity = Gravity.CENTER
+            gravity = Gravity.START
             setTextColor(Color.parseColor("#2D3338"))
             layoutParams = LayoutParams().apply {
-                setMargins(0, 8, 0, 8)
                 height = LayoutParams.WRAP_CONTENT
+                columnSpec = spec(1, 1f)
                 setMargins(0, 10, 0, 10)
             }
             addView(this)
