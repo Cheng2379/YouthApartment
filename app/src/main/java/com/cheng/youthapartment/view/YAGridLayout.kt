@@ -84,6 +84,7 @@ class YAGridLayout @JvmOverloads constructor(
             gravity = Gravity.START
             setTextColor(Color.parseColor("#2D3338"))
             layoutParams = LayoutParams().apply {
+                width = 0
                 height = LayoutParams.WRAP_CONTENT
                 // 权重比
                 columnSpec = spec(0, 1f)
@@ -97,6 +98,7 @@ class YAGridLayout @JvmOverloads constructor(
             gravity = Gravity.START
             setTextColor(Color.parseColor("#2D3338"))
             layoutParams = LayoutParams().apply {
+                width = 0
                 height = LayoutParams.WRAP_CONTENT
                 columnSpec = spec(1, 1f)
                 setMargins(0, 10, 0, 10)
