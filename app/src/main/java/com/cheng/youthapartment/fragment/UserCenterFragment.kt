@@ -22,6 +22,8 @@ import com.cheng.youthapartment.activity.BrowseHistoryActivity
 import com.cheng.youthapartment.activity.LoginActivity
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.user.UserBean
+import com.cheng.youthapartment.util.Logger
+import com.cheng.youthapartment.util.getYAParcelableExtra
 
 /**
  *
@@ -33,6 +35,7 @@ class UserCenterFragment : Fragment() {
     private val mAvatarImg: ImageView by lazy { view.findViewById(R.id.user_avatar) }
     private val mUserName: TextView by lazy { view.findViewById(R.id.user_name) }
     private val mExitLogin: Button by lazy { view.findViewById(R.id.exit_login) }
+    private var userBean: UserBean? = null
     private lateinit var view: View
 
     override fun onCreateView(
@@ -52,11 +55,9 @@ class UserCenterFragment : Fragment() {
     }
 
     private fun initView() {
-        val userBean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            activity.intent.getParcelableExtra("user", UserBean::class.java)
-        } else {
-            activity.intent.getParcelableExtra("user") as? UserBean
-        }
+        // todo 后续添加网络请求，二次获取用户名和头像
+        userBean = activity.intent.getYAParcelableExtra("user")
+        Logger.d("userBean: $userBean")
         userBean?.avatarUrl?.takeIf { it.isNotEmpty() }.let {
             Glide.with(this)
                 .load(it)
