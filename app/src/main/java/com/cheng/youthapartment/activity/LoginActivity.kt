@@ -131,59 +131,26 @@ class LoginActivity : BaseActivity() {
     private fun sendCaptcha() {
         mSendCaptcha.setOnClickListener {
             if (phoneCheck()) {
-                /*OkHttpUtil.get("/app/login/getCode?phone=$mPhoneStr") { _, response ->
-                    val baseBean = mGson.fromJson(
-                        response,
-                        BaseBean::class.java
-                    )
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            if (baseBean.code == 200) {
-                                "发送成功".showToast()
-                                mSendCaptcha.text = "已发送"
-                                mSendCaptcha.isEnabled = false
-
-                                // 倒计时
-                                var remainingTime = 60
-                                while (remainingTime > 0) {
-                                    mSendCaptcha.text = "$remainingTime 秒后可重新获取"
-                                    mSendCaptcha.textSize = 12f
-                                    delay(1000)
-                                    remainingTime--
-                                }
-
-                                mSendCaptcha.isEnabled = true
-                                mSendCaptcha.text = "发送验证码"
-                            } else {
-                                baseBean.message?.showToast()
-                            }
-                        }
+                lifecycleScope.launch(Dispatchers.Main) {
+                    mSendCaptcha.text = "已发送"
+                    mSendCaptcha.isEnabled = false
+                    // 倒计时
+                    var remainingTime = 60
+                    while (remainingTime > 0) {
+                        mSendCaptcha.text = "$remainingTime 秒后可重新获取"
+                        mSendCaptcha.textSize = 12f
+                        delay(1000)
+                        remainingTime--
                     }
-                }*/
+                    mSendCaptcha.isEnabled = true
+                    mSendCaptcha.text = "发送验证码"
+                }
                 RetrofitUtil.get<BaseBean<Any>>("/app/login/getCode?phone=$mPhoneStr") { _, response ->
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            response?.let {
-                                if (it.code == 200) {
-                                    "发送成功".showToast()
-                                    mSendCaptcha.text = "已发送"
-                                    mSendCaptcha.isEnabled = false
-
-                                    // 倒计时
-                                    var remainingTime = 60
-                                    while (remainingTime > 0) {
-                                        mSendCaptcha.text = "$remainingTime 秒后可重新获取"
-                                        mSendCaptcha.textSize = 12f
-                                        delay(1000)
-                                        remainingTime--
-                                    }
-
-                                    mSendCaptcha.isEnabled = true
-                                    mSendCaptcha.text = "发送验证码"
-                                } else {
-                                    it.message?.showToast()
-                                }
-                            }
+                    response?.let {
+                        if (it.code == 200) {
+                            "发送成功".showToast()
+                        } else {
+                            it.message?.showToast()
                         }
                     }
                 }

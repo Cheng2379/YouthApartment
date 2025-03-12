@@ -1,9 +1,12 @@
 package com.cheng.youthapartment.util
 
+import android.content.Intent
+import android.os.Build
 import android.view.View
 import android.widget.Toast
 import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.parcelize.Parcelize
 
 /**
  *
@@ -48,6 +51,18 @@ fun View.showSnackbar(
         }
     }
     snackbar.show()
+}
+
+@Suppress(
+    "FINAL_UPPER_BOUND",
+    "DEPRECATION",
+    "INFERRED_TYPE_VARIABLE_INTO_POSSIBLE_EMPTY_INTERSECTION"
+)
+inline fun <reified T : Parcelize> Intent.getYAParcelableExtra(
+    key: String
+): T? = when {
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
+    else -> getParcelableExtra(key) as? T
 }
 
 

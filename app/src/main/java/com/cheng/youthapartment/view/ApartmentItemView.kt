@@ -2,7 +2,6 @@ package com.cheng.youthapartment.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -63,6 +62,7 @@ class ApartmentItemView @JvmOverloads constructor(
                 val rvLabel: RecyclerView = view.findViewById(R.id.item_apartment_label)
                 rvLabel.visibility = VISIBLE
                 val labelSpanCount = minOf(6, vo.labelInfoList.size)
+                // todo: 后续优化，重新编写一个专属于label标签的GridSpaceItemDecoration
                 // 只取前三个
                 val labelList = ArrayList(vo.labelInfoList.take(3))
                 val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space)
@@ -75,18 +75,20 @@ class ApartmentItemView @JvmOverloads constructor(
                         includeEdge = false
                     )
                 )
-                rvLabel.adapter = RvAdapter(context, labelList, R.layout.item_text_label) { holder, position ->
-                    val labelInfo = holder.itemView.findTextById(R.id.item_label)
-                    labelInfo.text = it!![position].name
-                    // 动态计算 TextView 的宽度
-                    val textWidth = labelInfo.paint.measureText(it[position].name).toInt()
-                    val padding = resources.getDimensionPixelSize(R.dimen.label_grid_space)
-                    val totalWidth = textWidth + padding * 2
-                    // 设置 TextView 的宽度
-                    val layoutParams = labelInfo.layoutParams
-                    layoutParams.width = totalWidth
-                    labelInfo.layoutParams = layoutParams
-                }
+                rvLabel.adapter =
+                    RvAdapter(context, labelList, R.layout.item_text_label) { holder, position ->
+                        val labelText = holder.itemView.findTextById(R.id.item_label)
+                        labelText.text = it!![position].name
+                        labelText.textSize = 13f
+                        // 动态计算 TextView 的宽度
+                        val textWidth = labelText.paint.measureText(it[position].name).toInt()
+                        val padding = resources.getDimensionPixelSize(R.dimen.label_grid_space)
+                        val totalWidth = textWidth + padding * 2
+                        // 设置 TextView 的宽度
+                        val layoutParams = labelText.layoutParams
+                        layoutParams.width = totalWidth
+                        labelText.layoutParams = layoutParams
+                    }
             }
         }
     }

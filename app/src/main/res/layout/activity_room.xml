@@ -153,6 +153,8 @@
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />
+                
+                <!--  todo: 高德SDK  -->
             </LinearLayout>
             
             <!-- 费用明细 -->
@@ -348,10 +350,10 @@
                 android:layout_height="300dp"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="50dp"
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:layout_marginBottom="50dp"
                 android:paddingStart="15dp">
                 
                 <TextView
@@ -367,9 +369,10 @@
                     android:id="@+id/room_by_apartment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"/>
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp" />
             </LinearLayout>
-            
+        
         </LinearLayout>
     </ScrollView>
     
@@ -379,7 +382,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:background="@drawable/shape_btn_login_selector"
-        android:text="@string/btn_reserve_house"
+        android:text="@string/btn_appoint_house"
         android:textColor="@color/white"
         android:textSize="18dp" />
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.cheng.youthapartment.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -16,6 +17,7 @@ import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.history.HistoryRecord
 import com.cheng.youthapartment.bean.history.HistoryBean
+import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 
 class BrowseHistoryActivity : BaseActivity() {
@@ -49,6 +51,7 @@ class BrowseHistoryActivity : BaseActivity() {
             val mRoomRent: TextView = itemView.findViewById(R.id.search_item_room_rent)
 
             val history = mHistoryList[position]
+            Logger.d("historyId: ${history.id}")
             val graphVoList = history.roomGraphVoList
             if (graphVoList.isNotEmpty()) {
                 Glide.with(this)
@@ -67,7 +70,9 @@ class BrowseHistoryActivity : BaseActivity() {
             mRoomRent.text = "$ " + history.rent.stripTrailingZeros().toPlainString()
 
             itemView.setOnClickListener {
-                // TODO: 跳转到房间详情页面
+                val intent = Intent(this, RoomActivity::class.java)
+                intent.putExtra("room_id", history.roomId)
+                startActivity(intent)
             }
         }
         mRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

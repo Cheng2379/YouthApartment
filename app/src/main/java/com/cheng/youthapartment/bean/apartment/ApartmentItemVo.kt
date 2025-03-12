@@ -1,10 +1,12 @@
 package com.cheng.youthapartment.bean.apartment
 
-
+import android.os.Parcelable
 import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.LabelInfo
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class ApartmentItemVo(
     @SerializedName("id")
     val id: Int,
@@ -41,4 +43,4 @@ data class ApartmentItemVo(
     val provinceId: Int,
     @SerializedName("provinceName")
     val provinceName: String
-)
+) : Parcelable

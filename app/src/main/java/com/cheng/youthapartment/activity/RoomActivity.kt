@@ -1,6 +1,7 @@
 package com.cheng.youthapartment.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.setMargins
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cheng.youthapartment.App
@@ -21,12 +23,16 @@ import com.cheng.youthapartment.databinding.ActivityRoomBinding
 import com.cheng.youthapartment.decoration.GridSpaceItemDecoration
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.cheng.youthapartment.view.GridLayoutStyle
+import com.cheng.youthapartment.decoration.GridLayoutStyle
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
 // todo 写错了，该页面逻辑属于公寓详情，不是房间详情，后续更改
 class RoomActivity : BaseActivity() {
-    private lateinit var mRoomBinding: ActivityRoomBinding
+    private val mRoomBinding: ActivityRoomBinding by lazy {
+        ActivityRoomBinding.inflate(layoutInflater)
+    }
     private lateinit var mAdapter: ViewPagerAdapter
     private val mViewPager: ViewPager2 by lazy { mRoomBinding.roomViewpager }
     private val mIndicator: LinearLayout by lazy { mRoomBinding.indicator }
@@ -52,7 +58,6 @@ class RoomActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        mRoomBinding = ActivityRoomBinding.inflate(layoutInflater)
         setContentView(mRoomBinding.root)
 
         getApartmentById()
@@ -107,6 +112,7 @@ class RoomActivity : BaseActivity() {
             ) { holder, position ->
                 val labelText: TextView = holder.itemView.findViewById(R.id.item_label)
                 labelText.text = labelList[position]?.name ?: ""
+                labelText.textSize = 15f
             }
         mRoomBinding.roomPageRent.text = "$${mRoomDetailBean?.rent.toString()}/月"
 
@@ -226,7 +232,9 @@ class RoomActivity : BaseActivity() {
 
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {
-
+            val intent = Intent(this, AppointmentActivity::class.java)
+            intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentItemVo)
+            startActivity(intent)
         }
     }
 
