@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
 import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
@@ -64,5 +67,11 @@ inline fun <reified T : Parcelable> Intent.getYAParcelableExtra(
         getParcelableExtra(key) as? T
     }
 }
+
+fun View.findTextViewById(id: Int): TextView = findViewById(id)
+
+fun View.findEditTextById(id: Int): EditText = findViewById(id)
+
+fun View.findImageViewById(id: Int): ImageView = findViewById(id)
 
 

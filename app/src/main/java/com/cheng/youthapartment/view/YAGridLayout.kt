@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.TextView
-import com.cheng.youthapartment.decoration.GridLayoutStyle
+import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
 
 /**
  *

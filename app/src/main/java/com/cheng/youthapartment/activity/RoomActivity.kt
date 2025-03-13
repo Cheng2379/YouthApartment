@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.setMargins
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.cheng.youthapartment.App
@@ -20,12 +19,11 @@ import com.cheng.youthapartment.adapter.ViewPagerAdapter
 import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
-import com.cheng.youthapartment.decoration.GridSpaceItemDecoration
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.cheng.youthapartment.decoration.GridLayoutStyle
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
+import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
+import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
 import kotlin.collections.ArrayList
 
 // todo 写错了，该页面逻辑属于公寓详情，不是房间详情，后续更改
@@ -94,14 +92,14 @@ class RoomActivity : BaseActivity() {
             mRoomDetailBean?.apartmentItemVo?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
         val labelSpanCount = minOf(6, mRoomDetailBean?.labelInfoList?.size ?: 0)
         val labelList = ArrayList(mRoomDetailBean?.labelInfoList.orEmpty())
-        val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space)
         mRoomBinding.roomRvLabel.layoutManager = GridLayoutManager(this, labelSpanCount)
-        // 添加网格间距装饰器（处理首尾无间距）
+        val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space)
+        // 网格间距装饰器
         mRoomBinding.roomRvLabel.addItemDecoration(
-            GridSpaceItemDecoration(
-                spanCount = 6,
-                spacing = labelSpacing,
-                includeEdge = false
+            LabelSpaceDecoration(
+                spanCount = labelSpanCount,
+                rightSpacing = labelSpacing,
+                bottomSpacing = labelSpacing
             )
         )
         mRoomBinding.roomRvLabel.adapter =
@@ -129,8 +127,8 @@ class RoomActivity : BaseActivity() {
         val facilityList = ArrayList(mRoomDetailBean?.facilityInfoList.orEmpty())
         mRoomBinding.roomRvFacilityInfo.layoutManager = GridLayoutManager(this, facilitySpanCount)
         mRoomBinding.roomRvFacilityInfo.addItemDecoration(
-            GridSpaceItemDecoration(
-                spanCount = 6,
+            SpaceItemDecoration(
+                spanCount = facilitySpanCount,
                 spacing = labelSpacing,
                 includeEdge = false
             )

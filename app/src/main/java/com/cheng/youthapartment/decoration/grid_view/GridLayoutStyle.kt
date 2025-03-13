@@ -1,4 +1,4 @@
-package com.cheng.youthapartment.decoration
+package com.cheng.youthapartment.decoration.grid_view
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.cheng.youthapartment.decoration
+package com.cheng.youthapartment.decoration.grid_view
 
 import android.graphics.Rect
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @author CHENG
  * @since 2025/2/26
  */
-class GridSpaceItemDecoration(
+class SpaceItemDecoration(
     private val spanCount: Int,
     private val spacing: Int,
     private val includeEdge: Boolean

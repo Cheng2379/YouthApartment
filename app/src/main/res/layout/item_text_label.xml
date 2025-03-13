@@ -13,9 +13,10 @@
         android:gravity="center"
         android:includeFontPadding="false"
         android:maxLines="1"
-        android:minWidth="60sp"
         android:paddingStart="8dp"
+        android:paddingTop="2dp"
         android:paddingEnd="8dp"
+        android:paddingBottom="2dp"
         android:text="近地铁"
-        android:textSize="14sp" />
+        android:textSize="12sp" />
 </LinearLayout>

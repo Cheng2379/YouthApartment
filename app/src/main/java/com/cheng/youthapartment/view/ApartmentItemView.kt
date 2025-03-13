@@ -5,8 +5,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.GridLayout
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,7 +16,9 @@ import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
-import com.cheng.youthapartment.decoration.GridSpaceItemDecoration
+import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
+import com.cheng.youthapartment.util.findImageViewById
+import com.cheng.youthapartment.util.findTextViewById
 
 /**
  *
@@ -30,18 +33,33 @@ class ApartmentItemView @JvmOverloads constructor(
     private val view: View by lazy {
         LayoutInflater.from(context).inflate(R.layout.item_apartment_item, this, false)
     }
+    private val mName by lazy { view.findTextViewById(R.id.room_name) }
+    private val mLocation by lazy { view.findTextViewById(R.id.room_location) }
+    private val mRent by lazy { view.findTextViewById(R.id.search_item_room_rent) }
+    private val mImg by lazy { view.findImageViewById(R.id.room_img) }
+    private val mInfoGroup: FrameLayout by lazy { view.findViewById(R.id.item_info_group) }
 
     init {
         addView(view)
+        mImg.layoutParams.width = resources.getDimensionPixelSize(R.dimen.apartment_item_height)
+        mImg.layoutParams.height = resources.getDimensionPixelSize(R.dimen.apartment_item_height)
+        mInfoGroup.layoutParams.height = resources.getDimensionPixelSize(R.dimen.apartment_item_height) + 5
+    }
+
+    fun setViewWidthAndHeight(height: Int? = null) {
+        height?.let {
+            mImg.layoutParams.width = it
+            mImg.layoutParams.height = it
+            mInfoGroup.layoutParams.height = it
+        }
     }
 
     @SuppressLint("SetTextI18n")
     fun setData(apartmentItemVo: ApartmentItemVo?) {
         apartmentItemVo?.let { vo ->
-            view.findTextById(R.id.room_name).text = vo.name
-            view.findTextById(R.id.room_location).text =
-                vo.provinceName + " " + vo.cityName + " " + vo.districtName
-            view.findTextById(R.id.search_item_room_rent).text = vo.minRent.toString() + "/月起"
+            mName.text = vo.name
+            mLocation.text = vo.provinceName + " " + vo.cityName + " " + vo.districtName
+            mRent.text = vo.minRent.toString() + "/月起"
 
             val graphVoList = vo.graphVoList
             graphVoList.takeIf {
@@ -53,7 +71,7 @@ class ApartmentItemView @JvmOverloads constructor(
                         RequestOptions.bitmapTransform(SquareCrop(20))
                     )
                     .error(R.drawable.img_fail)
-                    .into(view.findViewById(R.id.room_img))
+                    .into(mImg)
             }
 
             vo.labelInfoList.takeIf {
@@ -61,40 +79,35 @@ class ApartmentItemView @JvmOverloads constructor(
             }.let {
                 val rvLabel: RecyclerView = view.findViewById(R.id.item_apartment_label)
                 rvLabel.visibility = VISIBLE
-                val labelSpanCount = minOf(6, vo.labelInfoList.size)
-                // todo: 后续优化，重新编写一个专属于label标签的GridSpaceItemDecoration
-                // 只取前三个
-                val labelList = ArrayList(vo.labelInfoList.take(3))
-                val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space)
-                rvLabel.layoutManager = GridLayoutManager(context, labelSpanCount)
-                // 添加网格间距装饰器（处理首尾无间距）
+
+                // 网格布局优化参数
+                val spanCount = 4
+                rvLabel.layoutManager = GridLayoutManager(context, spanCount)
+                val labelList = ArrayList(vo.labelInfoList.take(8))
+                val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space) / 3
+                // 使用自定义间距装饰器
                 rvLabel.addItemDecoration(
-                    GridSpaceItemDecoration(
-                        spanCount = 3,
-                        spacing = labelSpacing,
-                        includeEdge = false
+                    LabelSpaceDecoration(
+                        spanCount,
+                        rightSpacing = labelSpacing,
+                        topSpacing = labelSpacing,
+                        bottomSpacing = labelSpacing
                     )
                 )
+
                 rvLabel.adapter =
                     RvAdapter(context, labelList, R.layout.item_text_label) { holder, position ->
-                        val labelText = holder.itemView.findTextById(R.id.item_label)
-                        labelText.text = it!![position].name
-                        labelText.textSize = 13f
-                        // 动态计算 TextView 的宽度
-                        val textWidth = labelText.paint.measureText(it[position].name).toInt()
-                        val padding = resources.getDimensionPixelSize(R.dimen.label_grid_space)
-                        val totalWidth = textWidth + padding * 2
-                        // 设置 TextView 的宽度
+                        val labelText = holder.itemView.findTextViewById(R.id.item_label)
+                        labelText.text = labelList[position].name
+
+                        // 确保标签内容完整显示
                         val layoutParams = labelText.layoutParams
-                        layoutParams.width = totalWidth
+                        layoutParams.width = android.view.ViewGroup.LayoutParams.WRAP_CONTENT
                         labelText.layoutParams = layoutParams
                     }
             }
         }
     }
 
-    fun View.findTextById(id: Int): TextView {
-        return this.findViewById(id)
-    }
 
 }
