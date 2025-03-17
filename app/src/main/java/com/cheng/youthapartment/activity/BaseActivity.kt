@@ -8,6 +8,10 @@ import com.cheng.youthapartment.util.RetrofitUtil
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+/**
+ * 基础页，用于管理所有页面的状态
+ * 所有Activity必须继承BaseActivity
+ */
 open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

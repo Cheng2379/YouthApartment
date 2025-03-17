@@ -103,7 +103,7 @@
                 <TextView
                     android:id="@+id/appoint_date"
                     style="@style/AppointInfoTextKey"
-                    android:text="2025-03-17"/>
+                    android:text="2025-03-17" />
                 
                 <ImageView
                     android:layout_width="20dp"
@@ -137,7 +137,7 @@
                 <TextView
                     android:id="@+id/appoint_time"
                     style="@style/AppointInfoTextKey"
-                    android:text="23:43:54"/>
+                    android:text="23:43:54" />
                 
                 <ImageView
                     android:layout_width="20dp"
@@ -166,7 +166,8 @@
                 style="@style/AppointInfoEditValue"
                 android:layout_gravity="start"
                 android:gravity="start"
-                android:hint="请输入备注信息" />
+                android:hint="请输入备注信息"
+                android:maxLength="50" />
         </LinearLayout>
         
         <TextView

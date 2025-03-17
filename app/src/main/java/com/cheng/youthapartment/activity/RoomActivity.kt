@@ -26,7 +26,12 @@ import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
 import kotlin.collections.ArrayList
 
-// todo 公寓详情基于此页面进行修改
+/**
+ * 房间详情页
+ * @author Cheng
+ * @since 2025/03/05
+ * todo 公寓详情基于此页面进行修改
+ */
 class RoomActivity : BaseActivity() {
     private val mRoomBinding: ActivityRoomBinding by lazy {
         ActivityRoomBinding.inflate(layoutInflater)
