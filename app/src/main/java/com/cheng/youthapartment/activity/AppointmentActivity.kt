@@ -6,7 +6,9 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
 import com.cheng.youthapartment.databinding.ActivityAppointmentBinding
+import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.getYAParcelableExtra
+import com.cheng.youthapartment.util.textChangedListener
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -16,6 +18,8 @@ class AppointmentActivity : BaseActivity() {
         ActivityAppointmentBinding.inflate(layoutInflater)
     }
     private var mApartmentItemVo: ApartmentItemVo? = null
+    private val mCalendar = Calendar.getInstance()
+    private var mAppointmentTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,48 +39,49 @@ class AppointmentActivity : BaseActivity() {
             mAppointBinding.apartmentAppoint.setData(it)
         }
 
+        mAppointBinding.appointName.textChangedListener { charSequence, _, _, _ ->
+
+        }
+
+
         // 日期
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val defaultDate = Calendar.getInstance().apply {
-            // month从0开始计算
-            set(2025, 5, 11)
-        }
-        val appointDate = mAppointBinding.appointDate
-        appointDate.text = dateFormat.format(defaultDate.time)
+        val appointDateView = mAppointBinding.appointDate
+        var selectDate = dateFormat.format(mCalendar.time)
+        appointDateView.text = dateFormat.format(mCalendar.time)
         mAppointBinding.appointDateParent.setOnClickListener {
             val datePicker = DatePickerDialog(
-                this,
-                { _, year, month, dayOfMonth ->
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate.set(year, month, dayOfMonth)
-                    appointDate.text = dateFormat.format(selectedDate.time)
+                this, { _, year, month, dayOfMonth ->
+                    mCalendar.set(year, month, dayOfMonth)
+                    selectDate = dateFormat.format(mCalendar.time)
+                    appointDateView.text = dateFormat.format(mCalendar.time)
                 },
-                defaultDate.get(Calendar.YEAR),
-                defaultDate.get(Calendar.MONTH),
-                defaultDate.get(Calendar.DAY_OF_MONTH)
+                mCalendar.get(Calendar.YEAR),
+                mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DAY_OF_MONTH)
             )
             datePicker.show()
         }
 
         // 时间
-        val defaultHour = 14
-        val defaultMinute = 30
+        val defaultHour = mCalendar.get(Calendar.HOUR_OF_DAY)
+        val defaultMinute = mCalendar.get(Calendar.MINUTE)
         val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val calender = Calendar.getInstance().apply {
-            // month从0开始计算
             set(Calendar.HOUR_OF_DAY, defaultHour)
             set(Calendar.MINUTE, defaultMinute)
         }
-        val appointTime = mAppointBinding.appointTime
-        appointTime.text = timeFormat.format(calender.time)
+        val appointTimeView = mAppointBinding.appointTime
+        var selectTime = timeFormat.format(mCalendar.time)
+        appointTimeView.text = timeFormat.format(calender.time)
         mAppointBinding.appointTimeParent.setOnClickListener {
             val datePicker = TimePickerDialog(
                 this,
                 { _, hour, minute ->
-                    val selectedTime = Calendar.getInstance()
-                    selectedTime.set(Calendar.HOUR_OF_DAY, hour)
-                    selectedTime.set(Calendar.MINUTE, minute)
-                    appointTime.text = timeFormat.format(selectedTime.time)
+                    mCalendar.set(Calendar.HOUR_OF_DAY, hour)
+                    mCalendar.set(Calendar.MINUTE, minute)
+                    selectTime = timeFormat.format(mCalendar.time)
+                    appointTimeView.text = timeFormat.format(mCalendar.time)
                 },
                 defaultHour,
                 defaultMinute,
@@ -84,5 +89,6 @@ class AppointmentActivity : BaseActivity() {
             )
             datePicker.show()
         }
+        mAppointmentTime = "$selectDate $selectTime"
     }
 }

@@ -3,11 +3,14 @@ package com.cheng.youthapartment.util
 import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
 
@@ -66,6 +69,33 @@ inline fun <reified T : Parcelable> Intent.getYAParcelableExtra(
         @Suppress("DEPRECATION")
         getParcelableExtra(key) as? T
     }
+}
+
+fun EditText.textChangedListener(
+    beforeBlock: ((s: CharSequence?, start: Int, count: Int, after: Int) -> Unit)? = null,
+    afterBlock: ((s: Editable?) -> Unit)? = null,
+    onTextChangedBlock: ((s: CharSequence?, start: Int, before: Int, count: Int) -> Unit)? = null
+) {
+    val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            beforeBlock?.invoke(s, start, count, after)
+        }
+
+        override fun onTextChanged(
+            charSequence: CharSequence?,
+            start: Int,
+            before: Int,
+            count: Int
+        ) {
+            onTextChangedBlock?.invoke(charSequence, start, before, count)
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            afterBlock?.invoke(s)
+        }
+    }
+    // 添加监听器
+    this.addTextChangedListener(textWatcher)
 }
 
 fun View.findTextViewById(id: Int): TextView = findViewById(id)

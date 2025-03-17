@@ -19,6 +19,7 @@ import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
+import com.cheng.youthapartment.util.textChangedListener
 import kotlinx.coroutines.delay
 
 /**
@@ -55,59 +56,23 @@ class LoginActivity : BaseActivity() {
         mPhoneStr = mPhone.text.toString()
         mCaptchaStr = mCaptcha.getText().toString()
 
-        mPhone.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                charSequence: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
+        mPhone.textChangedListener { charSequence, start, before, count ->
+            mPhoneStr = charSequence.toString()
+            if (!phoneCheck()) {
+                mHidePhoneText.visibility = TextView.VISIBLE
+            } else {
+                mHidePhoneText.visibility = TextView.GONE
             }
+        }
 
-            override fun onTextChanged(
-                charSequence: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                mPhoneStr = charSequence.toString()
-                if (!phoneCheck()) {
-                    mHidePhoneText.visibility = TextView.VISIBLE
-                } else {
-                    mHidePhoneText.visibility = TextView.GONE
-                }
+        mCaptcha.textChangedListener { charSequence, start, before, count ->
+            mCaptchaStr = charSequence.toString()
+            if (mCaptchaStr!!.isEmpty()) {
+                mHideCaptchaText.visibility = TextView.VISIBLE
+            } else {
+                mHideCaptchaText.visibility = TextView.GONE
             }
-
-            override fun afterTextChanged(editable: Editable) {
-            }
-        })
-
-        mCaptcha.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                charSequence: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                charSequence: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                mCaptchaStr = charSequence.toString()
-                if (mCaptchaStr!!.isEmpty()) {
-                    mHideCaptchaText.visibility = TextView.VISIBLE
-                } else {
-                    mHideCaptchaText.visibility = TextView.GONE
-                }
-            }
-
-            override fun afterTextChanged(editable: Editable) {
-            }
-        })
+        }
     }
 
     /**
@@ -122,6 +87,23 @@ class LoginActivity : BaseActivity() {
                 pattern.matcher(it)
             }
             return matcher?.matches()!!
+        }
+    }
+
+    fun ErrorHint() {
+        if (mPhoneStr!!.isEmpty()) {
+            mHidePhoneText.visibility = TextView.VISIBLE
+            if (mCaptchaStr!!.isEmpty()) {
+                mHideCaptchaText.visibility = TextView.VISIBLE
+            }
+        } else if (mCaptchaStr!!.isEmpty()) {
+            mHideCaptchaText.visibility = TextView.VISIBLE
+            if (mPhoneStr!!.isEmpty()) {
+                mHidePhoneText.visibility = TextView.VISIBLE
+            }
+        } else {
+            mHidePhoneText.visibility = TextView.GONE
+            mHideCaptchaText.visibility = TextView.GONE
         }
     }
 
@@ -160,6 +142,7 @@ class LoginActivity : BaseActivity() {
 
     private fun login() {
         mLogin.setOnClickListener {
+            ErrorHint()
             if (phoneCheck() && mCaptchaStr?.isNotEmpty() != false) {
                 val map = mapOf<String, Any>("phone" to mPhoneStr!!, "code" to mCaptchaStr!!)
                 RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
