@@ -27,20 +27,167 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="@string/appoint_title_info"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold" />
     
+    <!-- todo: 后续封装为自定义View -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="400dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/shape_rv_search_home_style"
-        android:orientation="vertical">
-    
-    
+        android:orientation="vertical"
+        android:paddingHorizontal="20sp"
+        android:paddingTop="10sp">
+        
+        <!-- 姓名 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/AppointInfoTextKey"
+                android:text="姓名" />
+            
+            <EditText
+                android:id="@+id/appoint_name"
+                style="@style/AppointInfoEditValue"
+                android:hint="请输入姓名" />
+        </LinearLayout>
+        
+        <LinearLayout style="@style/DividingLine" />
+        
+        <!-- 手机号 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/AppointInfoTextKey"
+                android:text="手机号" />
+            
+            <EditText
+                android:id="@+id/appoint_phone"
+                style="@style/AppointInfoEditValue"
+                android:hint="请输入手机号" />
+        </LinearLayout>
+        
+        <LinearLayout style="@style/DividingLine" />
+        
+        <!-- 预约日期 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/AppointInfoTextKey"
+                android:layout_gravity="center_vertical"
+                android:text="预约日期" />
+            
+            <LinearLayout
+                android:id="@+id/appoint_date_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2">
+                
+                <TextView
+                    android:id="@+id/appoint_date"
+                    style="@style/AppointInfoTextKey"
+                    android:text="2025-03-17"/>
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/img_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <LinearLayout style="@style/DividingLine" />
+        
+        <!-- 预约时间 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/AppointInfoTextKey"
+                android:text="预约时间" />
+            
+            <LinearLayout
+                android:id="@+id/appoint_time_parent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2">
+                
+                
+                <TextView
+                    android:id="@+id/appoint_time"
+                    style="@style/AppointInfoTextKey"
+                    android:text="23:43:54"/>
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/img_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+        
+        <LinearLayout style="@style/DividingLine" />
+        
+        <!-- 备注信息 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            
+            <TextView
+                style="@style/AppointInfoTextKey"
+                android:gravity="start"
+                android:text="备注信息" />
+            
+            <EditText
+                android:id="@+id/appoint_remark"
+                style="@style/AppointInfoEditValue"
+                android:layout_gravity="start"
+                android:gravity="start"
+                android:hint="请输入备注信息" />
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/appoint_remark_number"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="0/50"
+            android:textColor="@color/black" />
     </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_reserve_house"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/shape_btn_appoint_selector"
+        android:text="@string/btn_appoint_house"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
 
 </LinearLayout>

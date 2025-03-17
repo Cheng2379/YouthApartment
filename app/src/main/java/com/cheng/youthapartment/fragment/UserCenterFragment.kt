@@ -1,7 +1,6 @@
 package com.cheng.youthapartment.fragment
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +33,7 @@ class UserCenterFragment : Fragment() {
     private val activity by lazy { requireActivity() as HomeActivity }
     private val mAvatarImg: ImageView by lazy { view.findViewById(R.id.user_avatar) }
     private val mUserName: TextView by lazy { view.findViewById(R.id.user_name) }
-    private val mExitLogin: Button by lazy { view.findViewById(R.id.exit_login) }
+    private val mLogout: Button by lazy { view.findViewById(R.id.exit_login) }
     private var userBean: UserBean? = null
     private lateinit var view: View
 
@@ -55,8 +54,14 @@ class UserCenterFragment : Fragment() {
     }
 
     private fun initView() {
-        // todo 后续添加网络请求，二次获取用户名和头像
-        userBean = activity.intent.getYAParcelableExtra("user")
+        activity.intent.getYAParcelableExtra<UserBean>("user")?.let {
+            userBean = it
+        } ?: run {
+            userBean = UserBean(
+                App.getSharedPreferences()?.getString("nickname", ""),
+                App.getSharedPreferences()?.getString("avatarUrl", null)
+            )
+        }
         Logger.d("userBean: $userBean")
         userBean?.avatarUrl?.takeIf { it.isNotEmpty() }.let {
             Glide.with(this)
@@ -71,19 +76,25 @@ class UserCenterFragment : Fragment() {
     }
 
     private fun onClickListener() {
+        // 租约历史
         view.findViewById<LinearLayout>(R.id.browse_history).setOnClickListener {
             val intent = Intent(activity, BrowseHistoryActivity::class.java)
-            intent.putExtra("token", activity.getSharedPreferences("user_info", MODE_PRIVATE).getString("token", ""))
+            intent.putExtra(
+                "token",
+                activity.getSharedPreferences("user_info", MODE_PRIVATE).getString("token", "")
+            )
             startActivity(intent)
         }
+        // 我的预约
         view.findViewById<LinearLayout>(R.id.my_reserve).setOnClickListener {
 
         }
+        // 我的租约
         view.findViewById<LinearLayout>(R.id.my_lease).setOnClickListener {
 
         }
-
-        mExitLogin.setOnClickListener {
+        // 退出登录
+        mLogout.setOnClickListener {
             AlertDialog.Builder(activity)
                 .setMessage("是否确认退出登录")
                 .setNegativeButton("否") { dialogInterface, _ ->

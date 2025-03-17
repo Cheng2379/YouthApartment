@@ -5,7 +5,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.cheng.youthapartment.bean.user.UserBean
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.google.gson.Gson
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -25,7 +24,7 @@ open class BaseActivity : AppCompatActivity() {
     /**
      * 获取登录信息
      */
-    suspend fun getLoginUserInfo(token: String?, gson: Gson): UserBean? {
+    suspend fun getLoginUserInfo(token: String): UserBean? {
         return suspendCoroutine { coroutine ->
             RetrofitUtil.get<UserBean>("/app/info", token) { _, response ->
                 response?.let {

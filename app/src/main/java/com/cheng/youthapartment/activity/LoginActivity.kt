@@ -9,11 +9,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.edit
-import com.cheng.youthapartment.util.OkHttpUtil
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.R
@@ -172,7 +170,7 @@ class LoginActivity : BaseActivity() {
 
                             // 获取用户信息
                             lifecycleScope.launch(Dispatchers.Main) {
-                                val userBean = getLoginUserInfo(mToken, mGson)
+                                val userBean = getLoginUserInfo(mToken)
                                 Logger.d("userBean: $userBean")
                                 userBean?.let {
                                     "登录成功".showToast()

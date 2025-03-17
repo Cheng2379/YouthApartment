@@ -2,10 +2,7 @@ package com.cheng.youthapartment.activity
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.core.content.edit
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import com.cheng.youthapartment.App
@@ -18,11 +15,8 @@ import com.cheng.youthapartment.fragment.SearchFragment
 import com.cheng.youthapartment.fragment.UserCenterFragment
 import com.cheng.youthapartment.util.Logger
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * 首页
@@ -54,7 +48,7 @@ class HomeActivity : BaseActivity() {
             val token = App.getToken()
             Logger.d("App token: $token")
             lifecycleScope.launch(Dispatchers.Main) {
-                val resultUser = getLoginUserInfo(token, Gson())
+                val resultUser = getLoginUserInfo(token)
                 if (resultUser == null) {
                     ActivityCollector.finishAll()
                     startActivity(Intent(this@HomeActivity, LoginActivity::class.java))

@@ -26,7 +26,7 @@ import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
 import kotlin.collections.ArrayList
 
-// todo 写错了，该页面逻辑属于公寓详情，不是房间详情，后续更改
+// todo 公寓详情基于此页面进行修改
 class RoomActivity : BaseActivity() {
     private val mRoomBinding: ActivityRoomBinding by lazy {
         ActivityRoomBinding.inflate(layoutInflater)
@@ -199,6 +199,7 @@ class RoomActivity : BaseActivity() {
         // 位置详情
 
         // 费用明细
+        // todo 缺少配套标签，后续优化
         val freeMap = mutableMapOf<String, String>()
         mRoomDetailBean?.feeValueVoList?.forEach {
             freeMap[it.feeKeyName] = "￥${it.feeKeyId}${it.unit}"

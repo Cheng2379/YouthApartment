@@ -12,6 +12,21 @@ import com.cheng.youthapartment.util.Logger
  * @since 2025/1/6
  */
 class App : Application() {
+    @SuppressLint("StaticFieldLeak")
+    companion object {
+        lateinit var mContext: Context
+        private var mSharedPreferences: SharedPreferences? = null
+
+        fun getSharedPreferences() = mSharedPreferences
+
+        fun clearUserInfo() {
+            mSharedPreferences?.edit()?.clear()?.apply()
+        }
+
+        fun getToken(): String {
+            return mSharedPreferences?.getString("token", "")!!
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -19,19 +34,5 @@ class App : Application() {
         mSharedPreferences = getSharedPreferences("user_info", MODE_PRIVATE)
         Logger.init(Logger.DEBUG)
         Logger.setLogDeep(1)
-    }
-
-    @SuppressLint("StaticFieldLeak")
-    companion object {
-        lateinit var mContext: Context
-        private var mSharedPreferences: SharedPreferences? = null
-
-        fun getToken(): String {
-            return mSharedPreferences?.getString("token", "")!!
-        }
-
-        fun clearUserInfo() {
-            mSharedPreferences?.edit()?.clear()?.apply()
-        }
     }
 }
