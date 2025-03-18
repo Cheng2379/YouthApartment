@@ -10,7 +10,7 @@
     
     <!--  导航栏主题  -->
     <style name="FootButton" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/cyan</item>
+        <item name="colorPrimary">@color/light_cyan</item>
         <item name="android:textColorSecondary">@android:color/black</item>
     </style>
 </resources>
