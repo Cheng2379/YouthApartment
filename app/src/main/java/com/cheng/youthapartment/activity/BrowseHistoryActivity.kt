@@ -25,7 +25,6 @@ class BrowseHistoryActivity : BaseActivity() {
     private val mRv: RecyclerView by lazy { findViewById(R.id.browse_history_rv) }
     private var mRvAdapter: RvAdapter<HistoryRecord>? = null
     private var mHistoryList = ArrayList<HistoryRecord>()
-    private var mToken: String = App.getToken()
     private var mCurrentPage = 1
     private var mPageSize = 10
 
@@ -82,7 +81,7 @@ class BrowseHistoryActivity : BaseActivity() {
     private fun getHistory(currentPage: Int, size: Int) {
         RetrofitUtil.get<HistoryBean>(
             "/app/history/pageItem",
-            mToken,
+            App.getToken(),
             mapOf("current" to currentPage, "size" to size)
         ) { _, response ->
             response?.let {

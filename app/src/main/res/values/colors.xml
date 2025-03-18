@@ -8,6 +8,8 @@
     <!--半透明-->
     <color name="translucent">#22050505</color>
     
-    <color name="cyan">#277941</color>
+    <color name="grey">#969799</color>
+    <color name="green">#07C060</color>
+    <color name="light_cyan">#277941</color>
     <color name="background">#FFFFFF</color>
 </resources>

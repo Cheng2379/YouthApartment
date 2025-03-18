@@ -35,7 +35,7 @@ object RetrofitUtil {
 
     init {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
+            setLevel(HttpLoggingInterceptor.Level.BASIC)
         }
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
@@ -90,37 +90,41 @@ object RetrofitUtil {
                 apiService.post(suffixUrl, headers, subParams)
             }
         }
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val result = response.body()?.string() ?: ""
-                    try {
-                        if (T::class == BaseBean::class) {
-                            val parsedResponse =
-                                gson.fromJson<BaseBean<Any>>(result, object : TypeToken<BaseBean<Any>>() {}.type)
-                            callBack(call, parsedResponse as? T)
-                        } else {
-                            val parsedResponse =
-                                gson.fromJson(result, object : TypeToken<BaseBean<T>>() {})
-                            if (parsedResponse.code == 200) {
-                                callBack(call, parsedResponse.data)
+        try {
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful && response.body() != null) {
+                        val result = response.body()?.string() ?: ""
+                        try {
+                            if (T::class == BaseBean::class) {
+                                val parsedResponse =
+                                    gson.fromJson<BaseBean<Any>>(result, object : TypeToken<BaseBean<Any>>() {}.type)
+                                callBack(call, parsedResponse as? T)
                             } else {
-                                Log.d(TAG, "response code: $result")
-                                callBack(call, null)
+                                val parsedResponse =
+                                    gson.fromJson(result, object : TypeToken<BaseBean<T>>() {})
+                                if (parsedResponse.code == 200) {
+                                    callBack(call, parsedResponse.data)
+                                } else {
+                                    Log.d(TAG, "response code: $result")
+                                    callBack(call, null)
+                                }
                             }
+                        } catch (e: Exception) {
+                            Log.d(TAG, "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}")
+                            callBack(call, null)
                         }
-                    } catch (e: Exception) {
-                        Log.d(TAG, "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}")
-                        callBack(call, null)
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<ResponseBody>, response: Throwable) {
-                Log.e(TAG, "request fail -> ${response.message}", response)
-                callBack(call, null)
-            }
-        })
+                override fun onFailure(call: Call<ResponseBody>, response: Throwable) {
+                    Log.e(TAG, "request fail -> ${response.message}", response)
+                    callBack(call, null)
+                }
+            })
+        } catch (e: Exception) {
+            Log.e(TAG, "call fail -> ${e.message}")
+        }
     }
 
 

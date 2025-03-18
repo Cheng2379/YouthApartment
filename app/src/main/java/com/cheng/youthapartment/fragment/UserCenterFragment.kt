@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -19,6 +18,7 @@ import com.cheng.youthapartment.activity.HomeActivity
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.activity.BrowseHistoryActivity
 import com.cheng.youthapartment.activity.LoginActivity
+import com.cheng.youthapartment.activity.MyAppointmentActivity
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.user.UserBean
 import com.cheng.youthapartment.util.Logger
@@ -78,20 +78,15 @@ class UserCenterFragment : Fragment() {
     private fun onClickListener() {
         // 租约历史
         view.findViewById<LinearLayout>(R.id.browse_history).setOnClickListener {
-            val intent = Intent(activity, BrowseHistoryActivity::class.java)
-            intent.putExtra(
-                "token",
-                activity.getSharedPreferences("user_info", MODE_PRIVATE).getString("token", "")
-            )
-            startActivity(intent)
+            startActivity(Intent(activity, BrowseHistoryActivity::class.java))
         }
         // 我的预约
         view.findViewById<LinearLayout>(R.id.my_reserve).setOnClickListener {
-
+            startActivity(Intent(activity, MyAppointmentActivity::class.java))
         }
         // 我的租约
         view.findViewById<LinearLayout>(R.id.my_lease).setOnClickListener {
-
+            //startActivity(Intent(activity, MyLease::class.java))
         }
         // 退出登录
         mLogout.setOnClickListener {

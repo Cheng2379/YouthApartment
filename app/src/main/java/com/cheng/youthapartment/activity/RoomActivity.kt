@@ -15,7 +15,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
-import com.cheng.youthapartment.adapter.ViewPagerAdapter
+import com.cheng.youthapartment.adapter.BannerAdapter
 import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
@@ -36,7 +36,7 @@ class RoomActivity : BaseActivity() {
     private val mRoomBinding: ActivityRoomBinding by lazy {
         ActivityRoomBinding.inflate(layoutInflater)
     }
-    private lateinit var mAdapter: ViewPagerAdapter
+    private lateinit var mAdapter: BannerAdapter
     private val mViewPager: ViewPager2 by lazy { mRoomBinding.roomViewpager }
     private val mIndicator: LinearLayout by lazy { mRoomBinding.indicator }
 
@@ -69,7 +69,7 @@ class RoomActivity : BaseActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getApartmentById() {
-        mAdapter = ViewPagerAdapter(mGraphVoList, this)
+        mAdapter = BannerAdapter(mGraphVoList, this)
         mViewPager.adapter = mAdapter
         RetrofitUtil.get<RoomDetailBean>(
             "/app/room/getDetailById",

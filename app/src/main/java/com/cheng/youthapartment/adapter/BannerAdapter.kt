@@ -14,15 +14,15 @@ import com.cheng.youthapartment.databinding.ItemBannerBinding
  * @author CHENG
  * @since 2025/2/7
  */
-class ViewPagerAdapter(
+class BannerAdapter(
     private val imageList: List<GraphVo>,
     val context: Context
 ) :
-    RecyclerView.Adapter<ViewPagerAdapter.PagerViewHolder>() {
+    RecyclerView.Adapter<BannerAdapter.PagerViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ViewPagerAdapter.PagerViewHolder {
+    ): BannerAdapter.PagerViewHolder {
         return PagerViewHolder(
             ItemBannerBinding.inflate(
                 LayoutInflater.from(context),
@@ -32,7 +32,7 @@ class ViewPagerAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: ViewPagerAdapter.PagerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BannerAdapter.PagerViewHolder, position: Int) {
         Glide.with(context)
             .load(imageList[position].url)
             .error(R.drawable.img_fail)

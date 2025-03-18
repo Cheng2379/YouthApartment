@@ -18,6 +18,11 @@
     
     <string name="browse_history_text">浏览历史</string>
     <string name="exit_login_btn">退出登录</string>
+    
+    <string name="my_appointment_rv_default_name">温都水城社区</string>
+    <string name="my_appointment_rv_default_label">待看房</string>
+    <string name="my_appointment_rv_default_time">预约时间</string>
+    
     <string-array name="price_ranges">
         <item>不限</item>
         <item>0–1500元</item>
