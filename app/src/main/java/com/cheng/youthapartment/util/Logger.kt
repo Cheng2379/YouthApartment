@@ -40,6 +40,8 @@ object Logger {
 
     fun e(msg: String) = e(TAG, msg)
 
+    fun e(msg: String, e: Throwable) = e(TAG, msg, e)
+
     fun v(tag: String, msg: String) {
         if (mLogLevel <= VERBOSE) {
             Log.v(tag, formatMSG(msg))
@@ -67,6 +69,12 @@ object Logger {
     fun e(tag: String, msg: String) {
         if (mLogLevel <= ERROR) {
             Log.e(tag, formatMSG(msg))
+        }
+    }
+
+    fun e(tag: String, msg: String, e: Throwable) {
+        if (mLogLevel <= ERROR) {
+            Log.e(tag, formatMSG(msg), e)
         }
     }
 

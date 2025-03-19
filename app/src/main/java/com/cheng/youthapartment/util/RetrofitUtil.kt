@@ -1,8 +1,6 @@
 package com.cheng.youthapartment.util
 
-import android.util.Log
 import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.listener.TimingEventListener
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ConnectionPool
@@ -92,13 +90,19 @@ object RetrofitUtil {
         }
         try {
             call.enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
                     if (response.isSuccessful && response.body() != null) {
                         val result = response.body()?.string() ?: ""
                         try {
                             if (T::class == BaseBean::class) {
                                 val parsedResponse =
-                                    gson.fromJson<BaseBean<Any>>(result, object : TypeToken<BaseBean<Any>>() {}.type)
+                                    gson.fromJson<BaseBean<Any>>(
+                                        result,
+                                        object : TypeToken<BaseBean<Any>>() {}.type
+                                    )
                                 callBack(call, parsedResponse as? T)
                             } else {
                                 val parsedResponse =
@@ -106,24 +110,27 @@ object RetrofitUtil {
                                 if (parsedResponse.code == 200) {
                                     callBack(call, parsedResponse.data)
                                 } else {
-                                    Log.d(TAG, "response code: $result")
+                                    Logger.d(TAG, "response code: $result")
                                     callBack(call, null)
                                 }
                             }
                         } catch (e: Exception) {
-                            Log.d(TAG, "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}")
+                            Logger.d(
+                                TAG,
+                                "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}"
+                            )
                             callBack(call, null)
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, response: Throwable) {
-                    Log.e(TAG, "request fail -> ${response.message}", response)
+                    Logger.e(TAG, "request fail -> ${response.message}", response)
                     callBack(call, null)
                 }
             })
         } catch (e: Exception) {
-            Log.e(TAG, "call fail -> ${e.message}")
+            Logger.e(TAG, "call fail -> ${e.message}")
         }
     }
 
