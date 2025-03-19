@@ -110,12 +110,12 @@ object RetrofitUtil {
                                 if (parsedResponse.code == 200) {
                                     callBack(call, parsedResponse.data)
                                 } else {
-                                    Logger.d(TAG, "response code: $result")
+                                    Logger.i(TAG, "response code: $result")
                                     callBack(call, null)
                                 }
                             }
                         } catch (e: Exception) {
-                            Logger.d(
+                            Logger.e(
                                 TAG,
                                 "GSON解析失败 -> $result \nexception -> ${e.printStackTrace()}"
                             )

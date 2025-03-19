@@ -6,6 +6,9 @@ import com.cheng.youthapartment.bean.LabelInfo
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+/**
+ * 公寓item详情数据, 内容比ApartmentInfo详细
+ */
 @Parcelize
 data class ApartmentItemVo(
     @SerializedName("id")

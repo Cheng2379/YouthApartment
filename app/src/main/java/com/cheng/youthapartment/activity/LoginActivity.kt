@@ -3,8 +3,6 @@ package com.cheng.youthapartment.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,10 +10,10 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
+import com.cheng.youthapartment.util.DataCheckUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
@@ -34,8 +32,8 @@ class LoginActivity : BaseActivity() {
     private val mHideCaptchaText: TextView by lazy { findViewById(R.id.hideCaptchaText) }
     private val mSendCaptcha: Button by lazy { findViewById(R.id.sendCaptcha) }
     private val mLogin: Button by lazy { findViewById(R.id.login_btn) }
-    private var mPhoneStr: String? = null
-    private var mCaptchaStr: String? = null
+    private var mPhoneStr: String = ""
+    private var mCaptchaStr: String = ""
     private val mPhoneFormat: String =
         "^(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57]|19[89]|166)[0-9]{8}"
     private val mGson: Gson = Gson()
@@ -58,7 +56,7 @@ class LoginActivity : BaseActivity() {
 
         mPhone.textChangedListener { charSequence, start, before, count ->
             mPhoneStr = charSequence.toString()
-            if (!phoneCheck()) {
+            if (!DataCheckUtil.checkPhone(mPhoneStr)) {
                 mHidePhoneText.visibility = TextView.VISIBLE
             } else {
                 mHidePhoneText.visibility = TextView.GONE
@@ -67,7 +65,7 @@ class LoginActivity : BaseActivity() {
 
         mCaptcha.textChangedListener { charSequence, start, before, count ->
             mCaptchaStr = charSequence.toString()
-            if (mCaptchaStr!!.isEmpty()) {
+            if (mCaptchaStr.isEmpty()) {
                 mHideCaptchaText.visibility = TextView.VISIBLE
             } else {
                 mHideCaptchaText.visibility = TextView.GONE
@@ -75,42 +73,15 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    /**
-     * 号码校验
-     */
-    fun phoneCheck(): Boolean {
-        if (mPhoneStr!!.isEmpty()) {
-            return false
-        } else {
-            val pattern = Pattern.compile(mPhoneFormat)
-            val matcher = mPhoneStr?.let {
-                pattern.matcher(it)
-            }
-            return matcher?.matches()!!
-        }
-    }
-
     fun ErrorHint() {
-        if (mPhoneStr!!.isEmpty()) {
-            mHidePhoneText.visibility = TextView.VISIBLE
-            if (mCaptchaStr!!.isEmpty()) {
-                mHideCaptchaText.visibility = TextView.VISIBLE
-            }
-        } else if (mCaptchaStr!!.isEmpty()) {
-            mHideCaptchaText.visibility = TextView.VISIBLE
-            if (mPhoneStr!!.isEmpty()) {
-                mHidePhoneText.visibility = TextView.VISIBLE
-            }
-        } else {
-            mHidePhoneText.visibility = TextView.GONE
-            mHideCaptchaText.visibility = TextView.GONE
-        }
+        mHidePhoneText.visibility = if (mPhoneStr.isEmpty()) TextView.VISIBLE else TextView.GONE
+        mHideCaptchaText.visibility = if (mCaptchaStr.isEmpty()) TextView.VISIBLE else TextView.GONE
     }
 
     @SuppressLint("SetTextI18n")
     private fun sendCaptcha() {
         mSendCaptcha.setOnClickListener {
-            if (phoneCheck()) {
+            if (DataCheckUtil.checkPhone(mPhoneStr)) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     mSendCaptcha.text = "已发送"
                     mSendCaptcha.isEnabled = false
@@ -143,24 +114,24 @@ class LoginActivity : BaseActivity() {
     private fun login() {
         mLogin.setOnClickListener {
             ErrorHint()
-            if (phoneCheck() && mCaptchaStr?.isNotEmpty() != false) {
-                val map = mapOf<String, Any>("phone" to mPhoneStr!!, "code" to mCaptchaStr!!)
+            if (DataCheckUtil.checkPhone(mPhoneStr) && mCaptchaStr.isNotEmpty()) {
+                val map = mapOf<String, Any>("phone" to mPhoneStr, "code" to mCaptchaStr)
                 RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
                     response?.let {
-                        if (response.code == 200) {
+                        if (it.code == 200) {
                             // 存储token，后续进行加密
-                            mToken = response.data.toString()
+                            mToken = it.data.toString()
 
                             // 获取用户信息
                             lifecycleScope.launch(Dispatchers.Main) {
                                 val userBean = getLoginUserInfo(mToken)
                                 Logger.d("userBean: $userBean")
-                                userBean?.let {
+                                userBean?.let { bean ->
                                     "登录成功".showToast()
                                     getSharedPreferences("user_info", MODE_PRIVATE).edit {
                                         putString("token", mToken)
-                                        putString("nickname", it.nickname)
-                                        putString("avatarUrl", it.avatarUrl ?: "")
+                                        putString("nickname", bean.nickname)
+                                        putString("avatarUrl", bean.avatarUrl ?: "")
                                     }
 
                                     val intent =

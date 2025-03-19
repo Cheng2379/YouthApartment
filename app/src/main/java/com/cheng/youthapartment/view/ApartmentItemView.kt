@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.GridLayout
-import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -31,7 +30,7 @@ class ApartmentItemView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : GridLayout(context, attrs, defStyleAttr) {
     private val view: View by lazy {
-        LayoutInflater.from(context).inflate(R.layout.item_apartment_item, this, false)
+        LayoutInflater.from(context).inflate(R.layout.item_apartment, this, false)
     }
     private val mName by lazy { view.findTextViewById(R.id.room_name) }
     private val mLocation by lazy { view.findTextViewById(R.id.room_location) }
@@ -46,7 +45,7 @@ class ApartmentItemView @JvmOverloads constructor(
         mInfoGroup.layoutParams.height = resources.getDimensionPixelSize(R.dimen.apartment_item_height) + 5
     }
 
-    fun setViewWidthAndHeight(height: Int? = null) {
+    fun setImgWidthAndHeight(height: Int? = null) {
         height?.let {
             mImg.layoutParams.width = it
             mImg.layoutParams.height = it

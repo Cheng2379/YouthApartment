@@ -1,10 +1,16 @@
 package com.cheng.youthapartment.bean.appointment
 
 
+import android.os.Parcelable
 import com.cheng.youthapartment.bean.GraphVo
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class AppointmentItemVoItemVo(
+/**
+ * 我的预约页面item数据
+ */
+@Parcelize
+data class AppointmentItemVo(
     @SerializedName("id")
     val id: Int,
     @SerializedName("apartmentName")
@@ -15,4 +21,4 @@ data class AppointmentItemVoItemVo(
     val appointmentTime: String,
     @SerializedName("appointmentStatus")
     val appointmentStatus: Int
-)
+): Parcelable
