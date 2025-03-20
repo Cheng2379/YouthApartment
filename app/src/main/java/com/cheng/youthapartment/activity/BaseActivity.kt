@@ -1,5 +1,6 @@
 package com.cheng.youthapartment.activity
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,6 +24,10 @@ open class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         ActivityCollector.removeActivity(this)
+    }
+
+    fun destroyActivity(activity: Activity) {
+        ActivityCollector.removeActivity(activity)
     }
 
     /**

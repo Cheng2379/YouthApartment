@@ -146,9 +146,11 @@ class AppointmentActivity : BaseActivity() {
         }
     }
 
-    // todo: 直接重新进入预约页面不输入信息会导致闪退, 等待处理
     private fun saveOrUpdate() {
-        Logger.d("mSubmitName: $mSubmitName, mSubmitPhone: $mSubmitPhone, mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}")
+        Logger.d(
+            "mSubmitName: $mSubmitName, mSubmitPhone: $mSubmitPhone, " +
+                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${mApartmentItemVo!!.id}"
+        )
         lifecycleScope.launch(Dispatchers.IO) {
             RetrofitUtil.post<BaseBean<Any>>(
                 "/app/appointment/saveOrUpdate",
@@ -169,12 +171,15 @@ class AppointmentActivity : BaseActivity() {
                 if (response?.code == 200) {
                     Logger.d("Submit success")
                     "预约成功".showToast()
-                    startActivity(
-                        Intent(
-                            this@AppointmentActivity,
-                            MyAppointmentActivity::class.java
+                    finish()
+                    if (mAppointmentItemVo == null) {
+                        startActivity(
+                            Intent(
+                                this@AppointmentActivity,
+                                MyAppointmentActivity::class.java
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
@@ -188,6 +193,7 @@ class AppointmentActivity : BaseActivity() {
             mapOf("id" to id)
         ) { _, response ->
             response?.let {
+                mApartmentItemVo = it.apartmentItemVo
                 mAppointName.setText(it.name)
                 mAppointPhone.setText(it.phone)
                 mAppointRemark.setText(it.additionalInfo)

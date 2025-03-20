@@ -201,7 +201,7 @@ class RoomActivity : BaseActivity() {
             }
         }
 
-        // 位置详情
+        // 位置详情 todo 后续接入高德SDK
 
         // 费用明细
         // todo 缺少配套标签，后续优化
@@ -230,8 +230,13 @@ class RoomActivity : BaseActivity() {
         mRoomBinding.roomLeaseTerm.setData(dataMap = leaseTermMap)
 
         // 所属公寓
-        mRoomDetailBean?.apartmentItemVo?.let {
-            mRoomBinding.roomByApartment.setData(it)
+        mRoomDetailBean?.apartmentItemVo?.let { itemVo ->
+            mRoomBinding.roomByApartment.setData(itemVo)
+            mRoomBinding.roomByApartment.setOnClickListener {
+                val intent = Intent(this, ApartmentActivity::class.java)
+                intent.putExtra("apartment_id", itemVo.id)
+                startActivity(intent)
+            }
         }
 
         // 预约看房button

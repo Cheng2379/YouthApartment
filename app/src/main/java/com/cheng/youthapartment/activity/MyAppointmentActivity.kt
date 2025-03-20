@@ -32,7 +32,7 @@ class MyAppointmentActivity : BaseActivity() {
     private val mRvView: RecyclerView by lazy { mMyAppointmentBinding.myAppointRv }
     private var mRvAdapter: RvAdapter<AppointmentItemVo>? = null
 
-    private var mAppointmentItemVo = ArrayList<AppointmentItemVo>()
+    private var mAppointmentVoList = ArrayList<AppointmentItemVo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +49,8 @@ class MyAppointmentActivity : BaseActivity() {
                 "/app/appointment/listItem", App.getToken(), null
             ) { _, response ->
                 response?.let {
-                    mAppointmentItemVo = it as ArrayList<AppointmentItemVo>
-                    mRvAdapter?.updateDta(mAppointmentItemVo)
+                    mAppointmentVoList = it as ArrayList<AppointmentItemVo>
+                    mRvAdapter?.updateDta(mAppointmentVoList)
                 }
             }
         }
@@ -62,14 +62,14 @@ class MyAppointmentActivity : BaseActivity() {
         }
         mRvView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mRvAdapter =
-            RvAdapter(this, mAppointmentItemVo, R.layout.item_my_appointment) { holder, position ->
+            RvAdapter(this, mAppointmentVoList, R.layout.item_my_appointment) { holder, position ->
                 val itemView = holder.itemView
                 val imageView = itemView.findViewById<ImageView>(R.id.my_appoint_img)
                 val name = itemView.findViewById<TextView>(R.id.my_appoint_name)
                 val label = itemView.findViewById<TextView>(R.id.my_appoint_label)
                 val time = itemView.findViewById<TextView>(R.id.my_appoint_time)
 
-                val itemAppointment = mAppointmentItemVo[position]
+                val itemAppointment = mAppointmentVoList[position]
                 itemAppointment.graphVoList.takeIf { it.isNotEmpty() }?.let {
                     Glide.with(this)
                         .load(it[0].url)
@@ -83,19 +83,19 @@ class MyAppointmentActivity : BaseActivity() {
                     1 -> {
                         label.text = "待看房"
                         label.setTextColor(Color.WHITE)
-                        label.setBackgroundResource(R.drawable.shape_appoint_status_green)
+                        label.setBackgroundResource(R.drawable.shape_status_green)
                     }
 
                     2 -> {
                         label.text = "已带看"
                         label.setTextColor(Color.WHITE)
-                        label.setBackgroundResource(R.drawable.shape_appoint_status_grey)
+                        label.setBackgroundResource(R.drawable.shape_status_grey)
                     }
 
                     3 -> {
                         label.text = "已取消"
                         label.setTextColor(Color.WHITE)
-                        label.setBackgroundResource(R.drawable.shape_appoint_status_grey)
+                        label.setBackgroundResource(R.drawable.shape_status_grey)
                     }
                 }
                 time.text = itemAppointment.appointmentTime

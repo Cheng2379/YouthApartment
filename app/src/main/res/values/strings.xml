@@ -11,19 +11,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="login_btn">登录</string>
     
-    <string name="search_rv_room_default">温都水城社区 101房间</string>
-    <string name="search_rv_region_default">北京市 市辖区 昌平区</string>
-    <string name="search_rv_time_default">2025–01–01 00:00:00</string>
-    <string name="search_rv_rent_default">$ 2500</string>
-    
-    <string name="browse_history_text">浏览历史</string>
-    <string name="exit_login_btn">退出登录</string>
-    
-    <string name="my_appointment_rv_default_title">我的预约</string>
-    <string name="my_appointment_rv_default_name">温都水城社区</string>
-    <string name="my_appointment_rv_default_label">待看房</string>
-    <string name="my_appointment_rv_default_time">预约时间</string>
-    
     <string-array name="price_ranges">
         <item>不限</item>
         <item>0–1500元</item>
@@ -43,10 +30,41 @@
         <item>低价优先</item>
     </string-array>
     
-    <string name="room_rent_default">$2000/月起</string>
-    <string name="apartment_community_desc_default">这是一座现代化公寓，位于城市中心，拥有多种户 型，从舒适的一居室到宽的三居室。设施齐全，配 备现代厨房、设施完备的健身房和社交区。公寓内部 设计时尚精致，大窗户带来充足自然光线，俯瞰城市 美景。24小时安保、智能门禁系统和停车位，确保 居民安全与便利。步行可至购物中心、餐厅和公共交 通站点，提供舒适便捷的城市生活体验。</string>
-    <string name="btn_appoint_house">预约看房</string>
+    <string name="room_rent_default">￥2000/月起</string>
+    
+    <string name="apartment_community_desc_default">community_desc_default</string>
+    
+    <string name="search_rv_room_default">温都水城社区 101房间</string>
+    <string name="search_rv_region_default">北京市 市辖区 昌平区</string>
+    <string name="search_rv_time_default">2025–01–01 00:00:00</string>
+    <string name="search_rv_rent_default">$ 2500</string>
+    
+    <string name="browse_history_text">浏览历史</string>
+    <string name="exit_login_btn">退出登录</string>
     
     <string name="appoint_title_info">预约信息</string>
     <string name="appoint_act_name">预约公寓</string>
+    
+    <string name="my_appointment_default_title">我的预约</string>
+    <string name="my_appointment_default_name">温都水城社区</string>
+    <string name="my_appointment_default_label">待看房</string>
+    <string name="my_appointment_default_time">预约时间</string>
+    <string name="my_appointment_btn">预约看房</string>
+    
+    <string name="my_lease_default_title">我的租约</string>
+    <string name="my_lease_default_rent">￥2000/月</string>
+    <string name="my_lease_default_date">2025–01-01 至 2025-12-31</string>
+    <string name="my_lease_default_renewal">续约</string>
+    <string name="my_lease_default_edit">修改</string>
+    <string name="my_lease_default_refund">提前退租</string>
+    
+    <!-- 租约状态(1:签约待确认，2:已签约，3:已取消，4:已到期，5:退租待确认，6:已退租，7:续约待确认) -->
+    <string name="my_lease_default_status_1">签约待确认</string>
+    <string name="my_lease_default_status_2">已签约</string>
+    <string name="my_lease_default_status_3">已取消</string>
+    <string name="my_lease_default_status_4">已到期</string>
+    <string name="my_lease_default_status_5">退租待确认</string>
+    <string name="my_lease_default_status_6">已退租</string>
+    <string name="my_lease_default_status_7">续约待确认</string>
+
 </resources>

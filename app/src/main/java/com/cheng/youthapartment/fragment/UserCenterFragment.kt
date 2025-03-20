@@ -19,6 +19,7 @@ import com.cheng.youthapartment.R
 import com.cheng.youthapartment.activity.BrowseHistoryActivity
 import com.cheng.youthapartment.activity.LoginActivity
 import com.cheng.youthapartment.activity.MyAppointmentActivity
+import com.cheng.youthapartment.activity.MyLeaseActivity
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.user.UserBean
 import com.cheng.youthapartment.util.Logger
@@ -86,7 +87,7 @@ class UserCenterFragment : Fragment() {
         }
         // 我的租约
         view.findViewById<LinearLayout>(R.id.my_lease).setOnClickListener {
-            //startActivity(Intent(activity, MyLease::class.java))
+            startActivity(Intent(activity, MyLeaseActivity::class.java))
         }
         // 退出登录
         mLogout.setOnClickListener {

@@ -50,12 +50,12 @@
             android:orientation="horizontal">
             
             <TextView
-                style="@style/AppointInfoTextKey"
+                style="@style/AppointInfoTextKeyStyle"
                 android:text="姓名" />
             
             <EditText
                 android:id="@+id/appoint_name"
-                style="@style/AppointInfoEditValue"
+                style="@style/AppointInfoEditValueStyle"
                 android:hint="请输入姓名" />
         </LinearLayout>
         
@@ -69,12 +69,12 @@
             android:orientation="horizontal">
             
             <TextView
-                style="@style/AppointInfoTextKey"
+                style="@style/AppointInfoTextKeyStyle"
                 android:text="手机号" />
             
             <EditText
                 android:id="@+id/appoint_phone"
-                style="@style/AppointInfoEditValue"
+                style="@style/AppointInfoEditValueStyle"
                 android:hint="请输入手机号" />
         </LinearLayout>
         
@@ -89,7 +89,7 @@
             android:orientation="horizontal">
             
             <TextView
-                style="@style/AppointInfoTextKey"
+                style="@style/AppointInfoTextKeyStyle"
                 android:layout_gravity="center_vertical"
                 android:text="预约日期" />
             
@@ -102,7 +102,7 @@
                 
                 <TextView
                     android:id="@+id/appoint_date"
-                    style="@style/AppointInfoTextKey"
+                    style="@style/AppointInfoTextKeyStyle"
                     android:text="2025-03-17" />
                 
                 <ImageView
@@ -123,7 +123,7 @@
             android:orientation="horizontal">
             
             <TextView
-                style="@style/AppointInfoTextKey"
+                style="@style/AppointInfoTextKeyStyle"
                 android:text="预约时间" />
             
             <LinearLayout
@@ -136,7 +136,7 @@
                 
                 <TextView
                     android:id="@+id/appoint_time"
-                    style="@style/AppointInfoTextKey"
+                    style="@style/AppointInfoTextKeyStyle"
                     android:text="23:43:54" />
                 
                 <ImageView
@@ -157,13 +157,13 @@
             android:orientation="horizontal">
             
             <TextView
-                style="@style/AppointInfoTextKey"
+                style="@style/AppointInfoTextKeyStyle"
                 android:gravity="start"
                 android:text="备注信息" />
             
             <EditText
                 android:id="@+id/appoint_remark"
-                style="@style/AppointInfoEditValue"
+                style="@style/AppointInfoEditValueStyle"
                 android:layout_gravity="start"
                 android:gravity="start"
                 android:hint="请输入备注信息"
@@ -187,7 +187,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:background="@drawable/shape_btn_appoint_selector"
-        android:text="@string/btn_appoint_house"
+        android:text="@string/my_appointment_btn"
         android:textColor="@color/white"
         android:textSize="18dp" />
 

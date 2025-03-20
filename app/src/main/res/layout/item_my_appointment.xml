@@ -27,29 +27,24 @@
             android:id="@+id/my_appoint_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_appointment_rv_default_name"
+            android:text="@string/my_appointment_default_name"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
         
         <TextView
             android:id="@+id/my_appoint_label"
-            android:layout_width="60dp"
-            android:layout_height="25dp"
+            style="@style/TextStatusStyle"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:background="@drawable/shape_appoint_status_green"
-            android:text="@string/my_appointment_rv_default_label"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:background="@drawable/shape_status_green"
+            android:text="@string/my_appointment_default_label" />
         
         <TextView
             android:id="@+id/my_appoint_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/my_appointment_rv_default_time"
+            android:text="@string/my_appointment_default_time"
             android:textColor="@color/red"
             android:textSize="13sp"
             android:textStyle="bold" />

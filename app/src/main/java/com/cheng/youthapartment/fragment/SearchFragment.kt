@@ -70,6 +70,9 @@ class SearchFragment : Fragment() {
         getRoomList(false, mCurrentPage, mPageSize)
     }
 
+    /**
+     * TODO 首页排序标签待处理
+     */
     @SuppressLint("SetTextI18n")
     private fun initView() {
         mDataEmpty.visibility = TextView.GONE

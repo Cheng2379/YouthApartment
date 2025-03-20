@@ -17,10 +17,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.MyLeaseActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.MyAppointmentActivity"
             android:exported="false" />
         <activity
             android:name=".activity.AppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ApartmentActivity"
             android:exported="false" />
         <activity
             android:name=".activity.RoomActivity"
