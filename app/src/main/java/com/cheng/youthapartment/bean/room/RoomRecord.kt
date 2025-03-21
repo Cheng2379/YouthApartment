@@ -3,13 +3,13 @@ package com.cheng.youthapartment.bean.room
 
 import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.LabelInfo
-import com.cheng.youthapartment.bean.apartment.ApartmentInfo
+import com.cheng.youthapartment.bean.apartment.ApartmentVo
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 data class RoomRecord(
     @SerializedName("apartmentInfo")
-    val apartmentInfo: ApartmentInfo,
+    val apartmentVo: ApartmentVo,
     @SerializedName("graphVoList")
     val graphVoList: List<GraphVo>,
     @SerializedName("id")

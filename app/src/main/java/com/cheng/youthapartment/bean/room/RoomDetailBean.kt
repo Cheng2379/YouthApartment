@@ -7,7 +7,7 @@ import com.cheng.youthapartment.bean.GraphVo
 import com.cheng.youthapartment.bean.LabelInfo
 import com.cheng.youthapartment.bean.LeaseTerm
 import com.cheng.youthapartment.bean.PaymentType
-import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
 import com.google.gson.annotations.SerializedName
 
 data class RoomDetailBean(
@@ -22,7 +22,7 @@ data class RoomDetailBean(
     @SerializedName("isRelease")
     val isRelease: Int,
     @SerializedName("apartmentItemVo")
-    val apartmentItemVo: ApartmentItemVo,
+    val apartmentDetailVo: ApartmentDetailVo,
     // 房间图片列表
     @SerializedName("graphVoList")
     val graphVoList: List<GraphVo>,

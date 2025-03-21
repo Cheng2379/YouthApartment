@@ -1,9 +1,13 @@
-package com.cheng.youthapartment.bean.room
-
+package com.cheng.youthapartment.bean.history
 
 import com.google.gson.annotations.SerializedName
 
-data class RoomBean(
+/**
+ *
+ * @author Cheng
+ * @since 2025/1/15
+ */
+data class HistoryVo(
     /**
      * {
      *  "records": [...]
@@ -19,23 +23,13 @@ data class RoomBean(
      * }
      */
     @SerializedName("records")
-    val roomRecords: List<RoomRecord>,
+    val records: List<HistoryRecord>,
     @SerializedName("total")
     val total: Int,
     @SerializedName("size")
     val size: Int,
-    @SerializedName("countId")
-    val countId: Any,
     @SerializedName("current")
     val current: Int,
-    @SerializedName("maxLimit")
-    val maxLimit: Any,
-    @SerializedName("optimizeCountSql")
-    val optimizeCountSql: Boolean,
-    @SerializedName("orders")
-    val orders: List<Any>,
     @SerializedName("pages")
     val pages: Int,
-    @SerializedName("searchCount")
-    val searchCount: Boolean
 )

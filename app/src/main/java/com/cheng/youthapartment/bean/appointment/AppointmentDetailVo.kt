@@ -1,6 +1,6 @@
 package com.cheng.youthapartment.bean.appointment
 
-import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -24,5 +24,5 @@ data class AppointmentDetailVo(
     @SerializedName("appointmentStatus")
     val appointmentStatus: Int,
     @SerializedName("apartmentItemVo")
-    val apartmentItemVo: ApartmentItemVo
+    val apartmentItemVo: ApartmentDetailVo
 )

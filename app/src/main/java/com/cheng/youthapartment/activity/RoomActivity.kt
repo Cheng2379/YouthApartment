@@ -94,7 +94,7 @@ class RoomActivity : BaseActivity() {
     private fun initView() {
         // xxx号房间
         mRoomBinding.roomName.text =
-            mRoomDetailBean?.apartmentItemVo?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
+            mRoomDetailBean?.apartmentDetailVo?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
         val labelSpanCount = minOf(6, mRoomDetailBean?.labelInfoList?.size ?: 0)
         val labelList = ArrayList(mRoomDetailBean?.labelInfoList.orEmpty())
         mRoomBinding.roomRvLabel.layoutManager = GridLayoutManager(this, labelSpanCount)
@@ -230,7 +230,7 @@ class RoomActivity : BaseActivity() {
         mRoomBinding.roomLeaseTerm.setData(dataMap = leaseTermMap)
 
         // 所属公寓
-        mRoomDetailBean?.apartmentItemVo?.let { itemVo ->
+        mRoomDetailBean?.apartmentDetailVo?.let { itemVo ->
             mRoomBinding.roomByApartment.setData(itemVo)
             mRoomBinding.roomByApartment.setOnClickListener {
                 val intent = Intent(this, ApartmentActivity::class.java)
@@ -242,7 +242,7 @@ class RoomActivity : BaseActivity() {
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {
             val intent = Intent(this, AppointmentInfoActivity::class.java)
-            intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentItemVo)
+            intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentDetailVo)
             startActivity(intent)
         }
     }

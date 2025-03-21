@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
  * 公寓详情数据, 内容比ApartmentInfo详细
  */
 @Parcelize
-data class ApartmentItemVo(
+data class ApartmentDetailVo(
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")

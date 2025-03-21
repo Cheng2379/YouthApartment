@@ -9,7 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
 import com.cheng.youthapartment.bean.appointment.AppointmentDetailVo
 import com.cheng.youthapartment.bean.appointment.AppointmentItemVo
 import com.cheng.youthapartment.databinding.ActivityAppointmentInfoBinding
@@ -43,7 +43,7 @@ class AppointmentInfoActivity : BaseActivity() {
     private val mApartmentAppoint by lazy { mAppointBinding.apartmentAppoint }
     private val mBtnReserveHouse by lazy { mAppointBinding.btnReserveHouse }
 
-    private var mApartmentItemVo: ApartmentItemVo? = null
+    private var apartmentDetailVo: ApartmentDetailVo? = null
     private var mAppointmentItemVo: AppointmentItemVo? = null
 
     private var mSubmitName: String = ""
@@ -64,7 +64,7 @@ class AppointmentInfoActivity : BaseActivity() {
     }
 
     private fun getApartmentItemVo() {
-        mApartmentItemVo = intent.getYAParcelableExtra("appoint_apartment")
+        apartmentDetailVo = intent.getYAParcelableExtra("appoint_apartment")
         mAppointmentItemVo = intent.getYAParcelableExtra("appoint_item")
         mAppointmentItemVo?.let {
             lifecycleScope.launch {
@@ -75,7 +75,7 @@ class AppointmentInfoActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     fun initView() {
-        mApartmentItemVo?.let {
+        apartmentDetailVo?.let {
             mApartmentAppoint.setData(it)
         }
 
@@ -149,7 +149,7 @@ class AppointmentInfoActivity : BaseActivity() {
     private fun saveOrUpdate() {
         Logger.d(
             "mSubmitName: $mSubmitName, mSubmitPhone: $mSubmitPhone, " +
-                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${mApartmentItemVo!!.id}"
+                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${apartmentDetailVo!!.id}"
         )
         lifecycleScope.launch(Dispatchers.IO) {
             RetrofitUtil.post<BaseBean<Any>>(
@@ -163,7 +163,7 @@ class AppointmentInfoActivity : BaseActivity() {
                     "date" to mSelectDate,
                     "time" to mSelectTime,
                     "additionalInfo" to mSubmitRemark,
-                    "apartmentId" to mApartmentItemVo!!.id,
+                    "apartmentId" to apartmentDetailVo!!.id,
                     "appointmentStatus" to 1
                 )
 
@@ -193,7 +193,7 @@ class AppointmentInfoActivity : BaseActivity() {
             mapOf("id" to id)
         ) { _, response ->
             response?.let {
-                mApartmentItemVo = it.apartmentItemVo
+                apartmentDetailVo = it.apartmentItemVo
                 mAppointName.setText(it.name)
                 mAppointPhone.setText(it.phone)
                 mAppointRemark.setText(it.additionalInfo)

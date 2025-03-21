@@ -4,7 +4,7 @@ package com.cheng.youthapartment.bean.lease
 import com.cheng.youthapartment.bean.GraphVo
 import com.google.gson.annotations.SerializedName
 
-data class LeaseInfoVo(
+data class LeaseDetailVo(
     @SerializedName("additionalInfo")
     val additionalInfo: String,
     @SerializedName("apartmentGraphVoList")

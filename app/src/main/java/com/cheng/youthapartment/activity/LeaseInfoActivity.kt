@@ -4,17 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.lease.LeaseInfoVo
+import com.cheng.youthapartment.bean.lease.LeaseDetailVo
 import com.cheng.youthapartment.databinding.ActivityLeaseInfoBinding
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.cheng.youthapartment.util.getYAParcelableExtra
 
 class LeaseInfoActivity : AppCompatActivity() {
     private val mLeaseInfoBinding: ActivityLeaseInfoBinding by lazy {
@@ -31,14 +28,14 @@ class LeaseInfoActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getLeaseDetailById(id: Int) {
-        RetrofitUtil.get<LeaseInfoVo>(
+        RetrofitUtil.get<LeaseDetailVo>(
             "/app/agreement/getDetailById",
             App.getToken(),
             mapOf("id" to id)
         ) { _, response ->
-            response?.let { leaseInfoVo ->
+            response?.let { leaseDetailVo ->
 
-                leaseInfoVo.apartmentGraphVoList.takeIf { it.isNotEmpty() }?.let {
+                leaseDetailVo.apartmentGraphVoList.takeIf { it.isNotEmpty() }?.let {
                     Glide.with(this)
                         .load(it[0].url)
                         .apply(RequestOptions.bitmapTransform(SquareCrop(20)))
@@ -46,25 +43,25 @@ class LeaseInfoActivity : AppCompatActivity() {
                         .into(mLeaseInfoBinding.leaseInfoApartmentImg)
                 }
 
-                leaseInfoVo.roomGraphVoList.takeIf { it.isNotEmpty() }?.let {
+                leaseDetailVo.roomGraphVoList.takeIf { it.isNotEmpty() }?.let {
                     Glide.with(this)
                         .load(it[0].url)
                         .apply(RequestOptions.bitmapTransform(SquareCrop(20)))
                         .error(R.drawable.img_fail)
                         .into(mLeaseInfoBinding.leaseInfoRoomImg)
                 }
-                mLeaseInfoBinding.leaseInfoApartmentName.text = leaseInfoVo.apartmentName
-                mLeaseInfoBinding.leaseInfoRoomName.text = "${leaseInfoVo.roomNumber}房间"
+                mLeaseInfoBinding.leaseInfoApartmentName.text = leaseDetailVo.apartmentName
+                mLeaseInfoBinding.leaseInfoRoomName.text = "${leaseDetailVo.roomNumber}房间"
 
-                mLeaseInfoBinding.leaseInfoName.text = leaseInfoVo.apartmentName
-                mLeaseInfoBinding.leaseInfoPhone.text = leaseInfoVo.phone
-                mLeaseInfoBinding.leaseInfoIdNumber.text = leaseInfoVo.identificationNumber
-                mLeaseInfoBinding.leaseInfoLeasePeriod.text = "${leaseInfoVo.leaseTermMonthCount}月"
+                mLeaseInfoBinding.leaseInfoName.text = leaseDetailVo.apartmentName
+                mLeaseInfoBinding.leaseInfoPhone.text = leaseDetailVo.phone
+                mLeaseInfoBinding.leaseInfoIdNumber.text = leaseDetailVo.identificationNumber
+                mLeaseInfoBinding.leaseInfoLeasePeriod.text = "${leaseDetailVo.leaseTermMonthCount}月"
                 mLeaseInfoBinding.leaseInfoDate.text =
-                    leaseInfoVo.leaseStartDate + " 至 " + leaseInfoVo.leaseEndDate
-                mLeaseInfoBinding.leaseInfoRent.text = "${leaseInfoVo.rent}元/月"
-                mLeaseInfoBinding.leaseInfoDeposit.text = "${leaseInfoVo.deposit}元"
-                mLeaseInfoBinding.leaseInfoPayType.text = leaseInfoVo.paymentTypeName
+                    leaseDetailVo.leaseStartDate + " 至 " + leaseDetailVo.leaseEndDate
+                mLeaseInfoBinding.leaseInfoRent.text = "${leaseDetailVo.rent}元/月"
+                mLeaseInfoBinding.leaseInfoDeposit.text = "${leaseDetailVo.deposit}元"
+                mLeaseInfoBinding.leaseInfoPayType.text = leaseDetailVo.paymentTypeName
             }
         }
     }

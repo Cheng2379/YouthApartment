@@ -9,14 +9,13 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.lease.MyLeaseItemVo
+import com.cheng.youthapartment.bean.lease.LeaseVo
 import com.cheng.youthapartment.databinding.ActivityMyLeaseBinding
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
@@ -32,9 +31,9 @@ class MyLeaseActivity : BaseActivity() {
     }
 
     private val mRvView: RecyclerView by lazy { mLeaseBinding.myLeaseRv }
-    private var mRvAdapter: RvAdapter<MyLeaseItemVo>? = null
+    private var mRvAdapter: RvAdapter<LeaseVo>? = null
 
-    private var mLeaseVoList = ArrayList<MyLeaseItemVo>()
+    private var mLeaseVoList = ArrayList<LeaseVo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -146,13 +145,13 @@ class MyLeaseActivity : BaseActivity() {
     }
 
     private fun getLeaseItemList() {
-        RetrofitUtil.get<List<MyLeaseItemVo>>(
+        RetrofitUtil.get<List<LeaseVo>>(
             "/app/agreement/listItem",
             App.getToken(),
             null
         ) { call, response ->
             response?.let {
-                mLeaseVoList = it as ArrayList<MyLeaseItemVo>
+                mLeaseVoList = it as ArrayList<LeaseVo>
                 mRvAdapter?.updateDta(mLeaseVoList)
                 Logger.d("mLeaseVoList: $mLeaseVoList")
             }

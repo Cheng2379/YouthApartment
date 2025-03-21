@@ -22,7 +22,7 @@ import com.cheng.youthapartment.activity.RoomActivity
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.room.RoomRecord
-import com.cheng.youthapartment.bean.room.RoomBean
+import com.cheng.youthapartment.bean.room.RoomVo
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.Dispatchers
@@ -95,9 +95,9 @@ class SearchFragment : Fragment() {
                         .error(R.drawable.img_fail)
                         .into(mRoomImg)
                 }
-                mRoomName.text = roomItem.apartmentInfo.name + " " + roomItem.roomNumber + "号房间"
+                mRoomName.text = roomItem.apartmentVo.name + " " + roomItem.roomNumber + "号房间"
                 mRoomLocation.text =
-                    roomItem.apartmentInfo.provinceName + "  " + roomItem.apartmentInfo.cityName + "  " + roomItem.apartmentInfo.districtName
+                    roomItem.apartmentVo.provinceName + "  " + roomItem.apartmentVo.cityName + "  " + roomItem.apartmentVo.districtName
                 mRoomRent.text = "$ " + roomItem.rent.stripTrailingZeros().toPlainString() + "/月"
 
                 itemView.setOnClickListener {
@@ -188,7 +188,7 @@ class SearchFragment : Fragment() {
      */
     private fun getRoomList(isUpdate: Boolean, currentPage: Int, size: Int) {
         mCurrentRequestJob?.cancel()
-        RetrofitUtil.get<RoomBean>(
+        RetrofitUtil.get<RoomVo>(
             "/app/room/pageItem",
             mToken,
             mapOf("current" to currentPage, "size" to size)

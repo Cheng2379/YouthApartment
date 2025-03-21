@@ -16,7 +16,7 @@ import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.history.HistoryRecord
-import com.cheng.youthapartment.bean.history.HistoryBean
+import com.cheng.youthapartment.bean.history.HistoryVo
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 
@@ -79,7 +79,7 @@ class BrowseHistoryActivity : BaseActivity() {
     }
 
     private fun getHistory(currentPage: Int, size: Int) {
-        RetrofitUtil.get<HistoryBean>(
+        RetrofitUtil.get<HistoryVo>(
             "/app/history/pageItem",
             App.getToken(),
             mapOf("current" to currentPage, "size" to size)
