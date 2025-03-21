@@ -16,7 +16,7 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.BannerAdapter
-import com.cheng.youthapartment.bean.GraphVo
+import com.cheng.youthapartment.bean.properties.GraphBean
 import com.cheng.youthapartment.bean.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
 import com.cheng.youthapartment.util.Logger
@@ -24,6 +24,7 @@ import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
 import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
+import com.cheng.youthapartment.util.DataUtil
 import kotlin.collections.ArrayList
 
 /**
@@ -41,17 +42,17 @@ class RoomActivity : BaseActivity() {
     private val mIndicator: LinearLayout by lazy { mRoomBinding.indicator }
 
     private var mRoomDetailBean: RoomDetailBean? = null
-    private var mGraphVoList: MutableList<GraphVo> = mutableListOf()
+    private var mGraphBeanList = mutableListOf<GraphBean>()
     private var mIsUserScrolling = false
 
     private val mScrollDelay = 3000L
     private val mHandler = Handler(Looper.getMainLooper())
     private val mAutoScrollRunnable = object : Runnable {
         override fun run() {
-            if (mGraphVoList.size > 1 && !mIsUserScrolling) {
+            if (mGraphBeanList.size > 1 && !mIsUserScrolling) {
                 val currentItem = mViewPager.currentItem
                 // 改为向右滑动逻辑
-                val nextItem = if (currentItem == mGraphVoList.size - 1) 0 else currentItem + 1
+                val nextItem = if (currentItem == mGraphBeanList.size - 1) 0 else currentItem + 1
                 mViewPager.setCurrentItem(nextItem, true)
             }
             mHandler.postDelayed(this, mScrollDelay)
@@ -63,13 +64,13 @@ class RoomActivity : BaseActivity() {
         enableEdgeToEdge()
         setContentView(mRoomBinding.root)
 
-        getApartmentById()
+        getRoomById()
         setupViewPager()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun getApartmentById() {
-        mAdapter = BannerAdapter(mGraphVoList, this)
+    private fun getRoomById() {
+        mAdapter = BannerAdapter(mGraphBeanList, this)
         mViewPager.adapter = mAdapter
         RetrofitUtil.get<RoomDetailBean>(
             "/app/room/getDetailById",
@@ -78,7 +79,7 @@ class RoomActivity : BaseActivity() {
         ) { _, response ->
             response?.let {
                 mRoomDetailBean = response
-                mRoomDetailBean!!.graphVoList.let { mGraphVoList.addAll(it) }
+                mGraphBeanList.addAll(mRoomDetailBean!!.graphVoList)
                 mViewPager.adapter = mAdapter
                 runOnUiThread {
                     mAdapter.notifyDataSetChanged()
@@ -94,7 +95,7 @@ class RoomActivity : BaseActivity() {
     private fun initView() {
         // xxx号房间
         mRoomBinding.roomName.text =
-            mRoomDetailBean?.apartmentDetailVo?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
+            mRoomDetailBean?.apartmentDetailBean?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
         val labelSpanCount = minOf(6, mRoomDetailBean?.labelInfoList?.size ?: 0)
         val labelList = ArrayList(mRoomDetailBean?.labelInfoList.orEmpty())
         mRoomBinding.roomRvLabel.layoutManager = GridLayoutManager(this, labelSpanCount)
@@ -121,11 +122,10 @@ class RoomActivity : BaseActivity() {
 
         // 基本信息
         val attrList = mutableListOf<String>()
-        mRoomDetailBean?.attrValueVoList?.forEach {
+        mRoomDetailBean?.attrValueList?.forEach {
             attrList.add(it.name)
         }
         mRoomBinding.roomBaseInfo.setData(attrList)
-
 
         // 配套说明
         val facilitySpanCount = minOf(6, mRoomDetailBean?.facilityInfoList?.size ?: 0)
@@ -146,59 +146,7 @@ class RoomActivity : BaseActivity() {
             val facilityInfoImage = holder.itemView.findViewById<ImageView>(R.id.facility_img)
             val facilityInfoText = holder.itemView.findViewById<TextView>(R.id.facility_text)
             facilityInfoText.text = facilityList[position]?.name ?: ""
-            when (facilityInfoText.text) {
-                "空调" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_air_conditioner)
-                }
-
-                "洗衣机" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_washing_machine)
-                }
-
-                "冰箱" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_icebox)
-                }
-
-                "书桌" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_desk)
-                }
-
-                "WIFI" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_wifi)
-                }
-
-                "床" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_bed)
-                }
-
-                "沙发" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_sofa)
-                }
-
-                "微波炉" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_microwave_oven)
-                }
-
-                "油烟机" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_range_hood)
-                }
-
-                "热水器" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_water_heater)
-                }
-
-                "衣柜" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_closet)
-                }
-
-                "电视机" -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_tv_set)
-                }
-
-                else -> {
-                    facilityInfoImage.setImageResource(R.drawable.svg_position)
-                }
-            }
+            DataUtil.setFacility(facilityInfoText.text, facilityInfoImage)
         }
 
         // 位置详情 todo 后续接入高德SDK
@@ -206,7 +154,7 @@ class RoomActivity : BaseActivity() {
         // 费用明细
         // todo 缺少配套标签，后续优化
         val freeMap = mutableMapOf<String, String>()
-        mRoomDetailBean?.feeValueVoList?.forEach {
+        mRoomDetailBean?.feeValueList?.forEach {
             freeMap[it.feeKeyName] = "￥${it.feeKeyId}${it.unit}"
         }
         Logger.d("freeMap: $freeMap")
@@ -230,7 +178,7 @@ class RoomActivity : BaseActivity() {
         mRoomBinding.roomLeaseTerm.setData(dataMap = leaseTermMap)
 
         // 所属公寓
-        mRoomDetailBean?.apartmentDetailVo?.let { itemVo ->
+        mRoomDetailBean?.apartmentDetailBean?.let { itemVo ->
             mRoomBinding.roomByApartment.setData(itemVo)
             mRoomBinding.roomByApartment.setOnClickListener {
                 val intent = Intent(this, ApartmentActivity::class.java)
@@ -242,7 +190,7 @@ class RoomActivity : BaseActivity() {
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {
             val intent = Intent(this, AppointmentInfoActivity::class.java)
-            intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentDetailVo)
+            intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentDetailBean)
             startActivity(intent)
         }
     }
@@ -263,7 +211,7 @@ class RoomActivity : BaseActivity() {
      */
     private fun initIndicators() {
         mIndicator.removeAllViews()
-        for (index in mGraphVoList.indices) {
+        for (index in mGraphBeanList.indices) {
             val dot = ImageView(this)
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,

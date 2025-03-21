@@ -1,9 +1,12 @@
-package com.cheng.youthapartment.bean
+package com.cheng.youthapartment.bean.properties
 
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
-data class FacilityInfo(
+@Parcelize
+data class FacilityInfoBean(
     @SerializedName("icon")
     val icon: String,
     @SerializedName("id")
@@ -12,4 +15,4 @@ data class FacilityInfo(
     val name: String,
     @SerializedName("type")
     val type: Int
-)
+): Parcelable

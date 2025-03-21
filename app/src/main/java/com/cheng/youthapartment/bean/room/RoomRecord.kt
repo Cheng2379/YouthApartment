@@ -1,21 +1,21 @@
 package com.cheng.youthapartment.bean.room
 
 
-import com.cheng.youthapartment.bean.GraphVo
-import com.cheng.youthapartment.bean.LabelInfo
-import com.cheng.youthapartment.bean.apartment.ApartmentVo
+import com.cheng.youthapartment.bean.properties.GraphBean
+import com.cheng.youthapartment.bean.properties.LabelInfoBean
+import com.cheng.youthapartment.bean.apartment.ApartmentBean
 import com.google.gson.annotations.SerializedName
 import java.math.BigDecimal
 
 data class RoomRecord(
     @SerializedName("apartmentInfo")
-    val apartmentVo: ApartmentVo,
+    val apartmentBean: ApartmentBean,
     @SerializedName("graphVoList")
-    val graphVoList: List<GraphVo>,
+    val graphVoList: List<GraphBean>,
     @SerializedName("id")
     val id: Int,
     @SerializedName("labelInfoList")
-    val labelInfoList: List<LabelInfo>,
+    val labelInfoList: List<LabelInfoBean>,
     @SerializedName("rent")
     val rent: BigDecimal,
     @SerializedName("roomNumber")

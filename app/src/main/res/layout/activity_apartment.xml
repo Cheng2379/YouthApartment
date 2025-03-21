@@ -1,15 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#EBECEF"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     tools:context=".activity.ApartmentActivity">
     
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_height="wrap_content">
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="ScrollViewSize"
+            tools:layout_height="wrap_content">
+            
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/apartment_viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="260dp"
+                    android:orientation="horizontal" />
+                
+                <LinearLayout
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal" />
+            </FrameLayout>
+            
+            <!-- 公寓标签 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_btn_login"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="15dp">
+                
+                <TextView
+                    android:id="@+id/apartment_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/apartment_rv_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:nestedScrollingEnabled="false" />
+                
+                <TextView
+                    android:id="@+id/apartment_rent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginVertical="10dp"
+                    android:textColor="@color/red"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            
+            <!-- 社区介绍 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_btn_login"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="15dp"
+                tools:ignore="RtlSymmetry">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="社区介绍"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+                
+                <TextView
+                    android:id="@+id/apartment_base_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:textSize="15sp"
+                    android:layout_marginVertical="10dp" />
+            </LinearLayout>
+            
+            <!-- 配套说明 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_btn_login"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="15dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="配套说明"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/apartment_rv_facility_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+            
+            
+            <!-- 位置详情 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/shape_btn_login"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="15dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="位置详情"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                
+                <!--  todo: 高德SDK  -->
+            </LinearLayout>
+            
+            <!-- 可选房间列表 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/shape_btn_login"
+                android:backgroundTint="@color/white"
+                android:orientation="vertical"
+                android:paddingStart="15dp">
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="可选房间列表"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+                
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/apartment_rv_room"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        
+        </LinearLayout>
+    </ScrollView>
     
-    
-</LinearLayout>
+    <Button
+        android:id="@+id/btn_reserve_house"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/shape_btn_login_selector"
+        android:text="@string/my_appointment_btn"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
+</FrameLayout>

@@ -2,7 +2,7 @@ package com.cheng.youthapartment.bean.appointment
 
 
 import android.os.Parcelable
-import com.cheng.youthapartment.bean.GraphVo
+import com.cheng.youthapartment.bean.properties.GraphBean
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -10,13 +10,13 @@ import kotlinx.parcelize.Parcelize
  * 我的预约页面item数据
  */
 @Parcelize
-data class AppointmentItemVo(
+data class AppointmentBean(
     @SerializedName("id")
     val id: Int,
     @SerializedName("apartmentName")
     val apartmentName: String,
     @SerializedName("graphVoList")
-    val graphVoList: List<GraphVo>,
+    val graphVoList: List<GraphBean>,
     @SerializedName("appointmentTime")
     val appointmentTime: String,
     @SerializedName("appointmentStatus")

@@ -1,10 +1,10 @@
 package com.cheng.youthapartment.bean.lease
 
 
-import com.cheng.youthapartment.bean.GraphVo
+import com.cheng.youthapartment.bean.properties.GraphBean
 import com.google.gson.annotations.SerializedName
 
-data class LeaseVo(
+data class LeaseBean(
     @SerializedName("apartmentName")
     val apartmentName: String,
     @SerializedName("id")
@@ -18,7 +18,7 @@ data class LeaseVo(
     @SerializedName("rent")
     val rent: Int,
     @SerializedName("roomGraphVoList")
-    val graphVo: List<GraphVo>,
+    val graphVo: List<GraphBean>,
     @SerializedName("roomNumber")
     val roomNumber: String,
     @SerializedName("sourceType")

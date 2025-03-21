@@ -15,7 +15,7 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.lease.LeaseVo
+import com.cheng.youthapartment.bean.lease.LeaseBean
 import com.cheng.youthapartment.databinding.ActivityMyLeaseBinding
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
@@ -31,9 +31,9 @@ class MyLeaseActivity : BaseActivity() {
     }
 
     private val mRvView: RecyclerView by lazy { mLeaseBinding.myLeaseRv }
-    private var mRvAdapter: RvAdapter<LeaseVo>? = null
+    private var mRvAdapter: RvAdapter<LeaseBean>? = null
 
-    private var mLeaseVoList = ArrayList<LeaseVo>()
+    private var mLeaseBeanList = ArrayList<LeaseBean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ class MyLeaseActivity : BaseActivity() {
             finish()
         }
         mRvView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        mRvAdapter = RvAdapter(this, mLeaseVoList, R.layout.item_my_lease) { holder, position ->
+        mRvAdapter = RvAdapter(this, mLeaseBeanList, R.layout.item_my_lease) { holder, position ->
             val itemView = holder.itemView
             val image = itemView.findViewById<ImageView>(R.id.my_lease_img)
             val name = itemView.findViewById<TextView>(R.id.my_lease_name)
@@ -64,7 +64,7 @@ class MyLeaseActivity : BaseActivity() {
             // 修改或确认
             val reviseOrConfirm = itemView.findViewById<TextView>(R.id.my_lease_revise_or_confirm)
 
-            val leaseVo = mLeaseVoList[position]
+            val leaseVo = mLeaseBeanList[position]
 
             leaseVo.graphVo.takeIf { it.isNotEmpty() }?.let {
                 Glide.with(this)
@@ -145,15 +145,15 @@ class MyLeaseActivity : BaseActivity() {
     }
 
     private fun getLeaseItemList() {
-        RetrofitUtil.get<List<LeaseVo>>(
+        RetrofitUtil.get<List<LeaseBean>>(
             "/app/agreement/listItem",
             App.getToken(),
             null
         ) { call, response ->
             response?.let {
-                mLeaseVoList = it as ArrayList<LeaseVo>
-                mRvAdapter?.updateDta(mLeaseVoList)
-                Logger.d("mLeaseVoList: $mLeaseVoList")
+                mLeaseBeanList = it as ArrayList<LeaseBean>
+                mRvAdapter?.updateDta(mLeaseBeanList)
+                Logger.d("mLeaseVoList: $mLeaseBeanList")
             }
         }
     }

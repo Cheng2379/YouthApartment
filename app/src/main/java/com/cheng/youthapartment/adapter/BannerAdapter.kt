@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cheng.youthapartment.R
-import com.cheng.youthapartment.bean.GraphVo
+import com.cheng.youthapartment.bean.properties.GraphBean
 import com.cheng.youthapartment.databinding.ItemBannerBinding
 
 /**
@@ -15,7 +15,7 @@ import com.cheng.youthapartment.databinding.ItemBannerBinding
  * @since 2025/2/7
  */
 class BannerAdapter(
-    private val imageList: List<GraphVo>,
+    private val imageList: List<GraphBean>,
     val context: Context
 ) :
     RecyclerView.Adapter<BannerAdapter.PagerViewHolder>() {

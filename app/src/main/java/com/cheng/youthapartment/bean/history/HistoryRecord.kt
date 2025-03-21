@@ -1,6 +1,6 @@
 package com.cheng.youthapartment.bean.history
 
-import com.cheng.youthapartment.bean.room.RoomGraphVo
+import com.cheng.youthapartment.bean.properties.GraphBean
 import java.math.BigDecimal
 
 data class HistoryRecord(
@@ -10,7 +10,7 @@ data class HistoryRecord(
     val browseTime: String,
     val roomNumber: String,
     val rent: BigDecimal,
-    val roomGraphVoList: List<RoomGraphVo>,
+    val roomGraphVoList: List<GraphBean>,
     val apartmentName: String,
     val provinceName: String,
     val cityName: String,

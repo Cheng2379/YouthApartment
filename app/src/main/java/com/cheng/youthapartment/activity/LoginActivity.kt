@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.util.DataCheckUtil
+import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
@@ -56,7 +56,7 @@ class LoginActivity : BaseActivity() {
 
         mPhone.textChangedListener { charSequence, start, before, count ->
             mPhoneStr = charSequence.toString()
-            if (!DataCheckUtil.checkPhone(mPhoneStr)) {
+            if (!DataUtil.checkPhone(mPhoneStr)) {
                 mHidePhoneText.visibility = TextView.VISIBLE
             } else {
                 mHidePhoneText.visibility = TextView.GONE
@@ -81,7 +81,7 @@ class LoginActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun sendCaptcha() {
         mSendCaptcha.setOnClickListener {
-            if (DataCheckUtil.checkPhone(mPhoneStr)) {
+            if (DataUtil.checkPhone(mPhoneStr)) {
                 lifecycleScope.launch(Dispatchers.Main) {
                     mSendCaptcha.text = "已发送"
                     mSendCaptcha.isEnabled = false
@@ -114,7 +114,7 @@ class LoginActivity : BaseActivity() {
     private fun login() {
         mLogin.setOnClickListener {
             ErrorHint()
-            if (DataCheckUtil.checkPhone(mPhoneStr) && mCaptchaStr.isNotEmpty()) {
+            if (DataUtil.checkPhone(mPhoneStr) && mCaptchaStr.isNotEmpty()) {
                 val map = mapOf<String, Any>("phone" to mPhoneStr, "code" to mCaptchaStr)
                 RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
                     response?.let {

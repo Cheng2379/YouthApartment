@@ -9,11 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
-import com.cheng.youthapartment.bean.appointment.AppointmentDetailVo
-import com.cheng.youthapartment.bean.appointment.AppointmentItemVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailBean
+import com.cheng.youthapartment.bean.appointment.AppointmentDetailBean
+import com.cheng.youthapartment.bean.appointment.AppointmentBean
 import com.cheng.youthapartment.databinding.ActivityAppointmentInfoBinding
-import com.cheng.youthapartment.util.DataCheckUtil
+import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.getYAParcelableExtra
@@ -43,8 +43,8 @@ class AppointmentInfoActivity : BaseActivity() {
     private val mApartmentAppoint by lazy { mAppointBinding.apartmentAppoint }
     private val mBtnReserveHouse by lazy { mAppointBinding.btnReserveHouse }
 
-    private var apartmentDetailVo: ApartmentDetailVo? = null
-    private var mAppointmentItemVo: AppointmentItemVo? = null
+    private var apartmentDetailBean: ApartmentDetailBean? = null
+    private var mAppointmentBean: AppointmentBean? = null
 
     private var mSubmitName: String = ""
     private var mSubmitPhone: String = ""
@@ -64,9 +64,9 @@ class AppointmentInfoActivity : BaseActivity() {
     }
 
     private fun getApartmentItemVo() {
-        apartmentDetailVo = intent.getYAParcelableExtra("appoint_apartment")
-        mAppointmentItemVo = intent.getYAParcelableExtra("appoint_item")
-        mAppointmentItemVo?.let {
+        apartmentDetailBean = intent.getYAParcelableExtra("appoint_apartment")
+        mAppointmentBean = intent.getYAParcelableExtra("appoint_item")
+        mAppointmentBean?.let {
             lifecycleScope.launch {
                 getDetailById(it.id)
             }
@@ -75,7 +75,7 @@ class AppointmentInfoActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     fun initView() {
-        apartmentDetailVo?.let {
+        apartmentDetailBean?.let {
             mApartmentAppoint.setData(it)
         }
 
@@ -141,7 +141,7 @@ class AppointmentInfoActivity : BaseActivity() {
                 mSubmitName to "请输入姓名",
                 mSubmitPhone to "请输入手机号",
             )
-            if (!DataCheckUtil.checkSubmit(map, mSubmitPhone)) return@setOnClickListener
+            if (!DataUtil.checkSubmit(map, mSubmitPhone)) return@setOnClickListener
             saveOrUpdate()
         }
     }
@@ -149,7 +149,7 @@ class AppointmentInfoActivity : BaseActivity() {
     private fun saveOrUpdate() {
         Logger.d(
             "mSubmitName: $mSubmitName, mSubmitPhone: $mSubmitPhone, " +
-                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${apartmentDetailVo!!.id}"
+                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${apartmentDetailBean!!.id}"
         )
         lifecycleScope.launch(Dispatchers.IO) {
             RetrofitUtil.post<BaseBean<Any>>(
@@ -163,7 +163,7 @@ class AppointmentInfoActivity : BaseActivity() {
                     "date" to mSelectDate,
                     "time" to mSelectTime,
                     "additionalInfo" to mSubmitRemark,
-                    "apartmentId" to apartmentDetailVo!!.id,
+                    "apartmentId" to apartmentDetailBean!!.id,
                     "appointmentStatus" to 1
                 )
 
@@ -172,7 +172,7 @@ class AppointmentInfoActivity : BaseActivity() {
                     Logger.d("Submit success")
                     "预约成功".showToast()
                     finish()
-                    if (mAppointmentItemVo == null) {
+                    if (mAppointmentBean == null) {
                         startActivity(
                             Intent(
                                 this@AppointmentInfoActivity,
@@ -187,13 +187,13 @@ class AppointmentInfoActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getDetailById(id: Int) {
-        RetrofitUtil.get<AppointmentDetailVo>(
+        RetrofitUtil.get<AppointmentDetailBean>(
             "/app/appointment/getDetailById",
             App.getToken(),
             mapOf("id" to id)
         ) { _, response ->
             response?.let {
-                apartmentDetailVo = it.apartmentItemVo
+                apartmentDetailBean = it.apartmentDetailBean
                 mAppointName.setText(it.name)
                 mAppointPhone.setText(it.phone)
                 mAppointRemark.setText(it.additionalInfo)
@@ -201,7 +201,7 @@ class AppointmentInfoActivity : BaseActivity() {
                 val split = it.appointmentTime.split(" ")
                 mAppointDate.text = split[0]
                 mAppointTime.text = split[1]
-                mApartmentAppoint.setData(it.apartmentItemVo)
+                mApartmentAppoint.setData(it.apartmentDetailBean)
                 mBtnReserveHouse.text = "重新预约"
             }
         }

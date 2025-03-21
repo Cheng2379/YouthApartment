@@ -15,7 +15,7 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.appointment.AppointmentItemVo
+import com.cheng.youthapartment.bean.appointment.AppointmentBean
 import com.cheng.youthapartment.databinding.ActivityMyAppointmentBinding
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.launch
@@ -30,9 +30,9 @@ class MyAppointmentActivity : BaseActivity() {
         ActivityMyAppointmentBinding.inflate(layoutInflater)
     }
     private val mRvView: RecyclerView by lazy { mMyAppointmentBinding.myAppointRv }
-    private var mRvAdapter: RvAdapter<AppointmentItemVo>? = null
+    private var mRvAdapter: RvAdapter<AppointmentBean>? = null
 
-    private var mAppointmentVoList = ArrayList<AppointmentItemVo>()
+    private var mAppointmentBeanList = ArrayList<AppointmentBean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,12 +45,12 @@ class MyAppointmentActivity : BaseActivity() {
 
     private fun getAllAppointment() {
         lifecycleScope.launch {
-            RetrofitUtil.get<List<AppointmentItemVo>>(
+            RetrofitUtil.get<List<AppointmentBean>>(
                 "/app/appointment/listItem", App.getToken(), null
             ) { _, response ->
                 response?.let {
-                    mAppointmentVoList = it as ArrayList<AppointmentItemVo>
-                    mRvAdapter?.updateDta(mAppointmentVoList)
+                    mAppointmentBeanList = it as ArrayList<AppointmentBean>
+                    mRvAdapter?.updateDta(mAppointmentBeanList)
                 }
             }
         }
@@ -62,14 +62,14 @@ class MyAppointmentActivity : BaseActivity() {
         }
         mRvView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mRvAdapter =
-            RvAdapter(this, mAppointmentVoList, R.layout.item_my_appointment) { holder, position ->
+            RvAdapter(this, mAppointmentBeanList, R.layout.item_my_appointment) { holder, position ->
                 val itemView = holder.itemView
                 val imageView = itemView.findViewById<ImageView>(R.id.my_appoint_img)
                 val name = itemView.findViewById<TextView>(R.id.my_appoint_name)
                 val label = itemView.findViewById<TextView>(R.id.my_appoint_label)
                 val time = itemView.findViewById<TextView>(R.id.my_appoint_time)
 
-                val itemAppointment = mAppointmentVoList[position]
+                val itemAppointment = mAppointmentBeanList[position]
                 itemAppointment.graphVoList.takeIf { it.isNotEmpty() }?.let {
                     Glide.with(this)
                         .load(it[0].url)

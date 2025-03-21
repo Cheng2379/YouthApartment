@@ -9,7 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.lease.LeaseDetailVo
+import com.cheng.youthapartment.bean.lease.LeaseDetailBean
 import com.cheng.youthapartment.databinding.ActivityLeaseInfoBinding
 import com.cheng.youthapartment.util.RetrofitUtil
 
@@ -28,7 +28,7 @@ class LeaseInfoActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getLeaseDetailById(id: Int) {
-        RetrofitUtil.get<LeaseDetailVo>(
+        RetrofitUtil.get<LeaseDetailBean>(
             "/app/agreement/getDetailById",
             App.getToken(),
             mapOf("id" to id)

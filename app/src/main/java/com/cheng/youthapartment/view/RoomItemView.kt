@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailBean
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
 import com.cheng.youthapartment.util.findImageViewById
 import com.cheng.youthapartment.util.findTextViewById
@@ -54,8 +54,8 @@ class RoomItemView @JvmOverloads constructor(
     }
 
     @SuppressLint("SetTextI18n")
-    fun setData(apartmentDetailVo: ApartmentDetailVo?) {
-        apartmentDetailVo?.let { vo ->
+    fun setData(apartmentDetailBean: ApartmentDetailBean?) {
+        apartmentDetailBean?.let { vo ->
             mName.text = vo.name
             mLocation.text = vo.provinceName + " " + vo.cityName + " " + vo.districtName
             mRent.text = vo.minRent.toString() + "/月起"

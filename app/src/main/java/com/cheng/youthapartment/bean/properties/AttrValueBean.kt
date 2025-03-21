@@ -1,9 +1,9 @@
-package com.cheng.youthapartment.bean
+package com.cheng.youthapartment.bean.properties
 
 
 import com.google.gson.annotations.SerializedName
 
-data class AttrValueVo(
+data class AttrValueBean(
     @SerializedName("attrKeyId")
     val attrKeyId: Int,
     @SerializedName("attrKeyName")

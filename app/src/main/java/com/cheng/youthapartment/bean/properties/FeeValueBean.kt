@@ -1,9 +1,9 @@
-package com.cheng.youthapartment.bean
+package com.cheng.youthapartment.bean.properties
 
 
 import com.google.gson.annotations.SerializedName
 
-data class FeeValueVo(
+data class FeeValueBean(
     @SerializedName("feeKeyId")
     val feeKeyId: Int,
     @SerializedName("feeKeyName")

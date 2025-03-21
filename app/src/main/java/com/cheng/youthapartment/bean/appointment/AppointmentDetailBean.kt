@@ -1,12 +1,12 @@
 package com.cheng.youthapartment.bean.appointment
 
-import com.cheng.youthapartment.bean.apartment.ApartmentDetailVo
+import com.cheng.youthapartment.bean.apartment.ApartmentDetailBean
 import com.google.gson.annotations.SerializedName
 
 /**
  * 预约详情页数据
  */
-data class AppointmentDetailVo(
+data class AppointmentDetailBean(
     @SerializedName("id")
     val id: Int,
     @SerializedName("userId")
@@ -24,5 +24,5 @@ data class AppointmentDetailVo(
     @SerializedName("appointmentStatus")
     val appointmentStatus: Int,
     @SerializedName("apartmentItemVo")
-    val apartmentItemVo: ApartmentDetailVo
+    val apartmentDetailBean: ApartmentDetailBean
 )

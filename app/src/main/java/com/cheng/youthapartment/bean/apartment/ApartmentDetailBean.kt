@@ -1,8 +1,9 @@
 package com.cheng.youthapartment.bean.apartment
 
 import android.os.Parcelable
-import com.cheng.youthapartment.bean.GraphVo
-import com.cheng.youthapartment.bean.LabelInfo
+import com.cheng.youthapartment.bean.properties.FacilityInfoBean
+import com.cheng.youthapartment.bean.properties.GraphBean
+import com.cheng.youthapartment.bean.properties.LabelInfoBean
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -10,7 +11,7 @@ import kotlinx.parcelize.Parcelize
  * 公寓详情数据, 内容比ApartmentInfo详细
  */
 @Parcelize
-data class ApartmentDetailVo(
+data class ApartmentDetailBean(
     @SerializedName("id")
     val id: Int,
     @SerializedName("name")
@@ -29,11 +30,13 @@ data class ApartmentDetailVo(
     val districtName: String,
     // 公寓图片列表
     @SerializedName("graphVoList")
-    val graphVoList: List<GraphVo>,
+    val graphVoList: List<GraphBean>,
     @SerializedName("isRelease")
     val isRelease: Int,
     @SerializedName("labelInfoList")
-    val labelInfoList: List<LabelInfo>,
+    val labelInfoList: List<LabelInfoBean>,
+    @SerializedName("facilityInfoList")
+    val facilityInfoList: List<FacilityInfoBean>,
     @SerializedName("latitude")
     val latitude: String,
     @SerializedName("longitude")

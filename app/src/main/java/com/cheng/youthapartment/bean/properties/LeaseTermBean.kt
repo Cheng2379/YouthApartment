@@ -1,9 +1,9 @@
-package com.cheng.youthapartment.bean
+package com.cheng.youthapartment.bean.properties
 
 
 import com.google.gson.annotations.SerializedName
 
-data class LeaseTerm(
+data class LeaseTermBean(
     @SerializedName("id")
     val id: Int,
     @SerializedName("monthCount")
