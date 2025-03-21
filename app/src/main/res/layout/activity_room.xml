@@ -365,7 +365,7 @@
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
-                <com.cheng.youthapartment.view.ApartmentItemView
+                <com.cheng.youthapartment.view.RoomItemView
                     android:id="@+id/room_by_apartment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

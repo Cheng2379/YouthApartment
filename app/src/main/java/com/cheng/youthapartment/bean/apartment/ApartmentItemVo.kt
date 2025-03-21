@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 /**
- * 公寓item详情数据, 内容比ApartmentInfo详细
+ * 公寓详情数据, 内容比ApartmentInfo详细
  */
 @Parcelize
 data class ApartmentItemVo(

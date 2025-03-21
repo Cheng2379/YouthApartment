@@ -12,7 +12,7 @@ import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.bean.apartment.ApartmentItemVo
 import com.cheng.youthapartment.bean.appointment.AppointmentDetailVo
 import com.cheng.youthapartment.bean.appointment.AppointmentItemVo
-import com.cheng.youthapartment.databinding.ActivityAppointmentBinding
+import com.cheng.youthapartment.databinding.ActivityAppointmentInfoBinding
 import com.cheng.youthapartment.util.DataCheckUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
@@ -30,9 +30,9 @@ import java.util.Locale
  * @author Cheng
  * @since 2025/03/14
  */
-class AppointmentActivity : BaseActivity() {
-    private val mAppointBinding: ActivityAppointmentBinding by lazy {
-        ActivityAppointmentBinding.inflate(layoutInflater)
+class AppointmentInfoActivity : BaseActivity() {
+    private val mAppointBinding: ActivityAppointmentInfoBinding by lazy {
+        ActivityAppointmentInfoBinding.inflate(layoutInflater)
     }
     private val mAppointName by lazy { mAppointBinding.appointName }
     private val mAppointPhone by lazy { mAppointBinding.appointPhone }
@@ -175,7 +175,7 @@ class AppointmentActivity : BaseActivity() {
                     if (mAppointmentItemVo == null) {
                         startActivity(
                             Intent(
-                                this@AppointmentActivity,
+                                this@AppointmentInfoActivity,
                                 MyAppointmentActivity::class.java
                             )
                         )

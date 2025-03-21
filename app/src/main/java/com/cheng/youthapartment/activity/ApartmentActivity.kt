@@ -3,6 +3,7 @@ package com.cheng.youthapartment.activity
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import com.cheng.youthapartment.R
+import com.cheng.youthapartment.databinding.ActivityApartmentBinding
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.getYAParcelableExtra
 
@@ -12,17 +13,21 @@ import com.cheng.youthapartment.util.getYAParcelableExtra
  * @since 2025/3/20
  */
 class ApartmentActivity : BaseActivity() {
-    private var mApartmentId: Int = -1
+    private val mApartmentBinding by lazy {
+        ActivityApartmentBinding.inflate(layoutInflater)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_apartment)
+        setContentView(mApartmentBinding.root)
 
         initView()
     }
 
     private fun initView() {
-        mApartmentId = intent.getIntExtra("apartment_id", -1)
-        Logger.d("mApartmentId: $mApartmentId")
+        intent.getIntExtra("apartment_id", 0).let {
+            Logger.d("apartmentId: $it")
+
+        }
     }
 }

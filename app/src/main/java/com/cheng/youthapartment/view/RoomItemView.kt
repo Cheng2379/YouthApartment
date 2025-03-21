@@ -20,17 +20,17 @@ import com.cheng.youthapartment.util.findImageViewById
 import com.cheng.youthapartment.util.findTextViewById
 
 /**
- *
+ * 房间item
  * @author CHENG
  * @since 2025/3/2
  */
-class ApartmentItemView @JvmOverloads constructor(
+class RoomItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : GridLayout(context, attrs, defStyleAttr) {
     private val view: View by lazy {
-        LayoutInflater.from(context).inflate(R.layout.item_apartment, this, false)
+        LayoutInflater.from(context).inflate(R.layout.item_room, this, false)
     }
     private val mName by lazy { view.findTextViewById(R.id.room_name) }
     private val mLocation by lazy { view.findTextViewById(R.id.room_location) }

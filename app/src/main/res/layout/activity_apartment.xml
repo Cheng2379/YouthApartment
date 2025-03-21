@@ -9,5 +9,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".activity.ApartmentActivity">
-
+    
+    
+    
 </LinearLayout>

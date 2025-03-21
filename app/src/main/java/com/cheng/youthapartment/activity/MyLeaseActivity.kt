@@ -1,6 +1,7 @@
 package com.cheng.youthapartment.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
@@ -44,32 +45,6 @@ class MyLeaseActivity : BaseActivity() {
         getLeaseItemList()
     }
 
-    /**
-     * {
-     *       "id": 7,
-     *       "roomGraphVoList": [
-     *         {
-     *           "name": "公寓 (17).jpg",
-     *           "url": "http://106.55.104.120:9000/lease/20240929/54c233d9-fce6-43ad-bb0b-0b13485324bb-公寓 (17).jpg"
-     *         },
-     *         {
-     *           "name": "公寓 (14).jpg",
-     *           "url": "http://106.55.104.120:9000/lease/20240929/b014a28f-4dd5-40dc-a30c-090d409da9df-公寓 (14).jpg"
-     *         },
-     *         {
-     *           "name": "公寓 (25).jpg",
-     *           "url": "http://106.55.104.120:9000/lease/20240929/9db32559-ea91-45f2-a9f2-58463880e5c4-公寓 (25).jpg"
-     *         }
-     *       ],
-     *       "apartmentName": "回龙观社区",
-     *       "roomNumber": "104",
-     *       "leaseStatus": 6,
-     *       "leaseStartDate": "2025-05-23",
-     *       "leaseEndDate": "2026-05-23",
-     *       "sourceType": 2,
-     *       "rent": 9000
-     *     },
-     */
     @SuppressLint("SetTextI18n")
     private fun initView() {
         mLeaseBinding.backBtn.setOnClickListener {
@@ -159,6 +134,12 @@ class MyLeaseActivity : BaseActivity() {
                         Logger.d("修改")
                     }
                 }
+            }
+
+            itemView.setOnClickListener {
+                val intent = Intent(this, LeaseInfoActivity::class.java)
+                intent.putExtra("lease_id", leaseVo.id)
+                startActivity(intent)
             }
         }
         mRvView.adapter = mRvAdapter

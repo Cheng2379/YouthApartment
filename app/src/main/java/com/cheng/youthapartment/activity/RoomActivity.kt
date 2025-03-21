@@ -241,7 +241,7 @@ class RoomActivity : BaseActivity() {
 
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {
-            val intent = Intent(this, AppointmentActivity::class.java)
+            val intent = Intent(this, AppointmentInfoActivity::class.java)
             intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentItemVo)
             startActivity(intent)
         }

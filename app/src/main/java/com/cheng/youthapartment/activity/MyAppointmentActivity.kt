@@ -102,7 +102,7 @@ class MyAppointmentActivity : BaseActivity() {
 
 
                 itemView.setOnClickListener {
-                    val intent = Intent(this, AppointmentActivity::class.java)
+                    val intent = Intent(this, AppointmentInfoActivity::class.java)
                     intent.putExtra("appoint_item", itemAppointment)
                     startActivity(intent)
                 }

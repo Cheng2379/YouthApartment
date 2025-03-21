@@ -7,7 +7,7 @@
     android:background="#EBECEF"
     android:orientation="vertical"
     android:paddingHorizontal="15dp"
-    tools:context=".activity.AppointmentActivity">
+    tools:context=".activity.AppointmentInfoActivity">
     
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:textSize="16sp"
         android:textStyle="bold" />
     
-    <com.cheng.youthapartment.view.ApartmentItemView
+    <com.cheng.youthapartment.view.RoomItemView
         android:id="@+id/apartment_appoint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

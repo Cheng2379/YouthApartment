@@ -3,6 +3,9 @@ package com.cheng.youthapartment.bean.apartment
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * 公寓详略数据，一般用于租约、预约、房间信息的传递
+ */
 data class ApartmentInfo(
     /**
      * "apartmentInfo": {
