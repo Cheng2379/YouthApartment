@@ -58,7 +58,7 @@ class RoomItemView @JvmOverloads constructor(
         apartmentDetailBean?.let { vo ->
             mName.text = vo.name
             mLocation.text = vo.provinceName + " " + vo.cityName + " " + vo.districtName
-            mRent.text = vo.minRent.toString() + "/月起"
+            mRent.text = "￥ " + vo.minRent.toString() + "/月起"
 
             val graphVoList = vo.graphVoList
             graphVoList.takeIf {
@@ -80,7 +80,7 @@ class RoomItemView @JvmOverloads constructor(
                 rvLabel.visibility = VISIBLE
 
                 // 网格布局优化参数
-                val spanCount = 4
+                val spanCount = 3
                 rvLabel.layoutManager = GridLayoutManager(context, spanCount)
                 val labelList = ArrayList(vo.labelInfoList.take(8))
                 val labelSpacing = resources.getDimensionPixelSize(R.dimen.label_grid_space) / 3

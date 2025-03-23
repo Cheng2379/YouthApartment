@@ -43,7 +43,7 @@ class AppointmentInfoActivity : BaseActivity() {
     private val mApartmentAppoint by lazy { mAppointBinding.apartmentAppoint }
     private val mBtnReserveHouse by lazy { mAppointBinding.btnReserveHouse }
 
-    private var apartmentDetailBean: ApartmentDetailBean? = null
+    private var mApartmentDetailBean: ApartmentDetailBean? = null
     private var mAppointmentBean: AppointmentBean? = null
 
     private var mSubmitName: String = ""
@@ -64,18 +64,20 @@ class AppointmentInfoActivity : BaseActivity() {
     }
 
     private fun getApartmentItemVo() {
-        apartmentDetailBean = intent.getYAParcelableExtra("appoint_apartment")
+        intent.getYAParcelableExtra<ApartmentDetailBean>("appoint_apartment")?.let {
+            Logger.d("apartmentDetailBean: $it")
+            mApartmentDetailBean = it
+        }
         mAppointmentBean = intent.getYAParcelableExtra("appoint_item")
+
         mAppointmentBean?.let {
-            lifecycleScope.launch {
-                getDetailById(it.id)
-            }
+            getDetailById(it.id)
         }
     }
 
     @SuppressLint("SetTextI18n")
     fun initView() {
-        apartmentDetailBean?.let {
+        mApartmentDetailBean?.let {
             mApartmentAppoint.setData(it)
         }
 
@@ -147,9 +149,13 @@ class AppointmentInfoActivity : BaseActivity() {
     }
 
     private fun saveOrUpdate() {
+        if (mApartmentDetailBean == null ) {
+            "数据异常".showToast()
+            return
+        }
         Logger.d(
             "mSubmitName: $mSubmitName, mSubmitPhone: $mSubmitPhone, " +
-                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${apartmentDetailBean!!.id}"
+                    "mSubmitRemark: $mSubmitRemark, time: ${"$mSelectDate $mSelectTime"}, ApartmentId: ${mApartmentDetailBean!!.id}"
         )
         lifecycleScope.launch(Dispatchers.IO) {
             RetrofitUtil.post<BaseBean<Any>>(
@@ -163,7 +169,7 @@ class AppointmentInfoActivity : BaseActivity() {
                     "date" to mSelectDate,
                     "time" to mSelectTime,
                     "additionalInfo" to mSubmitRemark,
-                    "apartmentId" to apartmentDetailBean!!.id,
+                    "apartmentId" to mApartmentDetailBean!!.id,
                     "appointmentStatus" to 1
                 )
 
@@ -193,7 +199,7 @@ class AppointmentInfoActivity : BaseActivity() {
             mapOf("id" to id)
         ) { _, response ->
             response?.let {
-                apartmentDetailBean = it.apartmentDetailBean
+                mApartmentDetailBean = it.apartmentDetailBean
                 mAppointName.setText(it.name)
                 mAppointPhone.setText(it.phone)
                 mAppointRemark.setText(it.additionalInfo)

@@ -79,10 +79,10 @@ class SearchFragment : Fragment() {
         mRvAdapter =
             RvAdapter(requireContext(), mRoomList, R.layout.item_room) { holder, position ->
                 val itemView = holder.itemView
-                val mRoomImg: ImageView = itemView.findViewById(R.id.room_img)
-                val mRoomName: TextView = itemView.findViewById(R.id.room_name)
-                val mRoomLocation: TextView = itemView.findViewById(R.id.room_location)
-                val mRoomRent: TextView = itemView.findViewById(R.id.search_item_room_rent)
+                val roomImg: ImageView = itemView.findViewById(R.id.room_img)
+                val roomName: TextView = itemView.findViewById(R.id.room_name)
+                val roomLocation: TextView = itemView.findViewById(R.id.room_location)
+                val roomRent: TextView = itemView.findViewById(R.id.search_item_room_rent)
 
                 val roomItem = mRoomList[position]
                 val graphVoList = roomItem.graphVoList
@@ -93,12 +93,12 @@ class SearchFragment : Fragment() {
                             RequestOptions.bitmapTransform(SquareCrop(20))
                         )
                         .error(R.drawable.img_fail)
-                        .into(mRoomImg)
+                        .into(roomImg)
                 }
-                mRoomName.text = roomItem.apartmentBean.name + " " + roomItem.roomNumber + "号房间"
-                mRoomLocation.text =
+                roomName.text = roomItem.apartmentBean.name + " " + roomItem.roomNumber + "号房间"
+                roomLocation.text =
                     roomItem.apartmentBean.provinceName + "  " + roomItem.apartmentBean.cityName + "  " + roomItem.apartmentBean.districtName
-                mRoomRent.text = "$ " + roomItem.rent.stripTrailingZeros().toPlainString() + "/月"
+                roomRent.text = "￥ " + roomItem.rent.stripTrailingZeros().toPlainString() + "/月"
 
                 itemView.setOnClickListener {
                     val intent = Intent(mActivity, RoomActivity::class.java)

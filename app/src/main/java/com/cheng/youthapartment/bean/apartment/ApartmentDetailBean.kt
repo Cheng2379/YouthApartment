@@ -1,10 +1,12 @@
 package com.cheng.youthapartment.bean.apartment
 
+import android.os.Parcel
 import android.os.Parcelable
 import com.cheng.youthapartment.bean.properties.FacilityInfoBean
 import com.cheng.youthapartment.bean.properties.GraphBean
 import com.cheng.youthapartment.bean.properties.LabelInfoBean
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -36,7 +38,7 @@ data class ApartmentDetailBean(
     @SerializedName("labelInfoList")
     val labelInfoList: List<LabelInfoBean>,
     @SerializedName("facilityInfoList")
-    val facilityInfoList: List<FacilityInfoBean>,
+    var facilityInfoList: List<FacilityInfoBean>,
     @SerializedName("latitude")
     val latitude: String,
     @SerializedName("longitude")

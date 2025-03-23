@@ -85,7 +85,7 @@
                     android:layout_marginEnd="10dp"
                     android:gravity="center"
                     android:text="@string/my_lease_default_renewal"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:visibility="gone" />
                 
                 <!-- 提前退租 -->
@@ -96,7 +96,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:text="@string/my_lease_default_refund"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:visibility="gone" />
                 
                 <!-- 修改 -->
@@ -108,7 +108,7 @@
                     android:layout_marginLeft="10dp"
                     android:gravity="center"
                     android:text="@string/my_lease_default_edit"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>

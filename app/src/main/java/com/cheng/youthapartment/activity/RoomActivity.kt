@@ -72,6 +72,7 @@ class RoomActivity : BaseActivity() {
     private fun getRoomById() {
         mAdapter = BannerAdapter(mGraphBeanList, this)
         mViewPager.adapter = mAdapter
+
         RetrofitUtil.get<RoomDetailBean>(
             "/app/room/getDetailById",
             App.getToken(),
@@ -80,7 +81,6 @@ class RoomActivity : BaseActivity() {
             response?.let {
                 mRoomDetailBean = response
                 mGraphBeanList.addAll(mRoomDetailBean!!.graphVoList)
-                mViewPager.adapter = mAdapter
                 runOnUiThread {
                     mAdapter.notifyDataSetChanged()
                     mViewPager.setCurrentItem(0, false)
@@ -93,6 +93,8 @@ class RoomActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
+        // 初始化指示器
+        initIndicators()
         // xxx号房间
         mRoomBinding.roomName.text =
             mRoomDetailBean?.apartmentDetailBean?.name + " " + mRoomDetailBean?.roomNumber + "号房间"
@@ -118,7 +120,7 @@ class RoomActivity : BaseActivity() {
                 labelText.text = labelList[position]?.name ?: ""
                 labelText.textSize = 15f
             }
-        mRoomBinding.roomPageRent.text = "$${mRoomDetailBean?.rent.toString()}/月"
+        mRoomBinding.roomPageRent.text = "￥${mRoomDetailBean?.rent.toString()}/月"
 
         // 基本信息
         val attrList = mutableListOf<String>()
@@ -152,7 +154,6 @@ class RoomActivity : BaseActivity() {
         // 位置详情 todo 后续接入高德SDK
 
         // 费用明细
-        // todo 缺少配套标签，后续优化
         val freeMap = mutableMapOf<String, String>()
         mRoomDetailBean?.feeValueList?.forEach {
             freeMap[it.feeKeyName] = "￥${it.feeKeyId}${it.unit}"
@@ -190,6 +191,7 @@ class RoomActivity : BaseActivity() {
         // 预约看房button
         mRoomBinding.btnReserveHouse.setOnClickListener {
             val intent = Intent(this, AppointmentInfoActivity::class.java)
+            mRoomDetailBean?.apartmentDetailBean?.facilityInfoList = emptyList()
             intent.putExtra("appoint_apartment", mRoomDetailBean?.apartmentDetailBean)
             startActivity(intent)
         }

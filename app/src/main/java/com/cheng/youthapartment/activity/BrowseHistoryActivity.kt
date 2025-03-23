@@ -66,7 +66,7 @@ class BrowseHistoryActivity : BaseActivity() {
                 history.provinceName + "  " + history.cityName + "  " + history.districtName
             mRoomTime.visibility = View.VISIBLE
             mRoomTime.text = history.browseTime
-            mRoomRent.text = "$ " + history.rent.stripTrailingZeros().toPlainString()
+            mRoomRent.text = "￥ " + history.rent.stripTrailingZeros().toPlainString()
 
             itemView.setOnClickListener {
                 val intent = Intent(this, RoomActivity::class.java)
