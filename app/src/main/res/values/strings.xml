@@ -66,5 +66,7 @@
     <string name="my_lease_default_status_5">退租待确认</string>
     <string name="my_lease_default_status_6">已退租</string>
     <string name="my_lease_default_status_7">续约待确认</string>
-
+    
+    <string name="lease_info_btn_save">保存</string>
+    
 </resources>

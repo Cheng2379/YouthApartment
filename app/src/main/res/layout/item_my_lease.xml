@@ -47,13 +47,13 @@
             android:id="@+id/my_lease_status"
             style="@style/TextStatusStyle"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="28dp"
             android:background="@drawable/shape_status_green"
             android:text="@string/my_lease_default_status_2" />
         
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="28dp"
             android:layout_gravity="bottom"
             android:orientation="horizontal">
             
@@ -62,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
+                android:gravity="bottom"
                 android:text="@string/my_lease_default_rent"
                 android:textColor="@color/red"
                 android:textSize="14sp"
@@ -70,7 +70,7 @@
             
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="25dp"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="right"
                 android:orientation="horizontal"

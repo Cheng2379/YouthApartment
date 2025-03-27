@@ -20,21 +20,21 @@ data class LeaseDetailBean(
     @SerializedName("identificationNumber")
     val identificationNumber: String,
     @SerializedName("leaseEndDate")
-    val leaseEndDate: String,
+    var leaseEndDate: String,
     @SerializedName("leaseStartDate")
-    val leaseStartDate: String,
+    var leaseStartDate: String,
     @SerializedName("leaseTermId")
     val leaseTermId: Int,
     @SerializedName("leaseTermMonthCount")
-    val leaseTermMonthCount: Int,
+    var leaseTermMonthCount: Int,
     @SerializedName("leaseTermUnit")
     val leaseTermUnit: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("paymentTypeId")
-    val paymentTypeId: Int,
+    var paymentTypeId: Int,
     @SerializedName("paymentTypeName")
-    val paymentTypeName: String,
+    var paymentTypeName: String,
     @SerializedName("phone")
     val phone: String,
     @SerializedName("rent")
@@ -48,5 +48,5 @@ data class LeaseDetailBean(
     @SerializedName("sourceType")
     val sourceType: Int,
     @SerializedName("status")
-    val status: Int
+    var status: Int
 )

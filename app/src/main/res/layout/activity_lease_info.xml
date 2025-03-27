@@ -5,18 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EBEDF0"
+    android:fitsSystemWindows="true"
     tools:context=".activity.LeaseInfoActivity">
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#EBEDF0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp">
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:text="签约公寓"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -24,9 +25,9 @@
             tools:ignore="HardcodedText" />
         
         <LinearLayout
+            android:id="@+id/lease_info_apartment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_rv_search_home_style"
             android:elevation="1sp"
@@ -55,7 +56,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:text="签约房间"
             android:textColor="@color/black"
@@ -64,9 +64,9 @@
             tools:ignore="HardcodedText" />
         
         <LinearLayout
+            android:id="@+id/lease_info_room"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_rv_search_home_style"
             android:elevation="1sp"
@@ -95,7 +95,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:text="租客信息"
             android:textColor="@color/black"
@@ -103,10 +102,10 @@
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
         
+        <!-- 租客信息 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/shape_rv_search_home_style"
             android:elevation="1sp"
@@ -119,26 +118,13 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="姓名"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
             
             <!-- 手机号 -->
@@ -148,26 +134,13 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="手机号"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_phone"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
             
             <LinearLayout
@@ -176,33 +149,19 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="身份证号"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_id_number"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
         </LinearLayout>
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:text="租约详情"
             android:textColor="@color/black"
@@ -211,13 +170,12 @@
             tools:ignore="HardcodedText" />
         
         <!-- 租约详情 -->
-        
         <LinearLayout
+            android:id="@+id/lease_info_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="40dp"
             android:background="@drawable/shape_rv_search_home_style"
             android:elevation="1sp"
             android:orientation="vertical">
@@ -229,26 +187,32 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="租期"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
-                <TextView
+                <LinearLayout
                     android:id="@+id/lease_info_lease_period"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
                     android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    android:background="@drawable/shape_segmented_bg_selector">
+                    
+                    <TextView
+                        android:id="@+id/lease_info_lease_period_text"
+                        style="@style/LeaseInfoValue"
+                        android:background="@color/transparent" />
+                    
+                    <ImageView
+                        android:id="@+id/lease_info_lease_period_img"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/img_right_arrow"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
             
             <!-- 租期合同 -->
@@ -258,26 +222,13 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="租期合同"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
             
             <!-- 租金 -->
@@ -287,26 +238,13 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="租金"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_rent"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
             
             <!-- 押金 -->
@@ -316,26 +254,13 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="押金"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
                 <TextView
                     android:id="@+id/lease_info_deposit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    style="@style/LeaseInfoValue" />
             </LinearLayout>
             
             <!-- 支付方式 -->
@@ -345,28 +270,44 @@
                 android:orientation="horizontal">
                 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
+                    style="@style/LeaseInfoKey"
                     android:text="支付方式"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
                     tools:ignore="HardcodedText" />
                 
-                <TextView
+                <LinearLayout
                     android:id="@+id/lease_info_pay_type"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
                     android:layout_weight="3"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    tools:ignore="HardcodedText" />
+                    android:background="@drawable/shape_segmented_bg_selector">
+                    
+                    <TextView
+                        android:id="@+id/lease_info_pay_type_text"
+                        style="@style/LeaseInfoValue"
+                        android:background="@color/transparent" />
+                    
+                    <ImageView
+                        android:id="@+id/lease_info_pay_type_img"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/img_right_arrow"
+                        android:visibility="gone" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        
+        <Button
+            android:id="@+id/lease_info_btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/shape_btn_appoint_selector"
+            android:text="@string/lease_info_btn_save"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
     </LinearLayout>
 
 

@@ -2,7 +2,7 @@ package com.cheng.youthapartment;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import com.cheng.youthapartment.bean.properties.LeaseStatus;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
+        int code = LeaseStatus.SIGNED.getValue();
+        System.out.printf("value: " + code);
     }
 }

@@ -2,6 +2,8 @@ package com.cheng.youthapartment.util
 
 import android.widget.ImageView
 import com.cheng.youthapartment.R
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.regex.Pattern
 
 /**
@@ -51,6 +53,26 @@ object DataUtil {
             return false
         }
         return true
+    }
+
+    /**
+     * 添加月数
+     */
+    fun addMonthsHandlingEndOfMonth(startDate: String, monthsToAdd: Int): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(startDate, formatter)
+
+        // 检查是否是月末
+        val isEndOfMonth = date.dayOfMonth == date.lengthOfMonth()
+
+        val newDate = date.plusMonths(monthsToAdd.toLong())
+
+        // 如果原日期是月末，且新月份天数较少，则调整到新月份的月末
+        return if (isEndOfMonth && newDate.dayOfMonth < date.dayOfMonth) {
+            newDate.withDayOfMonth(newDate.lengthOfMonth()).format(formatter)
+        } else {
+            newDate.format(formatter)
+        }
     }
     
     fun setFacility(text: CharSequence, imageView: ImageView) {

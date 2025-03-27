@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -15,10 +16,16 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
+import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.bean.lease.LeaseBean
+import com.cheng.youthapartment.bean.properties.LeaseStatus
 import com.cheng.youthapartment.databinding.ActivityMyLeaseBinding
+import com.cheng.youthapartment.fragment.DialogFragment
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
+import com.cheng.youthapartment.util.showToast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * 我的租约页面
@@ -77,67 +84,85 @@ class MyLeaseActivity : BaseActivity() {
             date.text = leaseVo.leaseStartDate + " 至 " + leaseVo.leaseEndDate
             rent.text = "￥${leaseVo.rent}/月"
 
-            // TODO 点击事件后续处理
+            val intent = Intent(this, LeaseInfoActivity::class.java)
+            intent.putExtra("lease_id", leaseVo.id)
+
             //租约状态(1:签约待确认，2:已签约，3:已取消，4:已到期，5:退租待确认，6:已退租，7:续约待确认)
-            when (leaseVo.leaseStatus) {
+            val leaseId = leaseVo.id
+            when (LeaseStatus.fromValue(leaseVo.leaseStatus)) {
                 // 显示-确认按钮
-                1 -> {
+                LeaseStatus.SIGN_AWAIT_CONFIRM -> {
                     status.text = this.getString(R.string.my_lease_default_status_1)
                     status.setBackgroundResource(R.drawable.shape_status_light_cyan)
                     reviseOrConfirm.visibility = Button.VISIBLE
                     reviseOrConfirm.text = "确认"
                     reviseOrConfirm.setOnClickListener {
-                        Logger.d("确认")
+                        intent.putExtra("status", "confirm")
+                        startActivity(intent)
                     }
                 }
                 // 显示-续约按钮、提前退租按钮
-                2 -> {
+                LeaseStatus.SIGNED -> {
                     status.text = this.getString(R.string.my_lease_default_status_2)
                     status.setBackgroundResource(R.drawable.shape_status_green)
                     renewal.visibility = Button.VISIBLE
                     refund.visibility = Button.VISIBLE
 
                     renewal.setOnClickListener {
-                        Logger.d("续约")
+                        intent.putExtra("status", "renewal")
+                        startActivity(intent)
                     }
                     refund.setOnClickListener {
-                        Logger.d("提前退租")
+                        // dialog 弹窗
+                        val dialogFragment = DialogFragment(this, R.layout.dialog_refund) { view, dialog ->
+                            val cancelBtn = view.findViewById<Button>(R.id.btn_cancel)
+                            val sureBtn = view.findViewById<Button>(R.id.btn_sure)
+
+                            cancelBtn.setOnClickListener {
+                                dialog.dismiss()
+                            }
+
+                            sureBtn.setOnClickListener {
+                                updateStatusById(leaseId, 5)
+                                dialog.dismiss()
+                            }
+                        }
+                        dialogFragment.show(supportFragmentManager, "LeaseRefund")
                     }
                 }
 
-                3 -> {
+                LeaseStatus.CANCELED -> {
                     status.text = this.getString(R.string.my_lease_default_status_3)
                     status.setBackgroundResource(R.drawable.shape_status_grey)
                 }
 
-                4 -> {
+                LeaseStatus.EXPIRED -> {
                     status.text = this.getString(R.string.my_lease_default_status_4)
                     status.setBackgroundResource(R.drawable.shape_status_grey)
                 }
 
-                5 -> {
+                LeaseStatus.TERMINATION_AWAIT_CONFIRM -> {
                     status.text = this.getString(R.string.my_lease_default_status_5)
                     status.setBackgroundResource(R.drawable.shape_status_red)
                 }
 
-                6 -> {
+                LeaseStatus.TERMINATED -> {
                     status.text = this.getString(R.string.my_lease_default_status_6)
                     status.setBackgroundResource(R.drawable.shape_status_grey)
                 }
                 // 显示修改按钮
-                7 -> {
+                LeaseStatus.RENEWAL_AWAIT_CONFIRM -> {
                     status.text = this.getString(R.string.my_lease_default_status_7)
                     status.setBackgroundResource(R.drawable.shape_status_light_cyan)
                     reviseOrConfirm.visibility = Button.VISIBLE
                     reviseOrConfirm.setOnClickListener {
-                        Logger.d("修改")
+                        intent.putExtra("status", "edit")
+                        startActivity(intent)
                     }
                 }
             }
 
             itemView.setOnClickListener {
-                val intent = Intent(this, LeaseInfoActivity::class.java)
-                intent.putExtra("lease_id", leaseVo.id)
                 startActivity(intent)
             }
         }
@@ -149,11 +174,28 @@ class MyLeaseActivity : BaseActivity() {
             "/app/agreement/listItem",
             App.getToken(),
             null
-        ) { call, response ->
+        ) { _, response ->
             response?.let {
                 mLeaseBeanList = it as ArrayList<LeaseBean>
-                mRvAdapter?.updateDta(mLeaseBeanList)
-                Logger.d("mLeaseVoList: $mLeaseBeanList")
+                lifecycleScope.launch(Dispatchers.Main) {
+                    mRvAdapter?.updateDta(mLeaseBeanList)
+                }
+            }
+        }
+    }
+
+    private fun updateStatusById(id: Int, status: Int) {
+        RetrofitUtil.post<BaseBean<Any>>(
+            "/app/agreement/saveOrUpdate",
+            App.getToken(),
+            mapOf(
+                "id" to id,
+                "status" to status
+            )
+        ) { _, response ->
+            if (response?.code == 200) {
+                "操作成功!".showToast()
+                getLeaseItemList()
             }
         }
     }
