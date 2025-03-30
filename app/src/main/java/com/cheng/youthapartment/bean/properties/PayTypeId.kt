@@ -11,8 +11,7 @@ enum class PayTypeId(val value: Int) {
     MONTH(6),
     QUARTERLY(7),
     HALF_A_YEAR(8),
-    YEAR(9),
-    TWO_YEAR(14);
+    YEAR(9);
 
     companion object {
 
@@ -32,10 +31,6 @@ enum class PayTypeId(val value: Int) {
 
                 "年付" -> {
                     YEAR.value
-                }
-
-                "两年付" -> {
-                    TWO_YEAR.value
                 }
 
                 else -> MONTH.value

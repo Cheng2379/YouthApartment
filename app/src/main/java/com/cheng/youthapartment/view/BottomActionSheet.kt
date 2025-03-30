@@ -82,7 +82,7 @@ class BottomActionSheet(private val context: Context) {
 
         // 初始化 Adapter
         // 注意：adapter 内部的 selectedPosition 会在点击时改变，
-        // 但我们最终确认时依赖的是 BottomActionSheet 的 currentSelectedPosition
+        // 但最终确认时依赖的是 BottomActionSheet 的 currentSelectedPosition
         adapter = ActionSheetAdapter(context, options, initialSelectedPosition) { position ->
             // 当列表项被点击时，更新 BottomActionSheet 内部的选中位置
             currentSelectedPosition = position

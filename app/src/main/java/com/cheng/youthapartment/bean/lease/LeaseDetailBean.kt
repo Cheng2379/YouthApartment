@@ -24,7 +24,7 @@ data class LeaseDetailBean(
     @SerializedName("leaseStartDate")
     var leaseStartDate: String,
     @SerializedName("leaseTermId")
-    val leaseTermId: Int,
+    var leaseTermId: Int,
     @SerializedName("leaseTermMonthCount")
     var leaseTermMonthCount: Int,
     @SerializedName("leaseTermUnit")

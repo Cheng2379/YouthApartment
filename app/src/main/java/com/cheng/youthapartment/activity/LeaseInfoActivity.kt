@@ -15,6 +15,7 @@ import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.bean.lease.LeaseDetailBean
 import com.cheng.youthapartment.bean.properties.LeaseStatus
+import com.cheng.youthapartment.bean.properties.LeaseTermId
 import com.cheng.youthapartment.bean.properties.PayTypeId
 import com.cheng.youthapartment.databinding.ActivityLeaseInfoBinding
 import com.cheng.youthapartment.util.DataUtil
@@ -47,7 +48,7 @@ class LeaseInfoActivity : AppCompatActivity() {
             mapOf("id" to id)
         ) { _, response ->
             response?.let { leaseDetailBean ->
-                Logger.d("leaseDetailVo: $leaseDetailBean")
+                Logger.d("response leaseDetailBean: $leaseDetailBean")
 
                 leaseDetailBean.apartmentGraphVoList.takeIf { it.isNotEmpty() }?.let {
                     Glide.with(this)
@@ -153,7 +154,8 @@ class LeaseInfoActivity : AppCompatActivity() {
                             "租期时长不能小于支付方式月份长度!".showToast()
                             return@setOnClickListener
                         }
-                        Logger.d("leaseDetailBean: $leaseDetailBean")
+                        // TODO 后台有个问题。支付方式修改为年付的情况下，会造成数据无法读取, 目前定位到问题可能出现在支付方式id和租期id
+                        Logger.d("submit leaseDetailBean: $leaseDetailBean")
                         saveOrUpdate(leaseDetailBean)
                     }
                 } ?: run {
@@ -260,7 +262,9 @@ class LeaseInfoActivity : AppCompatActivity() {
                         mLeaseInfoBinding.leaseInfoDate.text = "$startDate 至 $endDate"
                         leaseDetailBean.leaseStartDate = startDate
                         leaseDetailBean.leaseEndDate = endDate
+
                         leaseDetailBean.leaseTermMonthCount = months
+                        leaseDetailBean.leaseTermId = LeaseTermId.getIdByType(item)
                     } else {
                         // 处理支付方式选择
                         mLeaseInfoBinding.leaseInfoPayTypeText.text = item

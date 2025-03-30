@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.edit
-import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
@@ -22,35 +22,36 @@ import kotlinx.coroutines.delay
 
 /**
  * 登录页面
+ * TODO: 底部添加隐私政策按钮，点击弹出弹窗，显示隐私政策
+ * TODO: 调用代码参考<a href="https://blog.csdn.net/rain67/article/details/132174955">
  * @author Cheng
  * @since 2024/12/10
  */
 class LoginActivity : BaseActivity() {
-    private val mPhone: EditText by lazy { findViewById(R.id.phone) }
-    private val mCaptcha: EditText by lazy { findViewById(R.id.captcha) }
-    private val mHidePhoneText: TextView by lazy { findViewById(R.id.hidePhoneText) }
-    private val mHideCaptchaText: TextView by lazy { findViewById(R.id.hideCaptchaText) }
-    private val mSendCaptcha: Button by lazy { findViewById(R.id.sendCaptcha) }
+    private val mPhone: EditText by lazy { findViewById(R.id.login_edit_phone) }
+    private val mCaptcha: EditText by lazy { findViewById(R.id.login_edit_captcha) }
+    private val mHidePhoneText: TextView by lazy { findViewById(R.id.login_hide_phone_wrong_text) }
+    private val mHideCaptchaText: TextView by lazy { findViewById(R.id.login_hide_captcha_wrong_text) }
+    private val mSendCaptcha: Button by lazy { findViewById(R.id.login_send_captcha) }
     private val mLogin: Button by lazy { findViewById(R.id.login_btn) }
+    private val mCheckBox:CheckBox by lazy { findViewById(R.id.login_cb) }
+    private val mPrivacyPolicy: TextView by lazy { findViewById(R.id.login_privacy_policy) }
+
+    private var mIsChecked = false
     private var mPhoneStr: String = ""
     private var mCaptchaStr: String = ""
-    private val mPhoneFormat: String =
-        "^(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57]|19[89]|166)[0-9]{8}"
-    private val mGson: Gson = Gson()
     private var mToken: String = ""
-    //private val testToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJVU0VSX0lORk8iLCJleHAiOjE3NjMxMzk1MDcsInVzZXJJZCI6MiwidXNlcm5hbWUiOiIxNTY3OTIxNjE2MiJ9" +
-    //            ".mXZvDp-73_natBlclYEDSfjBtMqz9iwNsl5wCmzDCmE";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        editTextListener()
+        initView()
         sendCaptcha()
         login()
     }
 
-    private fun editTextListener() {
+    private fun initView() {
         mPhoneStr = mPhone.text.toString()
         mCaptchaStr = mCaptcha.getText().toString()
 
@@ -71,9 +72,15 @@ class LoginActivity : BaseActivity() {
                 mHideCaptchaText.visibility = TextView.GONE
             }
         }
+
+        mCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            mIsChecked = isChecked
+        }
+
+
     }
 
-    fun ErrorHint() {
+    fun wrongHint() {
         mHidePhoneText.visibility = if (mPhoneStr.isEmpty()) TextView.VISIBLE else TextView.GONE
         mHideCaptchaText.visibility = if (mCaptchaStr.isEmpty()) TextView.VISIBLE else TextView.GONE
     }
@@ -113,7 +120,7 @@ class LoginActivity : BaseActivity() {
 
     private fun login() {
         mLogin.setOnClickListener {
-            ErrorHint()
+            wrongHint()
             if (DataUtil.checkPhone(mPhoneStr) && mCaptchaStr.isNotEmpty()) {
                 val map = mapOf<String, Any>("phone" to mPhoneStr, "code" to mCaptchaStr)
                 RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
