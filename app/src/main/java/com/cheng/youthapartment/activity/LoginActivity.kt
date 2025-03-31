@@ -219,7 +219,7 @@ class LoginActivity : BaseActivity() {
     }
 
     /**
-     * 0: 服务协议      1: 隐私保护政策
+     * 0:同意服务协议     1: 服务协议      2: 隐私保护政策
      */
     private fun setClickableSpan(
         textType: Int,
