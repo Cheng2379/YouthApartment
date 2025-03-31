@@ -22,7 +22,7 @@ import java.io.IOException
  */
 object OkHttpUtil {
     private const val TAG: String = "OkHttpUtil"
-    private const val BASE_URL: String = "http://106.55.104.120:8082"
+    private const val BASE_URL: String = "http://127.0.0.1:8082"
     private var client: OkHttpClient
 
     init {

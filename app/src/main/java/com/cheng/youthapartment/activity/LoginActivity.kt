@@ -2,15 +2,25 @@ package com.cheng.youthapartment.activity
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
+import com.amap.api.maps.MapsInitializer
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.util.DataUtil
@@ -18,12 +28,11 @@ import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
 import com.cheng.youthapartment.util.textChangedListener
+import com.cheng.youthapartment.util.toHtml
 import kotlinx.coroutines.delay
 
 /**
  * 登录页面
- * TODO: 底部添加隐私政策按钮，点击弹出弹窗，显示隐私政策
- * TODO: 调用代码参考<a href="https://blog.csdn.net/rain67/article/details/132174955">
  * @author Cheng
  * @since 2024/12/10
  */
@@ -34,9 +43,10 @@ class LoginActivity : BaseActivity() {
     private val mHideCaptchaText: TextView by lazy { findViewById(R.id.login_hide_captcha_wrong_text) }
     private val mSendCaptcha: Button by lazy { findViewById(R.id.login_send_captcha) }
     private val mLogin: Button by lazy { findViewById(R.id.login_btn) }
-    private val mCheckBox:CheckBox by lazy { findViewById(R.id.login_cb) }
+    private val mCheckBox: CheckBox by lazy { findViewById(R.id.login_cb) }
     private val mPrivacyPolicy: TextView by lazy { findViewById(R.id.login_privacy_policy) }
 
+    private var lastUpdateDate = ""
     private var mIsChecked = false
     private var mPhoneStr: String = ""
     private var mCaptchaStr: String = ""
@@ -73,11 +83,54 @@ class LoginActivity : BaseActivity() {
             }
         }
 
-        mCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        mCheckBox.setOnCheckedChangeListener { _, isChecked ->
             mIsChecked = isChecked
         }
 
+        // 处理隐私政策点击事件
+        val privacyPolicyText = mPrivacyPolicy.text.toString()
+        val spannableString = SpannableString(privacyPolicyText)
 
+        val readAndAgree = "已阅读并同意"
+        val serviceAgreement = "服务协议"
+        val privacyPolicy = "隐私保护政策"
+
+        val readAndAgreeStartIndex = privacyPolicyText.indexOf(readAndAgree)
+        val readAndAgreeEndIndex = readAndAgreeStartIndex + readAndAgree.length
+
+        val serviceStartIndex = privacyPolicyText.indexOf(serviceAgreement)
+        val serviceEndIndex = serviceStartIndex + serviceAgreement.length
+
+        val privacyPolicyStartIndex = privacyPolicyText.indexOf(privacyPolicy)
+        val privacyPolicyEndIndex = privacyPolicyStartIndex + privacyPolicy.length
+
+        // 点击前半部分勾选同意
+        setClickableSpan(
+            0,
+            readAndAgreeStartIndex,
+            readAndAgreeEndIndex,
+            spannableString
+        )
+        // 设置服务协议点击事件
+        setClickableSpan(
+            1,
+            serviceStartIndex,
+            serviceEndIndex,
+            spannableString
+        )
+        // 设置隐私保护政策点击事件
+        setClickableSpan(
+            2,
+            privacyPolicyStartIndex,
+            privacyPolicyEndIndex,
+            spannableString
+        )
+
+        mPrivacyPolicy.text = spannableString
+        mPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
+        mPrivacyPolicy.highlightColor = Color.TRANSPARENT
+
+        mPrivacyPolicy.setOnClickListener(null)
     }
 
     fun wrongHint() {
@@ -122,6 +175,12 @@ class LoginActivity : BaseActivity() {
         mLogin.setOnClickListener {
             wrongHint()
             if (DataUtil.checkPhone(mPhoneStr) && mCaptchaStr.isNotEmpty()) {
+                if (!mIsChecked) {
+                    """请勾选"用户协议与隐私政策"""".showToast()
+                    return@setOnClickListener
+                }
+                // 设置高德隐私合规性
+                setPrivacyCompliance()
                 val map = mapOf<String, Any>("phone" to mPhoneStr, "code" to mCaptchaStr)
                 RetrofitUtil.post<BaseBean<Any>>("/app/login", params = map) { _, response ->
                     response?.let {
@@ -149,9 +208,7 @@ class LoginActivity : BaseActivity() {
                                 }
                             }
                         } else {
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                response.message?.showToast()
-                            }
+                            response.message?.showToast()
                         }
                     }
                 }
@@ -160,4 +217,101 @@ class LoginActivity : BaseActivity() {
             }
         }
     }
+
+    /**
+     * 0: 服务协议      1: 隐私保护政策
+     */
+    private fun setClickableSpan(
+        textType: Int,
+        textStartIndex: Int,
+        textEndIndex: Int,
+        spannableString: SpannableString
+    ) {
+        if (textStartIndex > 0) {
+            val span = object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    when (textType) {
+                        0 -> {
+                            if (mIsChecked) {
+                                mCheckBox.isChecked = false
+                                mIsChecked = false
+                            } else {
+                                mCheckBox.isChecked = true
+                                mIsChecked = true
+                            }
+                        }
+
+                        1, 2 -> {
+                            setDialog(textType)
+                        }
+                    }
+                }
+
+                override fun updateDrawState(ds: TextPaint) {
+                    if (textType != 0) {
+                        super.updateDrawState(ds)
+                    }
+                    ds.isUnderlineText = false
+                }
+            }
+            spannableString.setSpan(
+                span,
+                textStartIndex,
+                textEndIndex,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+    }
+
+    /**
+     * 根据服务协议或隐私政策显示不同的信息
+     */
+    private fun setDialog(textType: Int) {
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_privacy, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
+
+        dialog.setCanceledOnTouchOutside(false)
+        // 设置返回不关闭对话框
+        //dialog.setCancelable(false)
+
+        val title: TextView = view.findViewById(R.id.privacy_policy_title)
+        val latUpdateDate: TextView = view.findViewById(R.id.privacy_policy_last_update_date)
+        val contentText: TextView = view.findViewById(R.id.privacy_policy_content)
+
+        val closeBtn: Button = view.findViewById(R.id.close_btn)
+
+        // TODO: 最后更新时间逻辑   -> 需要在登录成功的一刻起，获取并设置本地时间数据到SharedPreferences(通过App对外接口设置), 然后在这里设置获取数据
+        //  判断获取状态是否为空，若为空，则显示暂无记录，若不为空，则显示SharedPreferences内的时间数据
+        latUpdateDate.text = resources.getText(R.string.last_update_date).toHtml()
+
+        when (textType) {
+            1 -> {
+                title.text = resources.getText(R.string.terms_of_service_title).toHtml()
+                contentText.text = resources.getText(R.string.terms_of_service_content).toHtml()
+            }
+
+            2 -> {
+                title.text = resources.getText(R.string.privacy_policy_title).toHtml()
+                contentText.text =
+                    resources.getText(R.string.privacy_policy_content).toHtml()
+            }
+        }
+
+        closeBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    /**
+     * 使用地图功能之前，必须设置隐私合规
+     */
+    private fun setPrivacyCompliance() {
+        MapsInitializer.updatePrivacyShow(this, true, true);
+        MapsInitializer.updatePrivacyAgree(this, true);
+    }
+
 }

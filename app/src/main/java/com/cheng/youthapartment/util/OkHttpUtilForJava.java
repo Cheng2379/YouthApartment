@@ -25,7 +25,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class OkHttpUtilForJava {
     private static final String TAG = "OkHttpUtils";
-    private static final String BASE_URL = "http://106.55.104.120:8082";
+    private static final String BASE_URL = "http://127.0.0.1:8082";
     private static OkHttpUtilForJava instance = new OkHttpUtilForJava();
     private static Handler handler = new Handler(Looper.getMainLooper());
     private static OkHttpClient client;

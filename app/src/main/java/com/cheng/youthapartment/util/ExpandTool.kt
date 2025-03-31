@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Build
 import android.os.Parcelable
 import android.text.Editable
+import android.text.Html
+import android.text.Spanned
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
@@ -15,6 +17,7 @@ import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
 
 /**
+ * 拓展函数工具类
  *
  * @author Cheng
  * @since 2025/1/4
@@ -57,6 +60,14 @@ fun View.showSnackbar(
         }
     }
     snackbar.show()
+}
+
+fun CharSequence.toHtml(): Spanned {
+    return this.toString().toHtml()
+}
+
+fun String.toHtml(flags: Int = Html.FROM_HTML_MODE_COMPACT): Spanned {
+    return Html.fromHtml(this, flags)
 }
 
 @Suppress("DEPRECATION")

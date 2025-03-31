@@ -53,7 +53,7 @@
     
     <string name="my_lease_default_title">我的租约</string>
     <string name="my_lease_default_rent">￥2000/月</string>
-    <string name="my_lease_default_date">2025–01-01 至 2025-12-31</string>
+    <string name="my_lease_default_date">2025–01–01 至 2025-12-31</string>
     <string name="my_lease_default_renewal">续约</string>
     <string name="my_lease_default_edit">修改</string>
     <string name="my_lease_default_refund">提前退租</string>
@@ -68,5 +68,81 @@
     <string name="my_lease_default_status_7">续约待确认</string>
     
     <string name="lease_info_btn_save">保存</string>
+    <string name="login_privacy_policy_text">
+        已阅读并同意
+        <font color="#277842">服务协议</font>
+        和
+        <font color="#277842">隐私保护政策</font>
+    </string>
     
+    <string name="last_update_date">
+        <![CDATA[<h3>最后更新日期：2025年XX月XX日</h3>]]>
+    </string>
+    
+    <!-- ========= 服务协议 ========= -->
+    <string name="terms_of_service_title"><![CDATA[青年公寓服务协议]]></string>
+    <string name="terms_of_service_content"><![CDATA[
+        <h4>一、服务内容</h4>
+        <p>1.1 本平台通过高德地图SDK提供房源定位、导航等服务，用户需同意授权位置相关权限方可使用核心功能。</p>
+        <h4>二、用户义务</h4>
+        <p>2.1 不得利用本服务从事非法活动，包括但不限于虚假房源发布、位置信息伪造等。</p>
+        <h4>三、权限说明</h4>
+            <p>3.1 为实现房源导航功能，您需授权以下权限：</p>
+        <ul>
+        <li><b>位置权限</b>（前台/后台）：用于实时定位、周边房源推荐</li>
+        <li><b>存储权限</b>：用于缓存地图数据，提升加载速度</li>
+        <li><b>网络相关权限</b>：用于数据同步及定位辅助</li>
+        </ul>
+        
+        <h4>四、免责条款</h4>
+        <p>4.1 高德地图服务由第三方提供，其数据准确性不由本平台担保。</p>
+        ]]>
+    </string>
+    
+    <!-- ========= 隐私政策 ========= -->
+    <string name="privacy_policy_title"><![CDATA[隐私保护政策]]></string>
+    <string name="privacy_policy_content"><![CDATA[
+        <h3>一、信息收集范围</h3>
+        <p>1.1 <b>必要信息</b></p>
+        <ul>
+        <li>位置数据（通过高德SDK获取，精确到50米范围内）</li>
+        <li>设备标识符（用于风控及服务稳定性保障）</li>
+        </ul>
+        
+        <p>1.2 <b>可选信息</b></p>
+        <ul>
+        <li>头像/昵称（仅用于社区功能，非强制提供）</li>
+        </ul>
+        
+        <h3>二、权限使用说明</h3>
+        <table>
+        <tr><th>权限</th><th>用途</th><th>是否强制</th></tr>
+        <tr><td>ACCESS_FINE_LOCATION</td><td>房源距离计算、导航</td><td>是</td></tr>
+        <tr><td>WRITE_EXTERNAL_STORAGE</td><td>缓存地图数据</td><td>否（但影响性能）</td></tr>
+        <tr><td>ACCESS_BACKGROUND_LOCATION</td><td>持续导航模式</td><td>可选</td></tr>
+        </table>
+        
+        <h3>三、第三方共享</h3>
+        <p>3.1 高德SDK会收集以下数据：</p>
+        <ul>
+        <li>设备MAC地址</li>
+        <li>基站/WiFi信息</li>
+        <li>经纬度坐标</li>
+        </ul>
+        <p>详见<a href="https://lbs.amap.com/pages/privacy/">高德隐私政策</a></p>
+        
+        <h3>四、数据保留</h3>
+        <p>4.1 位置信息在会话结束后24小时内匿名化处理</p>
+        
+        <h3>五、用户权利</h3>
+        <p>5.1 通过「设置-隐私中心」随时撤回位置权限授权</p>
+        
+        <h3>六、儿童保护</h3>
+        <p>6.1 不满14周岁的用户不得独立使用本服务</p>
+        <br>
+        <h5>我们需要您的位置权限用于：<br>🔍 查找3公里内的优质房源<br>🗺️ 生成最优看房路线</h5>
+        <h5>存储权限用于缓存地图数据，可减少50%流量消耗</h5>
+        ]]>
+    </string>
+
 </resources>
