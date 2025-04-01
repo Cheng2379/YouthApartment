@@ -222,9 +222,6 @@ class LeaseInfoActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * TODO: 分段选择处理器
-     */
     private fun showPicker(
         default: String,
         options: List<String>,

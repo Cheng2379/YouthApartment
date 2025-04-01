@@ -33,7 +33,6 @@
         android:textSize="16sp"
         android:textStyle="bold" />
     
-    <!-- todo: 后续封装为自定义View -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="400dp"

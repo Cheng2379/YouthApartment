@@ -59,8 +59,8 @@ class UserCenterFragment : Fragment() {
             userBean = it
         } ?: run {
             userBean = UserBean(
-                App.getSharedPreferences()?.getString("nickname", ""),
-                App.getSharedPreferences()?.getString("avatarUrl", null)
+                App.getSharedPreferences().getString("nickname", ""),
+                App.getSharedPreferences().getString("avatarUrl", null)
             )
         }
         Logger.d("userBean: $userBean")

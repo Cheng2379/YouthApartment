@@ -5,27 +5,36 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.MotionEvent
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.setMargins
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.amap.api.location.AMapLocation
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationListener
+import com.amap.api.location.IReGeoLocationCallback
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
-import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.BannerAdapter
+import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.bean.properties.GraphBean
 import com.cheng.youthapartment.bean.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
+import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
+import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
+import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
+import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
-import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
-import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
-import com.cheng.youthapartment.util.DataUtil
-import kotlin.collections.ArrayList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.abs
+
 
 /**
  * 房间详情页
@@ -59,13 +68,43 @@ class RoomActivity : BaseActivity() {
         }
     }
 
+    //声明AMapLocationClient类对象
+    private var mLocationClient: AMapLocationClient? = null
+
+    //声明定位回调监听器
+    private var mLocationListener: AMapLocationListener = AMapLocationListener { }
+
+    private var mLastX = 0f
+    private var mLastY = 0f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(mRoomBinding.root)
 
+        // 初始化地图
+        mRoomBinding.roomMap.onCreate(savedInstanceState)
+        setUpViewPager()
         getRoomById()
-        setupViewPager()
+        setMapSlidingConflict()
+    }
+
+    /**
+     * 设置地图
+     * @param [longitude] 精度
+     * @param [latitude]: 维度
+     */
+    private fun setMap(longitude: String, latitude: String) {
+        //初始化定位
+        mLocationClient = AMapLocationClient(this)
+        mLocationClient?.let { client ->
+            //设置定位回调监听
+            client.setLocationListener(mLocationListener)
+            client.setReGeoLocationCallback {
+                Logger.d("amapLocation: $it")
+            }
+
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -73,19 +112,21 @@ class RoomActivity : BaseActivity() {
         mAdapter = BannerAdapter(mGraphBeanList, this)
         mViewPager.adapter = mAdapter
 
-        RetrofitUtil.get<RoomDetailBean>(
-            "/app/room/getDetailById",
-            App.getToken(),
-            mapOf("id" to intent.getIntExtra("room_id", 0))
-        ) { _, response ->
-            response?.let {
-                mRoomDetailBean = response
-                mGraphBeanList.addAll(mRoomDetailBean!!.graphVoList)
-                runOnUiThread {
-                    mAdapter.notifyDataSetChanged()
-                    mViewPager.setCurrentItem(0, false)
-                    initIndicators()
-                    initView()
+        lifecycleScope.launch(Dispatchers.IO) {
+            RetrofitUtil.get<RoomDetailBean>(
+                "/app/room/getDetailById",
+                App.getToken(),
+                mapOf("id" to intent.getIntExtra("room_id", 0))
+            ) { _, response ->
+                response?.let {
+                    mRoomDetailBean = response
+                    mGraphBeanList.addAll(mRoomDetailBean!!.graphVoList)
+                    runOnUiThread {
+                        mAdapter.notifyDataSetChanged()
+                        mViewPager.setCurrentItem(0, false)
+                        initIndicators()
+                        initView()
+                    }
                 }
             }
         }
@@ -151,7 +192,12 @@ class RoomActivity : BaseActivity() {
             DataUtil.setFacility(facilityInfoText.text, facilityInfoImage)
         }
 
-        // 位置详情 todo 后续接入高德SDK
+        // 显示地址数据
+        mRoomDetailBean?.apartmentDetailBean?.let {
+            mRoomBinding.roomLocation.text = it.addressDetail
+            setMap(it.longitude, it.latitude)
+        }
+
 
         // 费用明细
         val freeMap = mutableMapOf<String, String>()
@@ -200,12 +246,49 @@ class RoomActivity : BaseActivity() {
     /**
      * 监听滑动图片
      */
-    private fun setupViewPager() {
+    private fun setUpViewPager() {
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 updateIndicators(position)
             }
         })
+    }
+
+    /**
+     * 处理地图控件与父组件的滑动冲突
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setMapSlidingConflict() {
+        mRoomBinding.roomMap.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mLastX = event.x
+                    mLastY = event.y
+                    // 请求父View不拦截触摸事件
+                    mRoomBinding.root.requestDisallowInterceptTouchEvent(true)
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    // 计算绝对值
+                    val deltaX = abs(event.x - mLastX)
+                    val deltaY = abs(event.y - mLastY)
+                    // 当y坐标偏移量大于x坐标偏移量，且deltaY大于阈值(10像素), 则为垂直滑动，交给父View处理
+                    if (deltaY > deltaX && deltaY > 10) {
+                        mRoomBinding.root.requestDisallowInterceptTouchEvent(false)
+                    } else {
+                        mRoomBinding.root.requestDisallowInterceptTouchEvent(true)
+                    }
+                    mLastX = event.x
+                    mLastY = event.y
+                }
+
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    // 手指抬起时, 恢复父View拦截
+                    mRoomBinding.root.requestDisallowInterceptTouchEvent(false)
+                }
+            }
+            false
+        }
     }
 
     /**

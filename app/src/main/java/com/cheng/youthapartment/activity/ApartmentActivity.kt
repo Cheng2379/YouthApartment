@@ -33,7 +33,6 @@ import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * 公寓详情页
@@ -75,16 +74,27 @@ class ApartmentActivity : BaseActivity() {
         enableEdgeToEdge()
         setContentView(mApartmentBinding.root)
 
+        // 初始化地图
+        mApartmentBinding.apartmentMap.onCreate(savedInstanceState)
+        setUpViewPager()
         getApartmentById()
         getRoomItemByApartmentId()
-        setupViewPager()
+    }
+
+    /**
+     * 设置地图
+     * @param [longitude] 精度
+     * @param [latitude]: 维度
+     */
+    private fun setMap(longitude: String, latitude: String) {
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getApartmentById() {
         mApartmentId = intent.getIntExtra("apartment_id", 0)
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             RetrofitUtil.get<ApartmentDetailBean>(
                 "/app/apartment/getDetailById",
                 App.getToken(),
@@ -159,6 +169,8 @@ class ApartmentActivity : BaseActivity() {
         }
 
         // 位置详情
+        mApartmentBinding.apartmentLocation.text = apartmentDetailBean.addressDetail
+        setMap(apartmentDetailBean.longitude, apartmentDetailBean.latitude)
 
         // 可选房间列表
         mRvRoom.layoutManager =
@@ -231,7 +243,7 @@ class ApartmentActivity : BaseActivity() {
         }
     }
 
-    private fun setupViewPager() {
+    private fun setUpViewPager() {
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 updateIndicators(position)

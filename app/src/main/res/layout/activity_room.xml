@@ -9,6 +9,7 @@
     tools:context=".activity.RoomActivity">
     
     <ScrollView
+        android:id="@+id/room_root_scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_height="wrap_content">
@@ -48,7 +49,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:id="@+id/room_name"
@@ -88,7 +89,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -115,7 +116,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -137,13 +138,13 @@
             <!-- 位置详情 -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="400dp"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -154,7 +155,24 @@
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
-                <!--  todo: 高德SDK  -->
+                <TextView
+                    android:id="@+id/room_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+                
+                <!-- 高德地图  -->
+                <com.amap.api.maps.MapView
+                    android:id="@+id/room_map"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
             </LinearLayout>
             
             <!-- 费用明细 -->
@@ -166,7 +184,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -228,7 +246,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -291,7 +309,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"
@@ -354,7 +372,7 @@
                 android:background="@drawable/shape_btn_login"
                 android:backgroundTint="@color/white"
                 android:orientation="vertical"
-                android:paddingStart="15dp">
+                android:paddingHorizontal="15dp">
                 
                 <TextView
                     android:layout_width="wrap_content"

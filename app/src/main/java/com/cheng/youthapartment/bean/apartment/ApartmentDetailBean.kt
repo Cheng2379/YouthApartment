@@ -39,10 +39,12 @@ data class ApartmentDetailBean(
     val labelInfoList: List<LabelInfoBean>,
     @SerializedName("facilityInfoList")
     var facilityInfoList: List<FacilityInfoBean>,
-    @SerializedName("latitude")
-    val latitude: String,
+    // 经度
     @SerializedName("longitude")
     val longitude: String,
+    // 纬度
+    @SerializedName("latitude")
+    val latitude: String,
     @SerializedName("minRent")
     val minRent: Int,
     @SerializedName("phone")

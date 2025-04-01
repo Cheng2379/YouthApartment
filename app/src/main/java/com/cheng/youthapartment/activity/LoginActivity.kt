@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.lifecycle.lifecycleScope
 import com.amap.api.maps.MapsInitializer
+import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.bean.BaseBean
 import com.cheng.youthapartment.util.DataUtil
@@ -30,6 +31,9 @@ import com.cheng.youthapartment.util.showToast
 import com.cheng.youthapartment.util.textChangedListener
 import com.cheng.youthapartment.util.toHtml
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * 登录页面
@@ -46,7 +50,7 @@ class LoginActivity : BaseActivity() {
     private val mCheckBox: CheckBox by lazy { findViewById(R.id.login_cb) }
     private val mPrivacyPolicy: TextView by lazy { findViewById(R.id.login_privacy_policy) }
 
-    private var lastUpdateDate = ""
+    private var lastUpdateDate: String? = null
     private var mIsChecked = false
     private var mPhoneStr: String = ""
     private var mCaptchaStr: String = ""
@@ -194,7 +198,7 @@ class LoginActivity : BaseActivity() {
                                 Logger.d("userBean: $userBean")
                                 userBean?.let { bean ->
                                     "登录成功".showToast()
-                                    getSharedPreferences("user_info", MODE_PRIVATE).edit {
+                                    App.getSharedPreferences().edit {
                                         putString("token", mToken)
                                         putString("nickname", bean.nickname)
                                         putString("avatarUrl", bean.avatarUrl ?: "")
@@ -219,7 +223,9 @@ class LoginActivity : BaseActivity() {
     }
 
     /**
-     * 0:同意服务协议     1: 服务协议      2: 隐私保护政策
+     * 0: 同意服务协议
+     * 1: 服务协议高亮与点击事件
+     * 2: 隐私保护政策高亮与点击事件
      */
     private fun setClickableSpan(
         textType: Int,
@@ -249,6 +255,7 @@ class LoginActivity : BaseActivity() {
 
                 override fun updateDrawState(ds: TextPaint) {
                     if (textType != 0) {
+                        // 集成该父类方法会使高亮文本失效，在此处让"已阅读并同意"这几个字高亮效果失效
                         super.updateDrawState(ds)
                     }
                     ds.isUnderlineText = false
@@ -276,26 +283,27 @@ class LoginActivity : BaseActivity() {
         // 设置返回不关闭对话框
         //dialog.setCancelable(false)
 
-        val title: TextView = view.findViewById(R.id.privacy_policy_title)
-        val latUpdateDate: TextView = view.findViewById(R.id.privacy_policy_last_update_date)
-        val contentText: TextView = view.findViewById(R.id.privacy_policy_content)
+        val titleView: TextView = view.findViewById(R.id.privacy_policy_title)
+        val lastUpdateDateView: TextView = view.findViewById(R.id.privacy_policy_last_update_date)
+        val contentTextView: TextView = view.findViewById(R.id.privacy_policy_content)
 
         val closeBtn: Button = view.findViewById(R.id.close_btn)
 
-        // TODO: 最后更新时间逻辑   -> 需要在登录成功的一刻起，获取并设置本地时间数据到SharedPreferences(通过App对外接口设置), 然后在这里设置获取数据
-        //  判断获取状态是否为空，若为空，则显示暂无记录，若不为空，则显示SharedPreferences内的时间数据
-        latUpdateDate.text = resources.getText(R.string.last_update_date).toHtml()
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        lastUpdateDate = simpleDateFormat.format(Date(System.currentTimeMillis()))
+
 
         when (textType) {
             1 -> {
-                title.text = resources.getText(R.string.terms_of_service_title).toHtml()
-                contentText.text = resources.getText(R.string.terms_of_service_content).toHtml()
+                lastUpdateDateView.text = this.getText(R.string.service_last_update_date).toHtml()
+                titleView.text = this.getText(R.string.terms_of_service_title).toHtml()
+                contentTextView.text = this.getText(R.string.terms_of_service_content).toHtml()
             }
 
             2 -> {
-                title.text = resources.getText(R.string.privacy_policy_title).toHtml()
-                contentText.text =
-                    resources.getText(R.string.privacy_policy_content).toHtml()
+                lastUpdateDateView.text = this.getText(R.string.privacy_policy_last_update_date).toHtml()
+                titleView.text = this.getText(R.string.privacy_policy_title).toHtml()
+                contentTextView.text = this.getText(R.string.privacy_policy_content).toHtml()
             }
         }
 
@@ -310,6 +318,7 @@ class LoginActivity : BaseActivity() {
      * 使用地图功能之前，必须设置隐私合规
      */
     private fun setPrivacyCompliance() {
+        // 设置高德SDK合规性，若不设置该属性，无法正常使用高德SDK
         MapsInitializer.updatePrivacyShow(this, true, true);
         MapsInitializer.updatePrivacyAgree(this, true);
     }

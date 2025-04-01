@@ -75,11 +75,10 @@
         <font color="#277842">隐私保护政策</font>
     </string>
     
-    <string name="last_update_date">
-        <![CDATA[<h3>最后更新日期：2025年XX月XX日</h3>]]>
-    </string>
-    
     <!-- ========= 服务协议 ========= -->
+    <string name="service_last_update_date">
+        <![CDATA[<h5>最后更新日期: 2025-03-15   <br>生效日期: 2025-03-15</h5>]]>
+    </string>
     <string name="terms_of_service_title"><![CDATA[青年公寓服务协议]]></string>
     <string name="terms_of_service_content"><![CDATA[
         <h4>一、服务内容</h4>
@@ -100,6 +99,9 @@
     </string>
     
     <!-- ========= 隐私政策 ========= -->
+    <string name="privacy_policy_last_update_date">
+        <![CDATA[<h5>最后更新日期: 2025-02-20   <br>生效日期: 2025-02-20</h5>]]>
+    </string>
     <string name="privacy_policy_title"><![CDATA[隐私保护政策]]></string>
     <string name="privacy_policy_content"><![CDATA[
         <h3>一、信息收集范围</h3>
