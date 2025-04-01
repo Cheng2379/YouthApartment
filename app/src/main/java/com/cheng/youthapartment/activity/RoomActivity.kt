@@ -18,6 +18,9 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationListener
 import com.amap.api.location.IReGeoLocationCallback
+import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.MarkerOptions
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.BannerAdapter
@@ -77,6 +80,7 @@ class RoomActivity : BaseActivity() {
     private var mLastX = 0f
     private var mLastY = 0f
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -96,6 +100,21 @@ class RoomActivity : BaseActivity() {
      */
     private fun setMap(longitude: String, latitude: String) {
         //初始化定位
+        try {
+            val map = mRoomBinding.roomMap.map ?: return
+            val lng = longitude.toDoubleOrNull() ?: 0.0
+            val lat = latitude.toDoubleOrNull() ?: 0.0
+            val latLng = LatLng(lat, lng)
+            // 15f为缩放级别
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            map.addMarker(
+                MarkerOptions().position(latLng)
+                    .title("房源位置")
+            )
+        } catch (e: Exception) {
+            Logger.e("map initialization fail")
+        }
+
         mLocationClient = AMapLocationClient(this)
         mLocationClient?.let { client ->
             //设置定位回调监听
@@ -256,6 +275,7 @@ class RoomActivity : BaseActivity() {
 
     /**
      * 处理地图控件与父组件的滑动冲突
+     * TODO: 滑动冲突依旧存在，待解决
      */
     @SuppressLint("ClickableViewAccessibility")
     private fun setMapSlidingConflict() {

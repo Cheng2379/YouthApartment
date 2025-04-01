@@ -14,6 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.amap.api.location.AMapLocationClient
+import com.amap.api.location.AMapLocationListener
+import com.amap.api.maps.CameraUpdateFactory
+import com.amap.api.maps.model.LatLng
+import com.amap.api.maps.model.MarkerOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
@@ -69,6 +74,13 @@ class ApartmentActivity : BaseActivity() {
         }
     }
 
+    //声明AMapLocationClient类对象
+    private var mLocationClient: AMapLocationClient? = null
+
+    //声明定位回调监听器
+    private var mLocationListener: AMapLocationListener = AMapLocationListener { }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -87,7 +99,31 @@ class ApartmentActivity : BaseActivity() {
      * @param [latitude]: 维度
      */
     private fun setMap(longitude: String, latitude: String) {
+        //初始化定位
+        try {
+            val map = mApartmentBinding.apartmentMap.map ?: return
+            val lng = longitude.toDoubleOrNull() ?: 0.0
+            val lat = latitude.toDoubleOrNull() ?: 0.0
+            val latLng = LatLng(lat, lng)
+            // 15f为缩放级别
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+            map.addMarker(
+                MarkerOptions().position(latLng)
+                    .title("房源位置")
+            )
+        } catch (e: Exception) {
+            Logger.e("map initialization fail")
+        }
 
+        mLocationClient = AMapLocationClient(this)
+        mLocationClient?.let { client ->
+            //设置定位回调监听
+            client.setLocationListener(mLocationListener)
+            client.setReGeoLocationCallback {
+                Logger.d("amapLocation: $it")
+            }
+
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
