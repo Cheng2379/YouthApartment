@@ -26,6 +26,7 @@
             android:layout_marginEnd="20dp"
             android:gravity="center"
             android:text="@string/browse_history_text"
+            android:textColor="@color/icon_or_text"
             android:textSize="20sp"
             android:textStyle="bold" />
     

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#EE0A24</color>
+    <!--透明-->
+    <color name="transparent">#00000000</color>
+    <!--半透明-->
+    <color name="translucent">#22050505</color>
+    
+    <color name="icon_or_text">#F5F5F5</color>
+    <color name="home_menu_bg">#2E2E2E</color>
+    
+    <color name="grey">#969799</color>
+    <color name="green">#07C060</color>
+    <color name="light_cyan">#277842</color>
+    <color name="background">#FFFFFF</color>
+    
+    <color name="home_top_filter_bar">#070707</color>
+    <color name="home_body">#1B1B1D</color>
+    <color name="home_body_item">#000000</color>
+    <color name="home_user_center_bg">#242624</color>
+    
+    <color name="room_bg">#3A3A3C</color>
+    <color name="room_item_bg">#000000</color>
+</resources>

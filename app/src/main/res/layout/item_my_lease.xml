@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="10sp"
-    android:layout_marginBottom="10sp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginTop="10dp"
     android:background="@drawable/shape_rv_search_home_style"
     android:elevation="2sp"
     android:gravity="center_vertical"
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/search_rv_room_default"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="17sp"
             android:textStyle="bold" />
         

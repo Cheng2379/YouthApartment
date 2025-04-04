@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBECEF"
+    android:background="@color/room_bg"
     android:fitsSystemWindows="true"
     tools:context=".activity.ApartmentActivity">
     
@@ -46,7 +46,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -84,7 +84,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp"
                 tools:ignore="RtlSymmetry">
@@ -94,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="社区介绍"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="15sp" />
             </LinearLayout>
             
@@ -116,7 +116,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="配套说明"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -144,7 +144,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="位置详情"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -162,7 +162,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="13sp"
                     android:textStyle="bold" />
                 
@@ -184,7 +184,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="60dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingBottom="80dp">
                 
@@ -194,26 +194,26 @@
                     android:layout_marginTop="10dp"
                     android:paddingStart="15dp"
                     android:text="可选房间列表"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText,RtlSymmetry" />
                 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/apartment_rv_room"
-                    android:layout_marginTop="10dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp" />
                 
                 <TextView
                     android:id="@+id/data_loading_completed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:text="没有更多了..."
-                    android:textColor="#B3A09B"
-                    android:textSize="18sp"
+                    android:textColor="@color/icon_or_text"
+                    android:textSize="15sp"
                     android:visibility="gone" />
             </LinearLayout>
         

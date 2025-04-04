@@ -7,8 +7,10 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
 import androidx.core.graphics.toColorInt
+import com.cheng.youthapartment.R
 
 /**
  *
@@ -60,7 +62,7 @@ class YAGridLayout @JvmOverloads constructor(
         TextView(context).apply {
             text = value
             textSize = 16f
-            setTextColor("#2D3338".toColorInt())
+            setTextColor(ContextCompat.getColor(context, R.color.icon_or_text))
             layoutParams = LayoutParams().apply {
                 setMargins(0, 8, 0, 8)
                 height = LayoutParams.WRAP_CONTENT
@@ -83,7 +85,7 @@ class YAGridLayout @JvmOverloads constructor(
             text = key
             textSize = 14f
             gravity = Gravity.START
-            setTextColor("#2D3338".toColorInt())
+            setTextColor(ContextCompat.getColor(context, R.color.icon_or_text))
             layoutParams = LayoutParams().apply {
                 width = 0
                 height = LayoutParams.WRAP_CONTENT
@@ -97,7 +99,7 @@ class YAGridLayout @JvmOverloads constructor(
             text = value
             textSize = 14f
             gravity = Gravity.START
-            setTextColor("#2D3338".toColorInt())
+            setTextColor(ContextCompat.getColor(context, R.color.icon_or_text))
             layoutParams = LayoutParams().apply {
                 width = 0
                 height = LayoutParams.WRAP_CONTENT

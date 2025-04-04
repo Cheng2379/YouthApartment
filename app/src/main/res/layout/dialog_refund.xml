@@ -17,7 +17,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
             android:text="提前退租"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -52,6 +52,7 @@
                 android:layout_weight="1"
                 android:background="@color/transparent"
                 android:gravity="center"
+                android:textColor="@color/icon_or_text"
                 android:text="取消"
                 android:textSize="18sp"
                 tools:ignore="HardcodedText" />

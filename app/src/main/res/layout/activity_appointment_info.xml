@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBECEF"
+    android:background="@color/room_bg"
     android:orientation="vertical"
     android:paddingHorizontal="15dp"
     tools:context=".activity.AppointmentInfoActivity">
@@ -12,9 +12,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:text="@string/appoint_act_name"
-        android:textColor="@color/black"
+        android:textColor="@color/icon_or_text"
         android:textSize="16sp"
         android:textStyle="bold" />
     
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/appoint_title_info"
-        android:textColor="@color/black"
+        android:textColor="@color/icon_or_text"
         android:textSize="16sp"
         android:textStyle="bold" />
     
@@ -108,6 +108,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
+                    android:backgroundTint="@color/icon_or_text"
                     android:background="@drawable/img_right_arrow" />
             </LinearLayout>
         </LinearLayout>
@@ -142,6 +143,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center_vertical"
+                    android:backgroundTint="@color/icon_or_text"
                     android:background="@drawable/img_right_arrow" />
             </LinearLayout>
         </LinearLayout>
@@ -177,7 +179,7 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="0/50"
-            android:textColor="@color/black" />
+            android:textColor="@color/icon_or_text" />
     </LinearLayout>
     
     <Button

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
@@ -24,7 +23,7 @@ import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
 import com.cheng.youthapartment.view.BottomActionSheet
 
-class LeaseInfoActivity : AppCompatActivity() {
+class LeaseInfoActivity : BaseActivity() {
     private val mLeaseInfoBinding: ActivityLeaseInfoBinding by lazy {
         ActivityLeaseInfoBinding.inflate(layoutInflater)
     }

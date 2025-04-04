@@ -11,6 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="数据已加载完毕"
-        android:textColor="@color/black"
+        android:textColor="@color/icon_or_text"
         android:textSize="14sp" />
 </LinearLayout>

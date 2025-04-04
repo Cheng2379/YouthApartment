@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20sp"
-    android:layout_marginBottom="10sp"
+    android:layout_marginTop="10dp"
     android:background="@drawable/shape_rv_search_home_style"
     android:elevation="2sp"
     android:gravity="center_vertical"
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/my_appointment_default_name"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="16sp"
             android:textStyle="bold" />
         

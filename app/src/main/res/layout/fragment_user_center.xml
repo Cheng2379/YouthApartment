@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
     
+    <!-- 白天黑夜模式切换按钮 -->
+    <ImageView
+        android:id="@+id/switch_theme_model"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/svg_dark"
+        android:backgroundTint="@color/icon_or_text"
+        tools:ignore="RtlHardcoded" />
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="30dp"
-        android:background="#E0EBD0"
+        android:layout_marginTop="10dp"
+        android:background="@color/home_user_center_bg"
         android:gravity="center"
         android:orientation="vertical">
         
@@ -16,7 +29,8 @@
             android:id="@+id/user_avatar"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:background="@drawable/img_user_center" />
+            android:background="@drawable/img_user_center"
+            android:backgroundTint="@color/icon_or_text" />
         
         <TextView
             android:id="@+id/user_name"
@@ -24,6 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="用户—xxxx"
+            android:textColor="@color/icon_or_text"
             android:textSize="18sp" />
     </LinearLayout>
     
@@ -36,7 +51,7 @@
         android:orientation="horizontal">
         
         <LinearLayout
-            android:id="@+id/browse_history"
+            android:id="@+id/user_center_browse_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -45,13 +60,16 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/img_browse_history" />
+                android:background="@drawable/img_browse_history"
+                android:backgroundTint="@color/icon_or_text" />
             
             <TextView
                 style="@style/UserCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="浏览历史" />
+                android:layout_marginTop="10dp"
+                android:text="浏览历史"
+                android:textColor="@color/icon_or_text" />
         </LinearLayout>
         
         <View
@@ -60,7 +78,7 @@
             android:layout_weight="1" />
         
         <LinearLayout
-            android:id="@+id/my_reserve"
+            android:id="@+id/user_center_my_reserve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -69,13 +87,16 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/img_my_reserve" />
+                android:background="@drawable/img_my_reserve"
+                android:backgroundTint="@color/icon_or_text" />
             
             <TextView
                 style="@style/UserCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="我的预约" />
+                android:layout_marginTop="10dp"
+                android:text="我的预约"
+                android:textColor="@color/icon_or_text" />
         </LinearLayout>
         
         <View
@@ -84,7 +105,7 @@
             android:layout_weight="1" />
         
         <LinearLayout
-            android:id="@+id/my_lease"
+            android:id="@+id/user_center_my_lease"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
@@ -93,13 +114,16 @@
             <ImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/img_my_lease" />
+                android:background="@drawable/img_my_lease"
+                android:backgroundTint="@color/icon_or_text" />
             
             <TextView
                 style="@style/UserCenter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="我的租约" />
+                android:layout_marginTop="10dp"
+                android:text="我的租约"
+                android:textColor="@color/icon_or_text" />
         </LinearLayout>
     </LinearLayout>
     
@@ -110,7 +134,7 @@
         android:layout_weight="1" />
     
     <Button
-        android:id="@+id/exit_login"
+        android:id="@+id/user_center_exit_login"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginHorizontal="40dp"

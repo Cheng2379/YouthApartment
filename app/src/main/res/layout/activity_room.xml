@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBECEF"
+    android:background="@color/room_bg"
     android:fitsSystemWindows="true"
     tools:context=".activity.RoomActivity">
     
@@ -47,7 +47,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -57,7 +57,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="回龙观社区"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -87,7 +87,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="基本信息"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -114,7 +114,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="配套说明"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -142,7 +142,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -151,7 +151,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="位置详情"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="13sp"
                     android:textStyle="bold" />
                 
@@ -182,7 +182,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -191,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="费用明细"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -244,7 +244,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -253,7 +253,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="可选付款方式"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -307,7 +307,7 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -316,7 +316,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="可选租期"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -370,7 +370,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="50dp"
                 android:background="@drawable/shape_btn_login"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/room_item_bg"
                 android:orientation="vertical"
                 android:paddingHorizontal="15dp">
                 
@@ -379,7 +379,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="所属公寓"
-                    android:textColor="@color/black"
+                    android:textColor="@color/icon_or_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
                 
@@ -388,7 +388,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp" />
+                    android:layout_marginHorizontal="10dp"/>
             </LinearLayout>
         
         </LinearLayout>

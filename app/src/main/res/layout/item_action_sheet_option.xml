@@ -7,5 +7,5 @@
     android:gravity="center"
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
-    android:textColor="@android:color/black"
+    android:textColor="@color/icon_or_text"
     android:textSize="18sp" />

@@ -27,6 +27,7 @@
     <!--允许读设备等信息，用于问题排查-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     
+    <!-- TODO LOGO更换 -->
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -53,9 +54,11 @@
             android:exported="false" />
         <activity
             android:name=".activity.ApartmentActivity"
+            android:configChanges="uiMode"
             android:exported="false" />
         <activity
             android:name=".activity.RoomActivity"
+            android:configChanges="uiMode"
             android:exported="false" />
         <activity
             android:name=".activity.BrowseHistoryActivity"
@@ -65,6 +68,7 @@
             android:exported="false" />
         <activity
             android:name=".activity.HomeActivity"
+            android:configChanges="uiMode"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -74,7 +78,9 @@
         </activity>
         
         <!-- 高德SDK -->
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="18fb50d9dde7b1acbba5ae989c25ecbe" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="18fb50d9dde7b1acbba5ae989c25ecbe" />
         
         <service android:name="com.amap.api.location.APSService" />
     </application>

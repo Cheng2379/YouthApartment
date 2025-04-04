@@ -1,6 +1,8 @@
 package com.cheng.youthapartment.fragment
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,8 +24,13 @@ import com.cheng.youthapartment.activity.MyAppointmentActivity
 import com.cheng.youthapartment.activity.MyLeaseActivity
 import com.cheng.youthapartment.adapter.SquareCrop
 import com.cheng.youthapartment.bean.user.UserBean
-import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.getYAParcelableExtra
+import androidx.core.content.res.ResourcesCompat
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.cheng.youthapartment.util.ViewUtil
 
 /**
  *
@@ -31,12 +38,16 @@ import com.cheng.youthapartment.util.getYAParcelableExtra
  * @since 2025/1/4
  */
 class UserCenterFragment : Fragment() {
-    private val activity by lazy { requireActivity() as HomeActivity }
+    private lateinit var view: View
+    private val mActivity by lazy { requireActivity() as HomeActivity }
     private val mAvatarImg: ImageView by lazy { view.findViewById(R.id.user_avatar) }
     private val mUserName: TextView by lazy { view.findViewById(R.id.user_name) }
-    private val mLogout: Button by lazy { view.findViewById(R.id.exit_login) }
-    private var userBean: UserBean? = null
-    private lateinit var view: View
+    private val mLogout: Button by lazy { view.findViewById(R.id.user_center_exit_login) }
+
+    private val mSwitchThemeView: ImageView by lazy { view.findViewById(R.id.switch_theme_model) }
+    private var mUserBean: UserBean? = null
+
+    private val mSp = App.getSharedPreferences()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,54 +66,93 @@ class UserCenterFragment : Fragment() {
     }
 
     private fun initView() {
-        activity.intent.getYAParcelableExtra<UserBean>("user")?.let {
-            userBean = it
+        // 根据主题状态显示对应的图标
+        mSwitchThemeView.background = ResourcesCompat.getDrawable(
+            resources,
+            if (ViewUtil.isNightModel()) R.drawable.svg_light else R.drawable.svg_dark,
+            null
+        )
+
+        mActivity.intent.getYAParcelableExtra<UserBean>("user")?.let {
+            mUserBean = it
         } ?: run {
-            userBean = UserBean(
-                App.getSharedPreferences().getString("nickname", ""),
-                App.getSharedPreferences().getString("avatarUrl", null)
+            mUserBean = UserBean(
+                mSp.getString("nickname", ""),
+                mSp.getString("avatarUrl", null)
             )
         }
-        Logger.d("userBean: $userBean")
-        userBean?.avatarUrl?.takeIf { it.isNotEmpty() }.let {
+        val hasValidAvatarUrl = mUserBean?.avatarUrl?.isNotEmpty() == true
+
+        if (hasValidAvatarUrl) {
             Glide.with(this)
-                .load(it)
+                .load(mUserBean?.avatarUrl)
                 .error(R.drawable.img_user_center)
-                .apply(
-                    RequestOptions.bitmapTransform(SquareCrop(20))
-                )
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        mAvatarImg.backgroundTintList = ColorStateList.valueOf(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.icon_or_text,
+                                null
+                            )
+                        )
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        mAvatarImg.backgroundTintList = null
+                        return false
+                    }
+                })
+                .apply(RequestOptions.bitmapTransform(SquareCrop(20)))
                 .into(mAvatarImg)
         }
-        mUserName.text = userBean?.nickname ?: "用户-xxxx"
+        mUserName.text = mUserBean?.nickname ?: "用户-xxxx"
     }
 
     private fun onClickListener() {
         // 租约历史
-        view.findViewById<LinearLayout>(R.id.browse_history).setOnClickListener {
-            startActivity(Intent(activity, BrowseHistoryActivity::class.java))
+        view.findViewById<LinearLayout>(R.id.user_center_browse_history).setOnClickListener {
+            startActivity(Intent(mActivity, BrowseHistoryActivity::class.java))
         }
         // 我的预约
-        view.findViewById<LinearLayout>(R.id.my_reserve).setOnClickListener {
-            startActivity(Intent(activity, MyAppointmentActivity::class.java))
+        view.findViewById<LinearLayout>(R.id.user_center_my_reserve).setOnClickListener {
+            startActivity(Intent(mActivity, MyAppointmentActivity::class.java))
         }
         // 我的租约
-        view.findViewById<LinearLayout>(R.id.my_lease).setOnClickListener {
-            startActivity(Intent(activity, MyLeaseActivity::class.java))
+        view.findViewById<LinearLayout>(R.id.user_center_my_lease).setOnClickListener {
+            startActivity(Intent(mActivity, MyLeaseActivity::class.java))
         }
         // 退出登录
         mLogout.setOnClickListener {
-            AlertDialog.Builder(activity)
+            AlertDialog.Builder(mActivity)
                 .setMessage("是否确认退出登录")
                 .setNegativeButton("否") { dialogInterface, _ ->
                     dialogInterface.dismiss()
                 }
                 .setPositiveButton("是") { dialogInterface, position ->
-                    startActivity(Intent(activity, LoginActivity::class.java))
-                    activity.finish()
+                    startActivity(Intent(mActivity, LoginActivity::class.java))
+                    mActivity.finish()
                     App.clearUserInfo()
                     dialogInterface.dismiss()
                 }
                 .show()
+        }
+
+        // 切换主题
+        mSwitchThemeView.setOnClickListener {
+            ViewUtil.setThemeModel(mSwitchThemeView, mActivity)
         }
     }
 

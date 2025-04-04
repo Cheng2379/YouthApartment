@@ -8,8 +8,23 @@
     <!--半透明-->
     <color name="translucent">#22050505</color>
     
+    <!-- 图标以及图标的文本 -->
+    <color name="icon_or_text">#323233</color>
+    <!-- 首页底部菜单背景 -->
+    <color name="home_menu_bg">#FFFFFF</color>
+    
     <color name="grey">#969799</color>
     <color name="green">#07C060</color>
     <color name="light_cyan">#277842</color>
     <color name="background">#FFFFFF</color>
+    
+    <!-- 首页 -->
+    <color name="home_top_filter_bar">#FFFFFF</color>
+    <color name="home_body">#FFFFFF</color>
+    <color name="home_body_item">#FFFFFF</color>
+    <color name="home_user_center_bg">#E0ECCF</color>
+    
+    <color name="room_bg">#EBECEF</color>
+    <!-- 每个属性条目的背景 -->
+    <color name="room_item_bg">#FFFFFF</color>
 </resources>

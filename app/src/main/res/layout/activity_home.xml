@@ -23,7 +23,7 @@
         android:id="@+id/bottom_nv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/home_menu_bg"
         app:labelVisibilityMode="labeled"
         android:theme="@style/FootButton"
         app:itemBackground="@null"

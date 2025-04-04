@@ -4,14 +4,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EBEDF0"
     android:fitsSystemWindows="true"
     tools:context=".activity.LeaseInfoActivity">
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EBEDF0"
+        android:background="@color/room_bg"
         android:orientation="vertical"
         android:paddingHorizontal="20dp">
         
@@ -19,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="签约公寓"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -47,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
-                android:textColor="@color/black"
+                android:textColor="@color/icon_or_text"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -58,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="签约房间"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -86,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
-                android:textColor="@color/black"
+                android:textColor="@color/icon_or_text"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:ignore="HardcodedText" />
@@ -97,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="租客信息"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -164,7 +163,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="租约详情"
-            android:textColor="@color/black"
+            android:textColor="@color/icon_or_text"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -196,6 +195,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="3"
                     android:background="@drawable/shape_segmented_bg_selector">
                     
@@ -211,6 +211,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/img_right_arrow"
+                        android:backgroundTint="@color/icon_or_text"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -279,6 +280,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="3"
                     android:background="@drawable/shape_segmented_bg_selector">
                     
@@ -294,6 +296,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/img_right_arrow"
+                        android:backgroundTint="@color/icon_or_text"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>

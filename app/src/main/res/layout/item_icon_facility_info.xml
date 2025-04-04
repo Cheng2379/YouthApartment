@@ -9,13 +9,13 @@
         android:id="@+id/facility_img"
         android:layout_width="30sp"
         android:layout_height="30sp"
-        android:backgroundTint="#3A3A3B"/>
+        android:backgroundTint="@color/icon_or_text"/>
     
     <TextView
         android:id="@+id/facility_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:textColor="#3A3A3B"
+        android:textColor="@color/icon_or_text"
         android:text="空调"/>
 </LinearLayout>

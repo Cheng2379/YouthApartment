@@ -1,6 +1,10 @@
 package com.cheng.youthapartment.util
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.cheng.youthapartment.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -74,61 +78,62 @@ object DataUtil {
             newDate.format(formatter)
         }
     }
-    
-    fun setFacility(text: CharSequence, imageView: ImageView) {
+
+    fun setFacility(context: Context, text: CharSequence, imageView: ImageView) {
         when (text) {
             "空调" -> {
-                imageView.setImageResource(R.drawable.svg_air_conditioner)
+                imageView.setBackgroundResource(R.drawable.svg_air_conditioner)
             }
 
             "洗衣机" -> {
-                imageView.setImageResource(R.drawable.svg_washing_machine)
+                imageView.setBackgroundResource(R.drawable.svg_washing_machine)
             }
 
             "冰箱" -> {
-                imageView.setImageResource(R.drawable.svg_icebox)
+                imageView.setBackgroundResource(R.drawable.svg_icebox)
             }
 
             "书桌" -> {
-                imageView.setImageResource(R.drawable.svg_desk)
+                imageView.setBackgroundResource(R.drawable.svg_desk)
             }
 
             "WIFI" -> {
-                imageView.setImageResource(R.drawable.svg_wifi)
+                imageView.setBackgroundResource(R.drawable.svg_wifi)
             }
 
             "床" -> {
-                imageView.setImageResource(R.drawable.svg_bed)
+                imageView.setBackgroundResource(R.drawable.svg_bed)
             }
 
             "沙发" -> {
-                imageView.setImageResource(R.drawable.svg_sofa)
+                imageView.setBackgroundResource(R.drawable.svg_sofa)
             }
 
             "微波炉" -> {
-                imageView.setImageResource(R.drawable.svg_microwave_oven)
+                imageView.setBackgroundResource(R.drawable.svg_microwave_oven)
             }
 
             "油烟机" -> {
-                imageView.setImageResource(R.drawable.svg_range_hood)
+                imageView.setBackgroundResource(R.drawable.svg_range_hood)
             }
 
             "热水器" -> {
-                imageView.setImageResource(R.drawable.svg_water_heater)
+                imageView.setBackgroundResource(R.drawable.svg_water_heater)
             }
 
             "衣柜" -> {
-                imageView.setImageResource(R.drawable.svg_closet)
+                imageView.setBackgroundResource(R.drawable.svg_closet)
             }
 
             "电视机" -> {
-                imageView.setImageResource(R.drawable.svg_tv_set)
+                imageView.setBackgroundResource(R.drawable.svg_tv_set)
             }
 
             else -> {
-                imageView.setImageResource(R.drawable.svg_position)
+                imageView.setBackgroundResource(R.drawable.svg_position)
             }
         }
-        
+        imageView.backgroundTintList =
+            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.icon_or_text))
     }
 }

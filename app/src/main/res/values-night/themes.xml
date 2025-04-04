@@ -1,8 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <!--TODO: 白天黑夜模式-->
-    <style name="Base.Theme.YouthApartment" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.YouthApartment" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    </style>
+    
+    <style name="Theme.YouthApartment" parent="Base.Theme.YouthApartment" />
+    
+    <!--  黑夜导航栏主题  -->
+    <style name="FootButton" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/light_cyan</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 </resources>

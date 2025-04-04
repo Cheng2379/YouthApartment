@@ -27,8 +27,12 @@ class App : Application() {
         fun getSharedPreferences() = mSharedPreferences
 
         fun clearUserInfo() {
+            val nightMode = mSharedPreferences.getInt("night_model", -1)
             mSharedPreferences.edit {
                 clear()
+                if (nightMode != -1) {
+                    putInt("night_model", nightMode)
+                }
                 Logger.i("SharePreferences Data cleared!")
             }
         }

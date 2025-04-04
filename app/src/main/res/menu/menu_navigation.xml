@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    
     <item
         android:id="@+id/fragment_search"
-        android:title="找房"
-        android:icon="@drawable/img_search"/>
-
+        android:icon="@drawable/img_search"
+        android:iconTint="@color/icon_or_text"
+        android:title="找房" />
+    
     <item
         android:id="@+id/fragment_group"
-        android:title="圈子"
-        android:icon="@drawable/img_group"/>
-
+        android:icon="@drawable/img_group"
+        android:iconTint="@color/icon_or_text"
+        android:title="圈子" />
+    
     <item
         android:id="@+id/fragment_my_room"
-        android:title="我的房间"
-        android:icon="@drawable/img_my_room"/>
-
+        android:icon="@drawable/img_my_room"
+        android:iconTint="@color/icon_or_text"
+        android:title="我的房间" />
+    
     <item
         android:id="@+id/fragment_message"
-        android:title="消息"
-        android:icon="@drawable/img_message"/>
-
+        android:icon="@drawable/img_message"
+        android:iconTint="@color/icon_or_text"
+        android:title="消息" />
+    
     <item
         android:id="@+id/fragment_user_center"
-        android:title="个人中心"
-        android:icon="@drawable/img_user_center"/>
+        android:icon="@drawable/img_user_center"
+        android:iconTint="@color/icon_or_text"
+        android:title="个人中心" />
 
 </menu>

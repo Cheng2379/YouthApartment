@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationListener
+import com.amap.api.maps.AMap
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.MarkerOptions
@@ -36,6 +37,7 @@ import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
+import com.cheng.youthapartment.util.ViewUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -99,9 +101,10 @@ class ApartmentActivity : BaseActivity() {
      * @param [latitude]: 维度
      */
     private fun setMap(longitude: String, latitude: String) {
+        val map = mApartmentBinding.apartmentMap.map ?: return
+        val isNight = ViewUtil.isNightModel()
         //初始化定位
         try {
-            val map = mApartmentBinding.apartmentMap.map ?: return
             val lng = longitude.toDoubleOrNull() ?: 0.0
             val lat = latitude.toDoubleOrNull() ?: 0.0
             val latLng = LatLng(lat, lng)
@@ -111,6 +114,7 @@ class ApartmentActivity : BaseActivity() {
                 MarkerOptions().position(latLng)
                     .title("房源位置")
             )
+            map.mapType = if (isNight) AMap.MAP_TYPE_NIGHT else AMap.MAP_TYPE_NORMAL
         } catch (e: Exception) {
             Logger.e("map initialization fail")
         }
@@ -201,7 +205,7 @@ class ApartmentActivity : BaseActivity() {
             val facilityInfoImage = holder.itemView.findViewById<ImageView>(R.id.facility_img)
             val facilityInfoText = holder.itemView.findViewById<TextView>(R.id.facility_text)
             facilityInfoText.text = facilityList[position]?.name ?: ""
-            DataUtil.setFacility(facilityInfoText.text, facilityInfoImage)
+            DataUtil.setFacility(this, facilityInfoText.text, facilityInfoImage)
         }
 
         // 位置详情
