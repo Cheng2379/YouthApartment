@@ -24,7 +24,7 @@
     <color name="home_body_item">#FFFFFF</color>
     <color name="home_user_center_bg">#E0ECCF</color>
     
-    <color name="room_bg">#EBECEF</color>
+    <color name="page_bg">#EBECEF</color>
     <!-- 每个属性条目的背景 -->
     <color name="room_item_bg">#FFFFFF</color>
 </resources>

@@ -37,7 +37,7 @@ import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
-import com.cheng.youthapartment.util.ViewUtil
+import com.cheng.youthapartment.manager.ThemeModelManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -95,14 +95,21 @@ class ApartmentActivity : BaseActivity() {
         getRoomItemByApartmentId()
     }
 
+    override fun onThemeModelChanged(isNightModel: Boolean) {
+        // 根据主题模式修改导航地图模式
+        mApartmentBinding.apartmentMap.map?.let {
+            it.mapType = if (isNightModel) AMap.MAP_TYPE_NIGHT else AMap.MAP_TYPE_NORMAL
+        }
+    }
+
     /**
      * 设置地图
-     * @param [longitude] 精度
-     * @param [latitude]: 维度
+     * @param [longitude] 经度
+     * @param [latitude]: 纬度
      */
     private fun setMap(longitude: String, latitude: String) {
         val map = mApartmentBinding.apartmentMap.map ?: return
-        val isNight = ViewUtil.isNightModel()
+        val isNight = ThemeModelManager.isNightModel()
         //初始化定位
         try {
             val lng = longitude.toDoubleOrNull() ?: 0.0

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.cheng.youthapartment.util.Logger
+import com.cheng.youthapartment.manager.ThemeModelManager
 
 /**
  *
@@ -26,19 +27,17 @@ class App : Application() {
 
         fun getSharedPreferences() = mSharedPreferences
 
-        fun clearUserInfo() {
-            val nightMode = mSharedPreferences.getInt("night_model", -1)
+        fun clear() {
+            val nightMode = ThemeModelManager.isNightModel()
             mSharedPreferences.edit {
                 clear()
-                if (nightMode != -1) {
-                    putInt("night_model", nightMode)
-                }
+                putBoolean("is_night_model", nightMode)
                 Logger.i("SharePreferences Data cleared!")
             }
         }
 
         fun getToken(): String {
-            return mSharedPreferences?.getString("token", "") ?: ""
+            return mSharedPreferences.getString("token", "") ?: ""
         }
     }
 
@@ -47,5 +46,8 @@ class App : Application() {
         mContext = applicationContext
         Logger.init(Logger.DEBUG)
         Logger.setLogDeep(1)
+        // 初始化主题模式
+        ThemeModelManager.setAppThemeMode(ThemeModelManager.isNightModel())
     }
+
 }

@@ -21,6 +21,6 @@
     <color name="home_body_item">#000000</color>
     <color name="home_user_center_bg">#242624</color>
     
-    <color name="room_bg">#3A3A3C</color>
+    <color name="page_bg">#3A3A3C</color>
     <color name="room_item_bg">#000000</color>
 </resources>

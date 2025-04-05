@@ -30,7 +30,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.cheng.youthapartment.util.ViewUtil
+import com.cheng.youthapartment.manager.ThemeModelManager
 
 /**
  *
@@ -69,7 +69,7 @@ class UserCenterFragment : Fragment() {
         // 根据主题状态显示对应的图标
         mSwitchThemeView.background = ResourcesCompat.getDrawable(
             resources,
-            if (ViewUtil.isNightModel()) R.drawable.svg_light else R.drawable.svg_dark,
+            if (ThemeModelManager.isNightModel()) R.drawable.svg_light else R.drawable.svg_dark,
             null
         )
 
@@ -144,7 +144,7 @@ class UserCenterFragment : Fragment() {
                 .setPositiveButton("是") { dialogInterface, position ->
                     startActivity(Intent(mActivity, LoginActivity::class.java))
                     mActivity.finish()
-                    App.clearUserInfo()
+                    App.clear()
                     dialogInterface.dismiss()
                 }
                 .show()
@@ -152,7 +152,14 @@ class UserCenterFragment : Fragment() {
 
         // 切换主题
         mSwitchThemeView.setOnClickListener {
-            ViewUtil.setThemeModel(mSwitchThemeView, mActivity)
+            it.animate().rotationBy(180f)
+                .setDuration(500)
+                .withEndAction {
+                    // 等待动画结束后再触发activity重建
+                    mActivity.recreate()
+                }
+                .start()
+            ThemeModelManager.toggleAppThemeModel()
         }
     }
 

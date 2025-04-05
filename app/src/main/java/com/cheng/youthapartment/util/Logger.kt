@@ -3,7 +3,7 @@ package com.cheng.youthapartment.util
 import android.util.Log
 
 /**
- *
+ * 自定义日志工具，快速定位日志信息
  * @author Cheng
  * @since 2025/1/9
  */
@@ -89,6 +89,10 @@ object Logger {
         return "[($className:${element.lineNumber})#${element.methodName}] $msg"
     }
 
+    /**
+     * 根据栈堆获取索引
+     * @param stackTrace 栈堆信息
+     */
     private fun getStackOffSet(stackTrace: Array<StackTraceElement>?): Int {
         stackTrace?.let {
             for (index in MIN_STACK_OFFSET until it.size) {
