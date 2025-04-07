@@ -8,8 +8,12 @@
     <!--半透明-->
     <color name="translucent">#22050505</color>
     
+    <color name="search_item_cancel">#F5F5F5</color>
+    
     <color name="icon_or_text">#F5F5F5</color>
     <color name="home_menu_bg">#2E2E2E</color>
+    
+    <color name="filter_icon">#B5B7B9</color>
     
     <color name="grey">#969799</color>
     <color name="green">#07C060</color>

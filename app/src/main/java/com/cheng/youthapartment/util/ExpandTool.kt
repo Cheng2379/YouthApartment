@@ -8,6 +8,7 @@ import android.text.Html
 import android.text.Spanned
 import android.text.TextWatcher
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -110,6 +111,8 @@ fun EditText.textChangedListener(
 }
 
 fun View.findTextViewById(id: Int): TextView = findViewById(id)
+
+fun View.findButtonById(id: Int): Button = findViewById(id)
 
 fun View.findEditTextById(id: Int): EditText = findViewById(id)
 

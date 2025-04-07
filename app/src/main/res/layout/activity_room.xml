@@ -399,7 +399,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:background="@drawable/shape_btn_login_selector"
+        android:background="@drawable/selector_btn_login"
         android:text="@string/my_appointment_btn"
         android:textColor="@color/white"
         android:textSize="18dp" />

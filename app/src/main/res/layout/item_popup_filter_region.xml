@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/home_menu_bg"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:orientation="horizontal">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_rv_province"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_rv_city"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/item_rv_district"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+        
+        <Button
+            android:id="@+id/item_cancel_btn"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_search_filter_cancel_press"
+            android:text="取消"
+            android:textColor="@color/icon_or_text" />
+        
+        <Button
+            android:id="@+id/item_confirm_btn"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="80dp"
+            android:background="@drawable/selector_search_filter_confirm_press"
+            android:text="查找"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>

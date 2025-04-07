@@ -197,7 +197,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="3"
-                    android:background="@drawable/shape_segmented_bg_selector">
+                    android:background="@drawable/selector_segmented_bg">
                     
                     <TextView
                         android:id="@+id/lease_info_lease_period_text"
@@ -282,7 +282,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="3"
-                    android:background="@drawable/shape_segmented_bg_selector">
+                    android:background="@drawable/selector_segmented_bg">
                     
                     <TextView
                         android:id="@+id/lease_info_pay_type_text"
@@ -307,7 +307,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
-            android:background="@drawable/shape_btn_appoint_selector"
+            android:background="@drawable/selector_btn_appoint"
             android:text="@string/lease_info_btn_save"
             android:textColor="@color/white"
             android:textSize="20dp" />

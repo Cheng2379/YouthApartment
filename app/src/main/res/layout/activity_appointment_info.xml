@@ -187,7 +187,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:background="@drawable/shape_btn_appoint_selector"
+        android:background="@drawable/selector_btn_appoint"
         android:text="@string/my_appointment_btn"
         android:textColor="@color/white"
         android:textSize="18dp" />

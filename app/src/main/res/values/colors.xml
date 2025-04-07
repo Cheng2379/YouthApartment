@@ -8,10 +8,15 @@
     <!--半透明-->
     <color name="translucent">#22050505</color>
     
+    <!-- 首页筛选菜单内取消按钮的边框 -->
+    <color name="search_item_cancel">#DCDEE0</color>
+    
     <!-- 图标以及图标的文本 -->
     <color name="icon_or_text">#323233</color>
     <!-- 首页底部菜单背景 -->
     <color name="home_menu_bg">#FFFFFF</color>
+    
+    <color name="filter_icon">#E2E4E6</color>
     
     <color name="grey">#969799</color>
     <color name="green">#07C060</color>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <!--  未选中  -->
+    <item android:drawable="@drawable/shape_search_filter_cancel" android:state_pressed="false" />
+    
+    <!--  已选中  -->
+    <item android:drawable="@drawable/shape_search_filter_cancel_press" android:state_pressed="true" />
+</selector>
