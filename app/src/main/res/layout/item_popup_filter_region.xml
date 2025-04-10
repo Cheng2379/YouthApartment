@@ -7,33 +7,39 @@
     
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="320dp"
         android:orientation="horizontal">
         
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_rv_province"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
         
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_rv_city"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
         
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_rv_district"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
     </LinearLayout>
     
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:gravity="center"
         android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:orientation="horizontal">
         
         <Button
@@ -45,7 +51,7 @@
             android:textColor="@color/icon_or_text" />
         
         <Button
-            android:id="@+id/item_confirm_btn"
+            android:id="@+id/item_find_btn"
             android:layout_width="130dp"
             android:layout_height="match_parent"
             android:layout_marginStart="80dp"

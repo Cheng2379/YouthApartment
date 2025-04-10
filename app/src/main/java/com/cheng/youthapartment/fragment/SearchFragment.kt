@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
@@ -38,12 +38,15 @@ import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.findButtonById
 import com.cheng.youthapartment.util.findImageViewById
+import com.cheng.youthapartment.util.findRecyclerViewById
 import com.cheng.youthapartment.util.findTextViewById
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
 
 /**
  *
@@ -65,9 +68,6 @@ class SearchFragment : Fragment() {
     private var mRoomList = ArrayList<RoomRecord>()
 
     private var currentPopupWindow: PopupWindow? = null
-    private val mProvinceBeanList = arrayListOf<ProvinceBean>()
-    private val mCityBeanList = arrayListOf<CityBean>()
-    private val mDistrictBeanList = arrayListOf<DistrictBean>()
 
     private var mToken: String = App.getToken()
     private var mCurrentRequestJob: Job? = null
@@ -78,6 +78,15 @@ class SearchFragment : Fragment() {
     private var mTotalScrollDistance = 0 // 累计滑动距离
     private var mIsScrollingUp = false // 是否正在向上滑动
     private var isSelect = false
+
+    private var selectProvinceView: TextView? = null
+    private var selectCityView: TextView? = null
+    private var selectDistrictView: TextView? = null
+
+    private var provinceId = 0L
+    private var cityId = 0L
+    private var districtId = 0L
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,9 +105,6 @@ class SearchFragment : Fragment() {
         getRoomList(false, mCurrentPage, mPageSize)
     }
 
-    /**
-     * TODO 首页排序标签待处理
-     */
     @SuppressLint("SetTextI18n")
     private fun initView() {
         mDataEmpty.visibility = TextView.GONE
@@ -138,14 +144,19 @@ class SearchFragment : Fragment() {
         if (mRoomList.isEmpty()) {
             mDataEmpty.visibility = TextView.VISIBLE
             mRv.visibility = RecyclerView.GONE
+            mSR.visibility = SwipeRefreshLayout.GONE
         } else {
             mDataEmpty.visibility = TextView.GONE
             mRv.visibility = RecyclerView.VISIBLE
+            mSR.visibility = SwipeRefreshLayout.VISIBLE
         }
 
         setSearchFilter()
     }
 
+    /**
+     * 设置搜索过滤器
+     */
     private fun setSearchFilter() {
         val regionText = mView.findTextViewById(R.id.search_region_text)
         val regionImg = mView.findImageViewById(R.id.search_region_img)
@@ -156,6 +167,7 @@ class SearchFragment : Fragment() {
         val sortText = mView.findTextViewById(R.id.search_sort_text)
         val sortImg = mView.findImageViewById(R.id.search_sort_img)
 
+        // 地区
         mLocationView.setOnClickListener {
             setSelectHighlightColor(
                 regionText,
@@ -166,6 +178,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(sortText, sortImg)
             showLocationFilterPopup(it)
         }
+        // 价格
         mPriceView.setOnClickListener {
             setSelectHighlightColor(
                 priceText,
@@ -175,6 +188,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(payTypeText, payTypeImg)
             setNoSelectDefaultColor(sortText, sortImg)
         }
+        // 支付方式
         mPayTypeView.setOnClickListener {
             setSelectHighlightColor(
                 payTypeText,
@@ -184,6 +198,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(priceText, priceImg)
             setNoSelectDefaultColor(sortText, sortImg)
         }
+        // 排序
         mSortView.setOnClickListener {
             setSelectHighlightColor(
                 sortText,
@@ -192,136 +207,6 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(priceText, priceImg)
             setNoSelectDefaultColor(payTypeText, payTypeImg)
-        }
-    }
-
-    @SuppressLint("InflateParams")
-    private fun showLocationFilterPopup(view: View) {
-        // 若已有窗口则关闭
-        currentPopupWindow?.dismiss()
-
-        // 获取菜单栏的位置与高度
-        val filterBarLocation = IntArray(2)
-        (view.parent as View).getLocationOnScreen(filterBarLocation)
-        val filterBarHeight = (view.parent as View).height
-        // 创捷遮蔽视图
-        val maskView = View(mActivity).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setBackgroundColor("#80000000".toColorInt())
-            alpha = 0f
-            y = (filterBarLocation[1] + filterBarHeight).toFloat()
-            // 添加点击事件，消费点击事件防止穿透
-            setOnClickListener {
-                currentPopupWindow?.dismiss()
-            }
-        }
-        // 添加到首页Activity的根部
-        val rootView = mActivity.window.decorView.findViewById<ViewGroup>(android.R.id.content)
-        rootView.addView(maskView)
-        maskView.animate().alpha(1f).setDuration(300).start()
-
-        val popupView =
-            LayoutInflater.from(mActivity).inflate(R.layout.item_popup_filter_region, null)
-        // 动画执行之前，设置视图高度为0
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        popupView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
-
-        currentPopupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ).apply {
-            // 外部点击可关闭
-            isOutsideTouchable = true
-
-            showAsDropDown(view.parent as View)
-            // 自定义动画
-            animationStyle = R.style.PopupAnimation
-            popupView.post {
-                val valueAnimator = ValueAnimator.ofInt(0, popupHeight)
-                valueAnimator.interpolator = DecelerateInterpolator()
-                valueAnimator.addUpdateListener {  animator ->
-                    // 获取当前帧的动画值, 并赋值给popupView布局参数的高度
-                    val value = animator.animatedValue as Int
-                    popupView.layoutParams.height = value
-                    // 通知系统重新布局popupView, 触发视图的测量和绘制过程, 使高度的变化立即生效
-                    popupView.requestLayout()
-                }
-                valueAnimator.start()
-            }
-
-            // 监听窗口关闭删除遮蔽视图
-            setOnDismissListener {
-                maskView.animate().alpha(0f).setDuration(300)
-                    .withEndAction {
-                        rootView.removeView(maskView)
-                    }
-                    .start()
-            }
-
-            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
-            val confirmBtn = popupView.findButtonById(R.id.item_confirm_btn)
-            cancelBtn.setOnClickListener {
-                this.dismiss()
-            }
-            confirmBtn.setOnClickListener {
-                this.dismiss()
-            }
-        }
-
-    }
-
-    /**
-     * 设置选中的菜单文本和图标高亮显示
-     */
-    private fun setSelectHighlightColor(textView: TextView, imageView: ImageView? = null) {
-        if (!isSelect) {
-            textView.setTextColor(mActivity.getColor(R.color.light_cyan))
-            imageView?.let {
-                it.animate().rotationBy(180f).setDuration(500).start()
-                it.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.light_cyan,
-                        null
-                    )
-                )
-            }
-            isSelect = true
-        } else {
-            textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
-            imageView?.let {
-                it.animate().rotationBy(-180f).setDuration(500).start()
-                it.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.filter_icon,
-                        null
-                    )
-                )
-            }
-            isSelect = false
-        }
-    }
-
-    /**
-     * 设置未选中的菜单文本和图标恢复默认颜色
-     */
-    private fun setNoSelectDefaultColor(textView: TextView, imageView: ImageView? = null) {
-        textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
-        imageView?.let {
-            it.animate().rotationBy(-180f).setDuration(500).start()
-            it.backgroundTintList = ColorStateList.valueOf(
-                ResourcesCompat.getColor(
-                    resources,
-                    R.color.filter_icon,
-                    null
-                )
-            )
         }
     }
 
@@ -379,6 +264,306 @@ class SearchFragment : Fragment() {
     }
 
     /**
+     * 展示地区过滤器
+     * TODO 后续将这里面的popupWindow剥离出来，封装为通用的popupWindow
+     */
+    @SuppressLint("InflateParams")
+    private fun showLocationFilterPopup(view: View) {
+        // 若已有窗口则关闭
+        currentPopupWindow?.dismiss()
+
+        // 获取菜单栏的位置与高度
+        val filterBarLocation = IntArray(2)
+        (view.parent as View).getLocationOnScreen(filterBarLocation)
+        val filterBarHeight = (view.parent as View).height
+        // 创捷遮蔽视图
+        val maskView = View(mActivity).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundColor("#80000000".toColorInt())
+            alpha = 0f
+            y = (filterBarLocation[1] + filterBarHeight).toFloat()
+            // 添加点击事件，消费点击事件防止穿透
+            setOnClickListener {
+                currentPopupWindow?.dismiss()
+            }
+        }
+        // 添加到首页Activity的根部
+        val rootView = mActivity.window.decorView.findViewById<ViewGroup>(android.R.id.content)
+        rootView.addView(maskView)
+        maskView.animate().alpha(1f).setDuration(300).start()
+
+        val popupView =
+            LayoutInflater.from(mActivity).inflate(R.layout.item_popup_filter_region, null)
+        // 动画执行之前，设置视图高度为0
+        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupHeight = popupView.measuredHeight
+        popupView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
+
+        currentPopupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        ).apply {
+            // 外部点击可关闭
+            isOutsideTouchable = true
+
+            showAsDropDown(view.parent as View)
+            // 自定义动画
+            animationStyle = R.style.PopupAnimation
+            popupView.post {
+                val valueAnimator = ValueAnimator.ofInt(0, popupHeight)
+                valueAnimator.interpolator = DecelerateInterpolator()
+                // 添加动画更新监听器, 在动画的每一帧被触发
+                valueAnimator.addUpdateListener { animator ->
+                    // 获取当前帧的动画值, 并赋值给popupView布局参数的高度
+                    val value = animator.animatedValue as Int
+                    popupView.layoutParams.height = value
+                    // 通知系统重新布局popupView, 触发视图的测量和绘制过程, 使高度的变化立即生效
+                    popupView.requestLayout()
+                }
+                valueAnimator.start()
+            }
+
+            // 监听窗口关闭删除遮蔽视图
+            setOnDismissListener {
+                maskView.animate().alpha(0f).setDuration(300)
+                    .withEndAction {
+                        rootView.removeView(maskView)
+                    }
+                    .start()
+            }
+
+            // 设置地区RecyclerView
+            // TODO 当点击上一个层级的时候，要把下一层级的数据立即清空
+            setupProvinceRecyclerView(
+                popupView.findRecyclerViewById(R.id.item_rv_province),
+                popupView.findRecyclerViewById(R.id.item_rv_city),
+                popupView.findRecyclerViewById(R.id.item_rv_district)
+            )
+
+            // 取消与查找按钮
+            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
+            val findBtn = popupView.findButtonById(R.id.item_find_btn)
+            cancelBtn.setOnClickListener {
+                this.dismiss()
+            }
+            findBtn.setOnClickListener {
+                this.dismiss()
+                getRoomList(true, mCurrentPage, mPageSize)
+            }
+        }
+
+    }
+
+    /**
+     * 设置选中的菜单文本和图标高亮显示
+     */
+    private fun setSelectHighlightColor(textView: TextView, imageView: ImageView? = null) {
+        if (!isSelect) {
+            textView.setTextColor(mActivity.getColor(R.color.light_cyan))
+            imageView?.let {
+                it.animate().rotationBy(180f).setDuration(500).start()
+                it.backgroundTintList = ColorStateList.valueOf(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.light_cyan,
+                        null
+                    )
+                )
+            }
+            isSelect = true
+        } else {
+            textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
+            imageView?.let {
+                it.animate().rotationBy(-180f).setDuration(500).start()
+                it.backgroundTintList = ColorStateList.valueOf(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.filter_icon,
+                        null
+                    )
+                )
+            }
+            isSelect = false
+        }
+    }
+
+    /**
+     * 设置未选中的菜单文本和图标恢复默认颜色
+     */
+    private fun setNoSelectDefaultColor(textView: TextView, imageView: ImageView? = null) {
+        textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
+        imageView?.let {
+            it.animate().rotationBy(-180f).setDuration(500).start()
+            it.backgroundTintList = ColorStateList.valueOf(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.filter_icon,
+                    null
+                )
+            )
+        }
+    }
+
+    /**
+     * 设置省份 RecyclerView
+     */
+    private fun setupProvinceRecyclerView(
+        rvProvince: RecyclerView,
+        rvCity: RecyclerView,
+        rvDistrict: RecyclerView
+    ) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val allProvinceList = getAllProvince()
+            // 设置省份
+            withContext(Dispatchers.Main) {
+                rvProvince.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+                rvProvince.adapter = RvAdapter(
+                    requireContext(),
+                    ArrayList(allProvinceList),
+                    R.layout.item_region_text
+                ) { holder, position ->
+                    val provinceTextView = holder.itemView.findTextViewById(R.id.item_region_text)
+                    provinceId = allProvinceList[position].id
+                    provinceTextView.text = allProvinceList[position].name
+                    holder.itemView.setOnClickListener {
+                        // 点击时触发获取id
+                        provinceId = allProvinceList[position].id
+                        // 更新选中省份的UI
+                        selectProvinceView?.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.icon_or_text
+                            )
+                        )
+                        provinceTextView.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.light_cyan
+                            )
+                        )
+                        // 更新当前选中的TextView
+                        selectProvinceView = provinceTextView
+
+                        // 设置城市 RecyclerView
+                        setupCityRecyclerView(
+                            rvCity,
+                            rvDistrict,
+                            provinceId
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 设置城市 RecyclerView
+     */
+    private fun setupCityRecyclerView(
+        rvCity: RecyclerView,
+        rvDistrict: RecyclerView,
+        provinceId: Long
+    ) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val cityBeanList = getCityByProvinceId(provinceId)
+            withContext(Dispatchers.Main) {
+                rvCity.layoutManager =
+                    LinearLayoutManager(
+                        requireContext(),
+                        LinearLayoutManager.VERTICAL,
+                        false
+                    )
+                rvCity.adapter = RvAdapter(
+                    requireContext(),
+                    ArrayList(cityBeanList),
+                    R.layout.item_region_text
+                ) { holder, position ->
+                    val cityTextView =
+                        holder.itemView.findTextViewById(R.id.item_region_text)
+                    cityTextView.text = cityBeanList[position].name
+                    holder.itemView.setOnClickListener {
+                        // 点击时触发获取id
+                        cityId = cityBeanList[position].id
+                        // 更新选中城市的UI
+                        selectCityView?.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.icon_or_text
+                            )
+                        )
+                        cityTextView.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.light_cyan
+                            )
+                        )
+                        // 更新当前选中的TextView
+                        selectCityView = cityTextView
+
+                        // 设置区/县 RecyclerView
+                        setupDistrictRecyclerView(
+                            rvDistrict,
+                            cityId
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置区/县 RecyclerView
+     */
+    private fun setupDistrictRecyclerView(
+        rvDistrict: RecyclerView,
+        cityId: Long,
+    ) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val districtList = getDistrictByCityId(cityId.toInt())
+            withContext(Dispatchers.Main) {
+                rvDistrict.layoutManager = LinearLayoutManager(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL,
+                    false
+                )
+                rvDistrict.adapter = RvAdapter(
+                    requireContext(),
+                    ArrayList(districtList),
+                    R.layout.item_region_text
+                ) { holder, position ->
+                    val districtView = holder.itemView.findTextViewById(R.id.item_region_text)
+                    districtView.text = districtList[position].name
+                    holder.itemView.setOnClickListener {
+                        // 点击时获取id
+                        districtId = districtList[position].id
+                        // 更新选中区/县的UI
+                        selectDistrictView?.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.icon_or_text
+                            )
+                        )
+                        districtView.setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.light_cyan
+                            )
+                        )
+                        // 更新当前选中的TextView
+                        selectDistrictView = districtView
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 忽略快速刷新加载，防抖
      */
     private fun scrollStabilization(): Boolean {
@@ -395,15 +580,28 @@ class SearchFragment : Fragment() {
      */
     private fun getRoomList(isUpdate: Boolean, currentPage: Int, size: Int) {
         mCurrentRequestJob?.cancel()
+        Logger.d("idddd: $provinceId, $cityId, $districtId")
         RetrofitUtil.get<RoomBean>(
             "/app/room/pageItem",
             mToken,
-            mapOf("current" to currentPage, "size" to size)
+            mapOf(
+                "current" to currentPage,
+                "size" to size,
+                "provinceId" to if (provinceId != 0L) provinceId else "",
+                "cityId" to if (cityId != 0L) cityId else "",
+                "districtId" to if (districtId != 0L) districtId else "",
+            )
         ) { _, response ->
             response?.let {
                 val newData = it.roomRecords
+                Logger.d("roomList: $newData")
                 if (newData.isEmpty()) {
-                    mRvAdapter?.setAllDataLoaded(true)
+                    mCurrentRequestJob = lifecycleScope.launch(Dispatchers.Main) {
+                        mRvAdapter?.updateDta(emptyList())
+                        mSR.visibility = SwipeRefreshLayout.GONE
+                        mRv.visibility = RecyclerView.GONE
+                        mDataEmpty.visibility = TextView.VISIBLE
+                    }
                 } else {
                     mCurrentRequestJob = lifecycleScope.launch {
                         withContext(Dispatchers.Main) {
@@ -412,6 +610,7 @@ class SearchFragment : Fragment() {
                             } else {
                                 mRvAdapter?.addData(newData)
                             }
+                            mSR.visibility = SwipeRefreshLayout.VISIBLE
                             mRv.visibility = RecyclerView.VISIBLE
                             mDataEmpty.visibility = TextView.GONE
                             Logger.d("currentPage: $currentPage Response RoomListSize: ${newData.size}")
@@ -422,39 +621,49 @@ class SearchFragment : Fragment() {
         }
     }
 
-    fun getAllProvince() {
-        RetrofitUtil.get<List<ProvinceBean>>(
-            "/app/region/province/list",
-            App.getToken(),
-            null
-        ) { _, response ->
-            response?.let {
-                mProvinceBeanList.addAll(it)
-            }
-        }
-    }
 
-    fun getCityByProvinceId(id: Long) {
-        RetrofitUtil.get<List<CityBean>>(
-            "/app/region/city/listByProvinceId",
-            App.getToken(),
-            mapOf("id" to id)
-        ) { _, response ->
-            response?.let {
-                mCityBeanList.addAll(it)
+    suspend fun getAllProvince(): List<ProvinceBean> =
+        suspendCancellableCoroutine { continuation ->
+            RetrofitUtil.get<List<ProvinceBean>>(
+                "/app/region/province/list",
+                App.getToken(),
+                null
+            ) { _, response ->
+                response?.let {
+                    continuation.resume(it)
+                } ?: run {
+                    continuation.resume(emptyList())
+                }
             }
         }
-    }
 
-    fun getDistrictByCityId(id: Int) {
-        RetrofitUtil.get<List<DistrictBean>>(
-            "/app/region/district/listByCityId",
-            App.getToken(),
-            mapOf("id" to id)
-        ) { _, response ->
-            response?.let {
-                mDistrictBeanList.addAll(it)
+    suspend fun getCityByProvinceId(id: Long): List<CityBean> =
+        suspendCancellableCoroutine { continuation ->
+            RetrofitUtil.get<List<CityBean>>(
+                "/app/region/city/listByProvinceId",
+                App.getToken(),
+                mapOf("id" to id)
+            ) { _, response ->
+                response?.let {
+                    continuation.resume(it)
+                } ?: run {
+                    continuation.resume(emptyList())
+                }
             }
         }
-    }
+
+    suspend fun getDistrictByCityId(id: Int): List<DistrictBean> =
+        suspendCancellableCoroutine { continuation ->
+            RetrofitUtil.get<List<DistrictBean>>(
+                "/app/region/district/listByCityId",
+                App.getToken(),
+                mapOf("id" to id)
+            ) { _, response ->
+                response?.let {
+                    continuation.resume(it)
+                } ?: run {
+                    continuation.resume(emptyList())
+                }
+            }
+        }
 }

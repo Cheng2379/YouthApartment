@@ -14,6 +14,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.RecyclerView
 import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
 
@@ -117,5 +118,7 @@ fun View.findButtonById(id: Int): Button = findViewById(id)
 fun View.findEditTextById(id: Int): EditText = findViewById(id)
 
 fun View.findImageViewById(id: Int): ImageView = findViewById(id)
+
+fun View.findRecyclerViewById(id: Int): RecyclerView = findViewById(id)
 
 
