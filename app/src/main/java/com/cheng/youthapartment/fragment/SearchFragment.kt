@@ -338,9 +338,6 @@ class SearchFragment : Fragment() {
             }
 
             // 设置地区RecyclerView
-            // TODO 当第二次点击上一个层级的时候，要把上一次的下下一层级的数据立即清空，就比如说，上一次选择了广东省-深圳市-龙岗区
-            //  下一次点击江西省的时候，此时会显示所有江西省的城市，但此时还会有深圳市内的的区域信息残留，这个数据要给清掉，等点击具体城市的时候再重新展示具体区域数据
-
             setupProvinceRecyclerView(
                 popupView.findRecyclerViewById(R.id.item_rv_province),
                 popupView.findRecyclerViewById(R.id.item_rv_city),
