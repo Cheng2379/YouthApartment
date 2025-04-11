@@ -79,6 +79,7 @@ class SearchFragment : Fragment() {
     private var mIsScrollingUp = false // 是否正在向上滑动
     private var isSelect = false
 
+    // 选中的省份、城市、区县文本
     private var selectProvinceView: TextView? = null
     private var selectCityView: TextView? = null
     private var selectDistrictView: TextView? = null
@@ -337,7 +338,9 @@ class SearchFragment : Fragment() {
             }
 
             // 设置地区RecyclerView
-            // TODO 当点击上一个层级的时候，要把下一层级的数据立即清空
+            // TODO 当第二次点击上一个层级的时候，要把上一次的下下一层级的数据立即清空，就比如说，上一次选择了广东省-深圳市-龙岗区
+            //  下一次点击江西省的时候，此时会显示所有江西省的城市，但此时还会有深圳市内的的区域信息残留，这个数据要给清掉，等点击具体城市的时候再重新展示具体区域数据
+
             setupProvinceRecyclerView(
                 popupView.findRecyclerViewById(R.id.item_rv_province),
                 popupView.findRecyclerViewById(R.id.item_rv_city),
@@ -416,6 +419,10 @@ class SearchFragment : Fragment() {
         rvCity: RecyclerView,
         rvDistrict: RecyclerView
     ) {
+        // 设置数据之前，先重置下这三个id
+        provinceId = 0
+        cityId = 0
+        districtId = 0
         lifecycleScope.launch(Dispatchers.IO) {
             val allProvinceList = getAllProvince()
             // 设置省份
@@ -428,7 +435,6 @@ class SearchFragment : Fragment() {
                     R.layout.item_region_text
                 ) { holder, position ->
                     val provinceTextView = holder.itemView.findTextViewById(R.id.item_region_text)
-                    provinceId = allProvinceList[position].id
                     provinceTextView.text = allProvinceList[position].name
                     holder.itemView.setOnClickListener {
                         // 点击时触发获取id
@@ -449,6 +455,9 @@ class SearchFragment : Fragment() {
                         // 更新当前选中的TextView
                         selectProvinceView = provinceTextView
 
+                        // 设置城市之前重置下城市、区县的RecyclerView
+                        rvCity.adapter = null
+                        rvDistrict.adapter = null
                         // 设置城市 RecyclerView
                         setupCityRecyclerView(
                             rvCity,
@@ -506,6 +515,7 @@ class SearchFragment : Fragment() {
                         // 更新当前选中的TextView
                         selectCityView = cityTextView
 
+                        rvDistrict.adapter = null
                         // 设置区/县 RecyclerView
                         setupDistrictRecyclerView(
                             rvDistrict,
@@ -580,7 +590,6 @@ class SearchFragment : Fragment() {
      */
     private fun getRoomList(isUpdate: Boolean, currentPage: Int, size: Int) {
         mCurrentRequestJob?.cancel()
-        Logger.d("idddd: $provinceId, $cityId, $districtId")
         RetrofitUtil.get<RoomBean>(
             "/app/room/pageItem",
             mToken,
@@ -594,7 +603,6 @@ class SearchFragment : Fragment() {
         ) { _, response ->
             response?.let {
                 val newData = it.roomRecords
-                Logger.d("roomList: $newData")
                 if (newData.isEmpty()) {
                     mCurrentRequestJob = lifecycleScope.launch(Dispatchers.Main) {
                         mRvAdapter?.updateDta(emptyList())
