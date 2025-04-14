@@ -80,13 +80,22 @@ object Logger {
 
     private fun formatMSG(msg: String): String {
         val stackTrace = Exception().stackTrace
-        val index = getStackOffSet(stackTrace)
-        if (index == -1) {
+        val startIndex = getStackOffSet(stackTrace)
+        if (startIndex == -1) {
             return "[Get LogInfo Error]"
         }
-        val element = stackTrace[index]
-        val className = element.fileName ?: "UnKnown"
-        return "[($className:${element.lineNumber})#${element.methodName}] $msg"
+        val sb = StringBuilder()
+        for (i in 0 until mStackDeep) {
+            val index = startIndex + i
+            if (index >= stackTrace.size) {
+                break
+            }
+            val element = stackTrace[index]
+            val className = element.fileName ?: "UnKnown"
+            sb.append("[($className:${element.lineNumber})#${element.methodName}] ")
+        }
+
+        return sb.toString() + msg
     }
 
     /**
