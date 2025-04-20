@@ -1,23 +1,23 @@
 package com.cheng.youthapartment.fragment
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.toColorInt
+import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -34,12 +34,15 @@ import com.cheng.youthapartment.bean.region.DistrictBean
 import com.cheng.youthapartment.bean.region.ProvinceBean
 import com.cheng.youthapartment.bean.room.RoomRecord
 import com.cheng.youthapartment.bean.room.RoomBean
+import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.findButtonById
 import com.cheng.youthapartment.util.findImageViewById
 import com.cheng.youthapartment.util.findRecyclerViewById
 import com.cheng.youthapartment.util.findTextViewById
+import com.cheng.youthapartment.util.getNumber
+import com.cheng.youthapartment.view.DropDownFilterViewUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -47,6 +50,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
+import kotlin.math.min
 
 /**
  *
@@ -84,9 +88,15 @@ class SearchFragment : Fragment() {
     private var selectCityView: TextView? = null
     private var selectDistrictView: TextView? = null
 
+    // 选中的价格、付款方式、排序
+    private var selectPriceView: LinearLayout? = null
+    private var selectPayTypeView: TextView? = null
+    private var selectSortView: TextView? = null
+
     private var provinceId = 0L
     private var cityId = 0L
     private var districtId = 0L
+    private var filterPriceList: List<Int>? = null
 
 
     override fun onCreateView(
@@ -157,6 +167,7 @@ class SearchFragment : Fragment() {
 
     /**
      * 设置搜索过滤器
+     * TODO 简化逻辑，筛选栏部分的控件需要设置选中状态(选中颜色与图标方向)
      */
     private fun setSearchFilter() {
         val regionText = mView.findTextViewById(R.id.search_region_text)
@@ -188,6 +199,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(payTypeText, payTypeImg)
             setNoSelectDefaultColor(sortText, sortImg)
+            showPriceFilterPopup(it, R.array.price_ranges)
         }
         // 支付方式
         mPayTypeView.setOnClickListener {
@@ -198,6 +210,8 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(priceText, priceImg)
             setNoSelectDefaultColor(sortText, sortImg)
+            // TODO
+            //showPayTypeFilterPopup(it, R.array.payment_method)
         }
         // 排序
         mSortView.setOnClickListener {
@@ -265,78 +279,18 @@ class SearchFragment : Fragment() {
     }
 
     /**
-     * 展示地区过滤器
-     * TODO 后续将这里面的popupWindow剥离出来，封装为通用的popupWindow
+     * 筛选地区
      */
-    @SuppressLint("InflateParams")
     private fun showLocationFilterPopup(view: View) {
         // 若已有窗口则关闭
         currentPopupWindow?.dismiss()
 
-        // 获取菜单栏的位置与高度
-        val filterBarLocation = IntArray(2)
-        (view.parent as View).getLocationOnScreen(filterBarLocation)
-        val filterBarHeight = (view.parent as View).height
-        // 创捷遮蔽视图
-        val maskView = View(mActivity).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setBackgroundColor("#80000000".toColorInt())
-            alpha = 0f
-            y = (filterBarLocation[1] + filterBarHeight).toFloat()
-            // 添加点击事件，消费点击事件防止穿透
-            setOnClickListener {
-                currentPopupWindow?.dismiss()
-            }
-        }
-        // 添加到首页Activity的根部
-        val rootView = mActivity.window.decorView.findViewById<ViewGroup>(android.R.id.content)
-        rootView.addView(maskView)
-        maskView.animate().alpha(1f).setDuration(300).start()
-
-        val popupView =
-            LayoutInflater.from(mActivity).inflate(R.layout.item_popup_filter_region, null)
-        // 动画执行之前，设置视图高度为0
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        popupView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0)
-
-        currentPopupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ).apply {
-            // 外部点击可关闭
-            isOutsideTouchable = true
-
-            showAsDropDown(view.parent as View)
-            // 自定义动画
-            animationStyle = R.style.PopupAnimation
-            popupView.post {
-                val valueAnimator = ValueAnimator.ofInt(0, popupHeight)
-                valueAnimator.interpolator = DecelerateInterpolator()
-                // 添加动画更新监听器, 在动画的每一帧被触发
-                valueAnimator.addUpdateListener { animator ->
-                    // 获取当前帧的动画值, 并赋值给popupView布局参数的高度
-                    val value = animator.animatedValue as Int
-                    popupView.layoutParams.height = value
-                    // 通知系统重新布局popupView, 触发视图的测量和绘制过程, 使高度的变化立即生效
-                    popupView.requestLayout()
-                }
-                valueAnimator.start()
-            }
-
-            // 监听窗口关闭删除遮蔽视图
-            setOnDismissListener {
-                maskView.animate().alpha(0f).setDuration(300)
-                    .withEndAction {
-                        rootView.removeView(maskView)
-                    }
-                    .start()
-            }
-
+        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
+            mActivity,
+            view,
+            R.layout.item_popup_filter_region,
+            R.style.PopupAnimation
+        ) { popupView, popupWindow ->
             // 设置地区RecyclerView
             setupProvinceRecyclerView(
                 popupView.findRecyclerViewById(R.id.item_rv_province),
@@ -348,18 +302,122 @@ class SearchFragment : Fragment() {
             val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
             val findBtn = popupView.findButtonById(R.id.item_find_btn)
             cancelBtn.setOnClickListener {
-                this.dismiss()
+                popupWindow.dismiss()
             }
             findBtn.setOnClickListener {
-                this.dismiss()
+                popupWindow.dismiss()
                 getRoomList(true, mCurrentPage, mPageSize)
             }
         }
-
     }
 
     /**
-     * 设置选中的菜单文本和图标高亮显示
+     * 筛选价格
+     */
+    private fun showPriceFilterPopup(view: View, stringArrayId: Int) {
+        currentPopupWindow?.dismiss()
+        val stringArray = resources.getStringArray(stringArrayId).toCollection(ArrayList())
+
+        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
+            mActivity,
+            view,
+            R.layout.item_popup_filter_item
+        ) { popupView, popupWindow ->
+            val rv = popupView.findRecyclerViewById(R.id.filter_item_rv)
+
+            rv.layoutManager = GridLayoutManager(requireContext(), 3)
+            rv.addItemDecoration(SpaceItemDecoration(3, 20, true))
+            rv.adapter = RvAdapter(
+                requireContext(),
+                stringArray,
+                R.layout.filter_item_text
+            ) { holder, position ->
+                val itemView = holder.itemView as LinearLayout
+                val filterTextView = itemView.findTextViewById(R.id.filter_condition_text)
+
+                filterTextView.text = stringArray[position]
+                // 检查当前项是否是之前选中的价格范围，如果是则高亮显示
+                val isCurrentItemSelected = if (position == 0) {
+                    // "不限"选项，当filterPriceList为null时应该高亮
+                    filterPriceList == null
+                } else {
+                    // 其他价格范围选项
+                    val currentItemPriceList = stringArray[position].getNumber()
+                    filterPriceList != null &&
+                            currentItemPriceList?.size == filterPriceList!!.size &&
+                            currentItemPriceList.zip(filterPriceList!!).all { it.first == it.second }
+                }
+                // 设置当前项的选中状态
+                setPriceItemSelected(itemView, filterTextView, isCurrentItemSelected)
+                // 如果当前项是选中的，更新选中视图引用
+                if (isCurrentItemSelected) {
+                    selectPriceView = itemView
+                }
+
+                itemView.setOnClickListener {
+                    // 获取筛选的价格
+                    filterPriceList = stringArray[position].getNumber()
+                    // 重置之前选中项的样式
+                    selectPriceView?.let { oldSelectedView ->
+                        val oldTextView = oldSelectedView.getChildAt(0) as TextView
+                        setPriceItemSelected(oldSelectedView, oldTextView, false)
+                    }
+
+                    // 设置当前选中项的样式
+                    setPriceItemSelected(itemView, filterTextView, true)
+
+                    // 更新选中视图引用
+                    selectPriceView = itemView
+                }
+            }
+
+            // 取消与查找按钮
+            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
+            val findBtn = popupView.findButtonById(R.id.item_find_btn)
+            cancelBtn.setOnClickListener {
+                popupWindow.dismiss()
+            }
+            findBtn.setOnClickListener {
+                popupWindow.dismiss()
+                getRoomList(
+                    true,
+                    mCurrentPage,
+                    mPageSize,
+                    filterPriceList?.get(0),
+                    filterPriceList?.get(1)
+                )
+            }
+        }
+    }
+
+    /**
+     * 设置价格筛选项的选中状态
+     */
+    private fun setPriceItemSelected(itemView: LinearLayout, textView: TextView, isSelected: Boolean) {
+        if (isSelected) {
+            // 设置选中样式
+            itemView.background = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.shape_item_selector_filter
+            )
+            textView.setTextColor(Color.WHITE)
+        } else {
+            // 设置未选中样式
+            itemView.background = ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.shape_item_filter
+            )
+            textView.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.icon_or_text
+                )
+            )
+        }
+    }
+
+    /**
+     * 设置选中的筛选栏文本和图标高亮显示
      */
     private fun setSelectHighlightColor(textView: TextView, imageView: ImageView? = null) {
         if (!isSelect) {
@@ -585,17 +643,28 @@ class SearchFragment : Fragment() {
     /**
      * @param isUpdate: 是否更新视图，不更新则为添加
      */
-    private fun getRoomList(isUpdate: Boolean, currentPage: Int, size: Int) {
+    private fun getRoomList(
+        isUpdate: Boolean,
+        currentPage: Int,
+        pageSize: Int,
+        minRent: Int? = null,
+        maxRent: Int? = null,
+        paymentTypeId: Int? = null
+    ) {
         mCurrentRequestJob?.cancel()
+        Logger.d("maxxx: $minRent, $maxRent")
         RetrofitUtil.get<RoomBean>(
             "/app/room/pageItem",
             mToken,
             mapOf(
                 "current" to currentPage,
-                "size" to size,
+                "size" to pageSize,
                 "provinceId" to if (provinceId != 0L) provinceId else "",
                 "cityId" to if (cityId != 0L) cityId else "",
                 "districtId" to if (districtId != 0L) districtId else "",
+                "minRent" to (minRent ?: ""),
+                "maxRent" to (maxRent ?: ""),
+                "paymentTypeId" to (paymentTypeId ?: "")
             )
         ) { _, response ->
             response?.let {

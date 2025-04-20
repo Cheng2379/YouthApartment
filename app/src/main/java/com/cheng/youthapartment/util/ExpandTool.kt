@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.RecyclerView
 import com.cheng.youthapartment.App
 import com.google.android.material.snackbar.Snackbar
@@ -109,6 +108,20 @@ fun EditText.textChangedListener(
     }
     // 添加监听器
     this.addTextChangedListener(textWatcher)
+}
+
+/**
+ * 获取文本内的数字, 用于首页的价格筛选
+ */
+fun String.getNumber(): List<Int>? {
+    val regex = Regex("\\d+")
+    val matches = regex.findAll(this).toList()
+    return if (this.isNotEmpty()) {
+        matches.mapNotNull { it.value.toIntOrNull() }
+            .takeIf { it.isNotEmpty() }
+    } else {
+        return null
+    }
 }
 
 fun View.findTextViewById(id: Int): TextView = findViewById(id)

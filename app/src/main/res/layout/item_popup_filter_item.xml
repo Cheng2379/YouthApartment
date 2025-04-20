@@ -1,39 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/home_menu_bg"
     android:orientation="vertical">
     
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/filter_item_rv"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
-        android:orientation="horizontal">
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_rv_province"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_rv_city"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
-        
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/item_rv_district"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:scrollbars="vertical" />
-    </LinearLayout>
+        android:paddingStart="20dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center" />
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,4 +36,5 @@
             android:text="查找"
             android:textColor="@color/white" />
     </LinearLayout>
+
 </LinearLayout>
