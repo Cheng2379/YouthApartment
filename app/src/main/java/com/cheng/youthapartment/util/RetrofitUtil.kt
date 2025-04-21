@@ -1,6 +1,6 @@
 package com.cheng.youthapartment.util
 
-import com.cheng.youthapartment.bean.BaseBean
+import com.cheng.youthapartment.entity.BaseBean
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ConnectionPool

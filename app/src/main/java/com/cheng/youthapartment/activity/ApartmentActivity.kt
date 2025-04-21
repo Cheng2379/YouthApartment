@@ -27,10 +27,10 @@ import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.BannerAdapter
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.properties.GraphBean
-import com.cheng.youthapartment.bean.apartment.ApartmentDetailBean
-import com.cheng.youthapartment.bean.room.RoomBean
-import com.cheng.youthapartment.bean.room.RoomRecord
+import com.cheng.youthapartment.entity.properties.GraphBean
+import com.cheng.youthapartment.entity.apartment.ApartmentDetailBean
+import com.cheng.youthapartment.entity.room.RoomBean
+import com.cheng.youthapartment.entity.room.RoomRecord
 import com.cheng.youthapartment.databinding.ActivityApartmentBinding
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration
 import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration

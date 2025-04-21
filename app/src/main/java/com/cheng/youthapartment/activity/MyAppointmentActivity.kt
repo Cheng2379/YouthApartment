@@ -15,7 +15,7 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.appointment.AppointmentBean
+import com.cheng.youthapartment.entity.appointment.AppointmentBean
 import com.cheng.youthapartment.databinding.ActivityMyAppointmentBinding
 import com.cheng.youthapartment.util.RetrofitUtil
 import kotlinx.coroutines.launch

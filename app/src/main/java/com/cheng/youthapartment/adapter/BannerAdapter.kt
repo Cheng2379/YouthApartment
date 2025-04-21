@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cheng.youthapartment.R
-import com.cheng.youthapartment.bean.properties.GraphBean
+import com.cheng.youthapartment.entity.properties.GraphBean
 import com.cheng.youthapartment.databinding.ItemBannerBinding
 
 /**

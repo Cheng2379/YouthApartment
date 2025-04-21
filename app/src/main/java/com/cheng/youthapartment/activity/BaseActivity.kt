@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import com.cheng.youthapartment.App
-import com.cheng.youthapartment.bean.user.UserBean
+import com.cheng.youthapartment.entity.user.UserBean
 import com.cheng.youthapartment.listener.ThemeModelChangeListener
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.manager.ThemeModelManager

@@ -14,7 +14,6 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,12 +28,13 @@ import com.cheng.youthapartment.R
 import com.cheng.youthapartment.activity.RoomActivity
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.region.CityBean
-import com.cheng.youthapartment.bean.region.DistrictBean
-import com.cheng.youthapartment.bean.region.ProvinceBean
-import com.cheng.youthapartment.bean.room.RoomRecord
-import com.cheng.youthapartment.bean.room.RoomBean
+import com.cheng.youthapartment.entity.region.CityBean
+import com.cheng.youthapartment.entity.region.DistrictBean
+import com.cheng.youthapartment.entity.region.ProvinceBean
+import com.cheng.youthapartment.entity.room.RoomRecord
+import com.cheng.youthapartment.entity.room.RoomBean
 import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
+import com.cheng.youthapartment.entity.enums.FilterType
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.findButtonById
@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.resume
-import kotlin.math.min
 
 /**
  *
@@ -96,6 +95,7 @@ class SearchFragment : Fragment() {
     private var provinceId = 0L
     private var cityId = 0L
     private var districtId = 0L
+
     // 显示价格的区间，如0-1500, 第一个值为最小租金, 第二个值为最大租金, 数据来源于string.xml的price_ranges属性
     private var filterPriceList: List<Int>? = null
 
@@ -173,10 +173,13 @@ class SearchFragment : Fragment() {
     private fun setSearchFilter() {
         val regionText = mView.findTextViewById(R.id.search_region_text)
         val regionImg = mView.findImageViewById(R.id.search_region_img)
+
         val priceText = mView.findTextViewById(R.id.search_price_text)
         val priceImg = mView.findImageViewById(R.id.search_price_img)
+
         val payTypeText = mView.findTextViewById(R.id.search_pay_type_text)
         val payTypeImg = mView.findImageViewById(R.id.search_pay_type_img)
+
         val sortText = mView.findTextViewById(R.id.search_sort_text)
         val sortImg = mView.findImageViewById(R.id.search_sort_img)
 
@@ -200,7 +203,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(payTypeText, payTypeImg)
             setNoSelectDefaultColor(sortText, sortImg)
-            showPriceFilterPopup(it, R.array.price_ranges)
+            showFilterPopup(it, R.array.price_ranges, FilterType.PRICE)
         }
         // 支付方式
         mPayTypeView.setOnClickListener {
@@ -211,8 +214,7 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(priceText, priceImg)
             setNoSelectDefaultColor(sortText, sortImg)
-            // TODO
-            //showPayTypeFilterPopup(it, R.array.payment_method)
+            showFilterPopup(it, R.array.payment_method, FilterType.PAY_TYPE)
         }
         // 排序
         mSortView.setOnClickListener {
@@ -223,6 +225,8 @@ class SearchFragment : Fragment() {
             setNoSelectDefaultColor(regionText, regionImg)
             setNoSelectDefaultColor(priceText, priceImg)
             setNoSelectDefaultColor(payTypeText, payTypeImg)
+            // TODO
+            //showPriceFilterPopup(it, R.array.payment_method, FilterType.SORT_TYPE)
         }
     }
 
@@ -313,9 +317,12 @@ class SearchFragment : Fragment() {
     }
 
     /**
-     * 筛选价格
+     * 下拉筛选菜单实现
+     * @param view 具体的筛选条件的View
+     * @param stringArrayId string.xml文件内定义的固定字符串数组, 具体为每个筛选的条目值
+     * @param filterType 筛选方式枚举类, 地区筛选单独处理
      */
-    private fun showPriceFilterPopup(view: View, stringArrayId: Int) {
+    private fun showFilterPopup(view: View, stringArrayId: Int, filterType: FilterType) {
         currentPopupWindow?.dismiss()
         val stringArray = resources.getStringArray(stringArrayId).toCollection(ArrayList())
 
@@ -346,7 +353,8 @@ class SearchFragment : Fragment() {
                     val currentItemPriceList = stringArray[position].getNumber()
                     filterPriceList != null &&
                             currentItemPriceList?.size == filterPriceList!!.size &&
-                            currentItemPriceList.zip(filterPriceList!!).all { it.first == it.second }
+                            currentItemPriceList.zip(filterPriceList!!)
+                                .all { it.first == it.second }
                 }
                 // 设置当前项的选中状态
                 setPriceItemSelected(itemView, filterTextView, isCurrentItemSelected)
@@ -394,7 +402,11 @@ class SearchFragment : Fragment() {
     /**
      * 设置价格筛选项的选中状态
      */
-    private fun setPriceItemSelected(itemView: LinearLayout, textView: TextView, isSelected: Boolean) {
+    private fun setPriceItemSelected(
+        itemView: LinearLayout,
+        textView: TextView,
+        isSelected: Boolean
+    ) {
         if (isSelected) {
             // 设置选中样式
             itemView.background = ContextCompat.getDrawable(
@@ -642,15 +654,23 @@ class SearchFragment : Fragment() {
     }
 
     /**
+     * 获取房间列表
      * @param isUpdate: 是否更新视图，不更新则为添加
+     * @param currentPage 当前页码
+     * @param pageSize 每页数量
+     * @param minRent 最小租金
+     * @param maxRent 最大租金
+     * @param paymentTypeId 支付方式ID
+     * @param orderType 排序方式
      */
     private fun getRoomList(
-        isUpdate: Boolean,
+        isUpdate: Boolean = false,
         currentPage: Int,
         pageSize: Int,
         minRent: Int? = null,
         maxRent: Int? = null,
-        paymentTypeId: Int? = null
+        paymentTypeId: Int? = null,
+        orderType: Int? = null
     ) {
         mCurrentRequestJob?.cancel()
         Logger.d("maxxx: $minRent, $maxRent")
@@ -665,7 +685,8 @@ class SearchFragment : Fragment() {
                 "districtId" to if (districtId != 0L) districtId else "",
                 "minRent" to (minRent ?: ""),
                 "maxRent" to (maxRent ?: ""),
-                "paymentTypeId" to (paymentTypeId ?: "")
+                "paymentTypeId" to (paymentTypeId ?: ""),
+                "orderType" to (orderType ?: "")
             )
         ) { _, response ->
             response?.let {
@@ -696,7 +717,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-
+    /**
+     * 获取所有的省份列表
+     */
     suspend fun getAllProvince(): List<ProvinceBean> =
         suspendCancellableCoroutine { continuation ->
             RetrofitUtil.get<List<ProvinceBean>>(
@@ -712,6 +735,9 @@ class SearchFragment : Fragment() {
             }
         }
 
+    /**
+     * 根据省份id获取所有的城市列表
+     */
     suspend fun getCityByProvinceId(id: Long): List<CityBean> =
         suspendCancellableCoroutine { continuation ->
             RetrofitUtil.get<List<CityBean>>(
@@ -727,6 +753,9 @@ class SearchFragment : Fragment() {
             }
         }
 
+    /**
+     * 根据城市id获取具体地区列表
+     */
     suspend fun getDistrictByCityId(id: Int): List<DistrictBean> =
         suspendCancellableCoroutine { continuation ->
             RetrofitUtil.get<List<DistrictBean>>(

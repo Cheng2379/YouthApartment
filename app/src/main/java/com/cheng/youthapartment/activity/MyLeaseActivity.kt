@@ -16,12 +16,11 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.bean.lease.LeaseBean
-import com.cheng.youthapartment.bean.properties.LeaseStatus
+import com.cheng.youthapartment.entity.BaseBean
+import com.cheng.youthapartment.entity.lease.LeaseBean
+import com.cheng.youthapartment.entity.enums.LeaseStatus
 import com.cheng.youthapartment.databinding.ActivityMyLeaseBinding
 import com.cheng.youthapartment.fragment.DialogFragment
-import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.showToast
 import kotlinx.coroutines.Dispatchers

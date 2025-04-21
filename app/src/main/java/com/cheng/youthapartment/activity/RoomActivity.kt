@@ -24,8 +24,8 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.BannerAdapter
 import com.cheng.youthapartment.adapter.RvAdapter
-import com.cheng.youthapartment.bean.properties.GraphBean
-import com.cheng.youthapartment.bean.room.RoomDetailBean
+import com.cheng.youthapartment.entity.properties.GraphBean
+import com.cheng.youthapartment.entity.room.RoomDetailBean
 import com.cheng.youthapartment.databinding.ActivityRoomBinding
 import com.cheng.youthapartment.decoration.grid_view.GridLayoutStyle
 import com.cheng.youthapartment.decoration.grid_view.LabelSpaceDecoration

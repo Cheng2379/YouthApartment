@@ -8,10 +8,10 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.lifecycleScope
 import com.cheng.youthapartment.App
-import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.bean.apartment.ApartmentDetailBean
-import com.cheng.youthapartment.bean.appointment.AppointmentDetailBean
-import com.cheng.youthapartment.bean.appointment.AppointmentBean
+import com.cheng.youthapartment.entity.BaseBean
+import com.cheng.youthapartment.entity.apartment.ApartmentDetailBean
+import com.cheng.youthapartment.entity.appointment.AppointmentDetailBean
+import com.cheng.youthapartment.entity.appointment.AppointmentBean
 import com.cheng.youthapartment.databinding.ActivityAppointmentInfoBinding
 import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger

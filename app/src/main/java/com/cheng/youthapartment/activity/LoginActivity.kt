@@ -23,7 +23,7 @@ import androidx.lifecycle.lifecycleScope
 import com.amap.api.maps.MapsInitializer
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
-import com.cheng.youthapartment.bean.BaseBean
+import com.cheng.youthapartment.entity.BaseBean
 import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil

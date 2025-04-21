@@ -23,7 +23,7 @@ import com.cheng.youthapartment.activity.LoginActivity
 import com.cheng.youthapartment.activity.MyAppointmentActivity
 import com.cheng.youthapartment.activity.MyLeaseActivity
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.user.UserBean
+import com.cheng.youthapartment.entity.user.UserBean
 import com.cheng.youthapartment.util.getYAParcelableExtra
 import androidx.core.content.res.ResourcesCompat
 import com.bumptech.glide.load.DataSource

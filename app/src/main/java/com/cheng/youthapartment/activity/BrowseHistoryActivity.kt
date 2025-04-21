@@ -15,8 +15,8 @@ import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.history.HistoryRecord
-import com.cheng.youthapartment.bean.history.HistoryBean
+import com.cheng.youthapartment.entity.history.HistoryRecord
+import com.cheng.youthapartment.entity.history.HistoryBean
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 

@@ -2,7 +2,7 @@ package com.cheng.youthapartment;
 
 import org.junit.Test;
 
-import com.cheng.youthapartment.bean.properties.LeaseStatus;
+import com.cheng.youthapartment.entity.enums.LeaseStatus;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

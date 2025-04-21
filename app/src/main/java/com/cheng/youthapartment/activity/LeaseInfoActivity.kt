@@ -11,11 +11,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
 import com.cheng.youthapartment.R
 import com.cheng.youthapartment.adapter.SquareCrop
-import com.cheng.youthapartment.bean.BaseBean
-import com.cheng.youthapartment.bean.lease.LeaseDetailBean
-import com.cheng.youthapartment.bean.properties.LeaseStatus
-import com.cheng.youthapartment.bean.properties.LeaseTermId
-import com.cheng.youthapartment.bean.properties.PayTypeId
+import com.cheng.youthapartment.entity.BaseBean
+import com.cheng.youthapartment.entity.lease.LeaseDetailBean
+import com.cheng.youthapartment.entity.enums.LeaseStatus
+import com.cheng.youthapartment.entity.enums.LeaseTermId
+import com.cheng.youthapartment.entity.enums.PayTypeId
 import com.cheng.youthapartment.databinding.ActivityLeaseInfoBinding
 import com.cheng.youthapartment.util.DataUtil
 import com.cheng.youthapartment.util.Logger
