@@ -32,4 +32,7 @@
     <color name="page_bg">#EBECEF</color>
     <!-- 每个属性条目的背景 -->
     <color name="room_item_bg">#FFFFFF</color>
+    
+    <!-- 关闭按钮 -->
+    <color name="close_btn_bg_tint">#000000</color>
 </resources>

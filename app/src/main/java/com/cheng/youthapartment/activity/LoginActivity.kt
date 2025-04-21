@@ -223,6 +223,7 @@ class LoginActivity : BaseActivity() {
     }
 
     /**
+     * @param textType 服务协议类型
      * 0: 同意服务协议
      * 1: 服务协议高亮与点击事件
      * 2: 隐私保护政策高亮与点击事件
@@ -301,7 +302,8 @@ class LoginActivity : BaseActivity() {
             }
 
             2 -> {
-                lastUpdateDateView.text = this.getText(R.string.privacy_policy_last_update_date).toHtml()
+                lastUpdateDateView.text =
+                    this.getText(R.string.privacy_policy_last_update_date).toHtml()
                 titleView.text = this.getText(R.string.privacy_policy_title).toHtml()
                 contentTextView.text = this.getText(R.string.privacy_policy_content).toHtml()
             }

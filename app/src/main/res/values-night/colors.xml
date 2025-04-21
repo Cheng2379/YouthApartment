@@ -27,4 +27,6 @@
     
     <color name="page_bg">#3A3A3C</color>
     <color name="room_item_bg">#000000</color>
+    
+    <color name="close_btn_bg_tint">@color/white</color>
 </resources>

@@ -96,6 +96,7 @@ class SearchFragment : Fragment() {
     private var provinceId = 0L
     private var cityId = 0L
     private var districtId = 0L
+    // 显示价格的区间，如0-1500, 第一个值为最小租金, 第二个值为最大租金, 数据来源于string.xml的price_ranges属性
     private var filterPriceList: List<Int>? = null
 
 
