@@ -23,18 +23,19 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cheng.youthapartment.App
-import com.cheng.youthapartment.activity.HomeActivity
 import com.cheng.youthapartment.R
+import com.cheng.youthapartment.activity.HomeActivity
 import com.cheng.youthapartment.activity.RoomActivity
 import com.cheng.youthapartment.adapter.RvAdapter
 import com.cheng.youthapartment.adapter.SquareCrop
+import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
+import com.cheng.youthapartment.entity.enums.FilterType
+import com.cheng.youthapartment.entity.enums.PayTypeId
 import com.cheng.youthapartment.entity.region.CityBean
 import com.cheng.youthapartment.entity.region.DistrictBean
 import com.cheng.youthapartment.entity.region.ProvinceBean
-import com.cheng.youthapartment.entity.room.RoomRecord
 import com.cheng.youthapartment.entity.room.RoomBean
-import com.cheng.youthapartment.decoration.grid_view.SpaceItemDecoration
-import com.cheng.youthapartment.entity.enums.FilterType
+import com.cheng.youthapartment.entity.room.RoomRecord
 import com.cheng.youthapartment.util.Logger
 import com.cheng.youthapartment.util.RetrofitUtil
 import com.cheng.youthapartment.util.findButtonById
@@ -70,6 +71,16 @@ class SearchFragment : Fragment() {
     private var mRvAdapter: RvAdapter<RoomRecord>? = null
     private var mRoomList = ArrayList<RoomRecord>()
 
+    // 筛选栏的四个筛选控件
+    private lateinit var regionText: TextView
+    private lateinit var regionImg: ImageView
+    private lateinit var priceText: TextView
+    private lateinit var priceImg: ImageView
+    private lateinit var payTypeText: TextView
+    private lateinit var payTypeImg: ImageView
+    private lateinit var sortText: TextView
+    private lateinit var sortImg: ImageView
+
     private var currentPopupWindow: PopupWindow? = null
 
     private var mToken: String = App.getToken()
@@ -80,24 +91,29 @@ class SearchFragment : Fragment() {
     private val mDebounceTime = 1000L
     private var mTotalScrollDistance = 0 // 累计滑动距离
     private var mIsScrollingUp = false // 是否正在向上滑动
-    private var isSelect = false
 
     // 选中的省份、城市、区县文本
     private var selectProvinceView: TextView? = null
     private var selectCityView: TextView? = null
     private var selectDistrictView: TextView? = null
 
-    // 选中的价格、付款方式、排序
-    private var selectPriceView: LinearLayout? = null
-    private var selectPayTypeView: TextView? = null
-    private var selectSortView: TextView? = null
+    // 显示价格的区间，如0-1500, 第一个值为最小租金, 第二个值为最大租金, 数据来源于string.xml的price_ranges属性
+    private var filterPriceList: List<Int>? = null
+
+    // 添加筛选控件状态Map
+    private val filterViewStateMap = mutableMapOf<LinearLayout, Boolean>()
+
+    // 选中的视图Map(不包含地区)，根据筛选类型存储对应的选中视图
+    private val selectedViewMap = mutableMapOf<FilterType, LinearLayout?>()
 
     private var provinceId = 0L
     private var cityId = 0L
     private var districtId = 0L
 
-    // 显示价格的区间，如0-1500, 第一个值为最小租金, 第二个值为最大租金, 数据来源于string.xml的price_ranges属性
-    private var filterPriceList: List<Int>? = null
+    private var filterPayTypeId = -1
+
+    // 0代表高价优先(倒序), 1代表低价优先(正序), 默认-1不排序
+    private var filterSortType = -1
 
 
     override fun onCreateView(
@@ -167,69 +183,8 @@ class SearchFragment : Fragment() {
     }
 
     /**
-     * 设置搜索过滤器
-     * TODO 简化逻辑，筛选栏部分的控件需要设置选中状态(选中颜色与图标方向)
+     * 初始化滚动监听
      */
-    private fun setSearchFilter() {
-        val regionText = mView.findTextViewById(R.id.search_region_text)
-        val regionImg = mView.findImageViewById(R.id.search_region_img)
-
-        val priceText = mView.findTextViewById(R.id.search_price_text)
-        val priceImg = mView.findImageViewById(R.id.search_price_img)
-
-        val payTypeText = mView.findTextViewById(R.id.search_pay_type_text)
-        val payTypeImg = mView.findImageViewById(R.id.search_pay_type_img)
-
-        val sortText = mView.findTextViewById(R.id.search_sort_text)
-        val sortImg = mView.findImageViewById(R.id.search_sort_img)
-
-        // 地区
-        mLocationView.setOnClickListener {
-            setSelectHighlightColor(
-                regionText,
-                regionImg
-            )
-            setNoSelectDefaultColor(priceText, priceImg)
-            setNoSelectDefaultColor(payTypeText, payTypeImg)
-            setNoSelectDefaultColor(sortText, sortImg)
-            showLocationFilterPopup(it)
-        }
-        // 价格
-        mPriceView.setOnClickListener {
-            setSelectHighlightColor(
-                priceText,
-                priceImg
-            )
-            setNoSelectDefaultColor(regionText, regionImg)
-            setNoSelectDefaultColor(payTypeText, payTypeImg)
-            setNoSelectDefaultColor(sortText, sortImg)
-            showFilterPopup(it, R.array.price_ranges, FilterType.PRICE)
-        }
-        // 支付方式
-        mPayTypeView.setOnClickListener {
-            setSelectHighlightColor(
-                payTypeText,
-                payTypeImg
-            )
-            setNoSelectDefaultColor(regionText, regionImg)
-            setNoSelectDefaultColor(priceText, priceImg)
-            setNoSelectDefaultColor(sortText, sortImg)
-            showFilterPopup(it, R.array.payment_method, FilterType.PAY_TYPE)
-        }
-        // 排序
-        mSortView.setOnClickListener {
-            setSelectHighlightColor(
-                sortText,
-                sortImg
-            )
-            setNoSelectDefaultColor(regionText, regionImg)
-            setNoSelectDefaultColor(priceText, priceImg)
-            setNoSelectDefaultColor(payTypeText, payTypeImg)
-            // TODO
-            //showPriceFilterPopup(it, R.array.payment_method, FilterType.SORT_TYPE)
-        }
-    }
-
     private fun initScrollListener() {
         mSR.setOnRefreshListener {
             lifecycleScope.launch {
@@ -284,125 +239,58 @@ class SearchFragment : Fragment() {
     }
 
     /**
-     * 筛选地区
+     * 设置搜索过滤器
+     * TODO 重复点击控件时需要收起控件
      */
-    private fun showLocationFilterPopup(view: View) {
-        // 若已有窗口则关闭
-        currentPopupWindow?.dismiss()
+    private fun setSearchFilter() {
+        regionText = mView.findTextViewById(R.id.search_region_text)
+        regionImg = mView.findImageViewById(R.id.search_region_img)
 
-        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
-            mActivity,
-            view,
-            R.layout.item_popup_filter_region,
-            R.style.PopupAnimation
-        ) { popupView, popupWindow ->
-            // 设置地区RecyclerView
-            setupProvinceRecyclerView(
-                popupView.findRecyclerViewById(R.id.item_rv_province),
-                popupView.findRecyclerViewById(R.id.item_rv_city),
-                popupView.findRecyclerViewById(R.id.item_rv_district)
-            )
+        priceText = mView.findTextViewById(R.id.search_price_text)
+        priceImg = mView.findImageViewById(R.id.search_price_img)
 
-            // 取消与查找按钮
-            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
-            val findBtn = popupView.findButtonById(R.id.item_find_btn)
-            cancelBtn.setOnClickListener {
-                popupWindow.dismiss()
-            }
-            findBtn.setOnClickListener {
-                popupWindow.dismiss()
-                getRoomList(true, mCurrentPage, mPageSize)
-            }
+        payTypeText = mView.findTextViewById(R.id.search_pay_type_text)
+        payTypeImg = mView.findImageViewById(R.id.search_pay_type_img)
+
+        sortText = mView.findTextViewById(R.id.search_sort_text)
+        sortImg = mView.findImageViewById(R.id.search_sort_img)
+
+        // 初始化筛选控件状态
+        filterViewStateMap[mLocationView] = false
+        filterViewStateMap[mPriceView] = false
+        filterViewStateMap[mPayTypeView] = false
+        filterViewStateMap[mSortView] = false
+
+        // 地区
+        mLocationView.setOnClickListener {
+            updateFilterViewStates(mLocationView)
+            setFilterViewAppearance(regionText, regionImg)
+            showLocationFilterPopup(it)
+        }
+        // 价格
+        mPriceView.setOnClickListener {
+            updateFilterViewStates(mPriceView)
+            setFilterViewAppearance(priceText, priceImg)
+            showFilterPopup(it, R.array.price_ranges, FilterType.PRICE)
+        }
+        // 支付方式
+        mPayTypeView.setOnClickListener {
+            updateFilterViewStates(mPayTypeView)
+            setFilterViewAppearance(payTypeText, payTypeImg)
+            showFilterPopup(it, R.array.payment_method, FilterType.PAY_TYPE)
+        }
+        // 排序
+        mSortView.setOnClickListener {
+            updateFilterViewStates(mSortView)
+            setFilterViewAppearance(sortText, sortImg)
+            showFilterPopup(it, R.array.sort, FilterType.SORT_TYPE)
         }
     }
 
     /**
-     * 下拉筛选菜单实现
-     * @param view 具体的筛选条件的View
-     * @param stringArrayId string.xml文件内定义的固定字符串数组, 具体为每个筛选的条目值
-     * @param filterType 筛选方式枚举类, 地区筛选单独处理
+     * 设置筛选项的选中状态
      */
-    private fun showFilterPopup(view: View, stringArrayId: Int, filterType: FilterType) {
-        currentPopupWindow?.dismiss()
-        val stringArray = resources.getStringArray(stringArrayId).toCollection(ArrayList())
-
-        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
-            mActivity,
-            view,
-            R.layout.item_popup_filter_item
-        ) { popupView, popupWindow ->
-            val rv = popupView.findRecyclerViewById(R.id.filter_item_rv)
-
-            rv.layoutManager = GridLayoutManager(requireContext(), 3)
-            rv.addItemDecoration(SpaceItemDecoration(3, 20, true))
-            rv.adapter = RvAdapter(
-                requireContext(),
-                stringArray,
-                R.layout.filter_item_text
-            ) { holder, position ->
-                val itemView = holder.itemView as LinearLayout
-                val filterTextView = itemView.findTextViewById(R.id.filter_condition_text)
-
-                filterTextView.text = stringArray[position]
-                // 检查当前项是否是之前选中的价格范围，如果是则高亮显示
-                val isCurrentItemSelected = if (position == 0) {
-                    // "不限"选项，当filterPriceList为null时应该高亮
-                    filterPriceList == null
-                } else {
-                    // 其他价格范围选项
-                    val currentItemPriceList = stringArray[position].getNumber()
-                    filterPriceList != null &&
-                            currentItemPriceList?.size == filterPriceList!!.size &&
-                            currentItemPriceList.zip(filterPriceList!!)
-                                .all { it.first == it.second }
-                }
-                // 设置当前项的选中状态
-                setPriceItemSelected(itemView, filterTextView, isCurrentItemSelected)
-                // 如果当前项是选中的，更新选中视图引用
-                if (isCurrentItemSelected) {
-                    selectPriceView = itemView
-                }
-
-                itemView.setOnClickListener {
-                    // 获取筛选的价格
-                    filterPriceList = stringArray[position].getNumber()
-                    // 重置之前选中项的样式
-                    selectPriceView?.let { oldSelectedView ->
-                        val oldTextView = oldSelectedView.getChildAt(0) as TextView
-                        setPriceItemSelected(oldSelectedView, oldTextView, false)
-                    }
-
-                    // 设置当前选中项的样式
-                    setPriceItemSelected(itemView, filterTextView, true)
-
-                    // 更新选中视图引用
-                    selectPriceView = itemView
-                }
-            }
-
-            // 取消与查找按钮
-            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
-            val findBtn = popupView.findButtonById(R.id.item_find_btn)
-            cancelBtn.setOnClickListener {
-                popupWindow.dismiss()
-            }
-            findBtn.setOnClickListener {
-                popupWindow.dismiss()
-                getRoomList(
-                    true,
-                    mCurrentPage,
-                    mPageSize,
-                    filterPriceList?.get(0),
-                    filterPriceList?.get(1)
-                )
-            }
-        }
-    }
-
-    /**
-     * 设置价格筛选项的选中状态
-     */
-    private fun setPriceItemSelected(
+    private fun setFilterPopupItemSelected(
         itemView: LinearLayout,
         textView: TextView,
         isSelected: Boolean
@@ -432,43 +320,58 @@ class SearchFragment : Fragment() {
     /**
      * 设置选中的筛选栏文本和图标高亮显示
      */
-    private fun setSelectHighlightColor(textView: TextView, imageView: ImageView? = null) {
-        if (!isSelect) {
-            textView.setTextColor(mActivity.getColor(R.color.light_cyan))
-            imageView?.let {
-                it.animate().rotationBy(180f).setDuration(500).start()
-                it.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.light_cyan,
-                        null
-                    )
-                )
-            }
-            isSelect = true
-        } else {
-            textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
-            imageView?.let {
-                it.animate().rotationBy(-180f).setDuration(500).start()
-                it.backgroundTintList = ColorStateList.valueOf(
-                    ResourcesCompat.getColor(
-                        resources,
-                        R.color.filter_icon,
-                        null
-                    )
-                )
-            }
-            isSelect = false
+    private fun updateFilterViewStates(selectedView: LinearLayout) {
+        // 将所有控件状态设为false
+        filterViewStateMap.keys.forEach { view ->
+            filterViewStateMap[view] = (view == selectedView)
         }
     }
 
     /**
-     * 设置未选中的菜单文本和图标恢复默认颜色
+     * 设置筛选控件外观
+     */
+    private fun setFilterViewAppearance(textView: TextView, imageView: ImageView? = null) {
+        // 先将所有控件设置为默认状态
+        resetAllFilterViews()
+        // 设置当前选中控件的高亮状态
+        setSelectHighlightColor(textView, imageView)
+    }
+
+    /**
+     * 重置所有筛选控件为默认状态
+     */
+    private fun resetAllFilterViews() {
+        // 直接使用类级别的变量，不需要重新获取
+        setNoSelectDefaultColor(regionText, regionImg)
+        setNoSelectDefaultColor(priceText, priceImg)
+        setNoSelectDefaultColor(payTypeText, payTypeImg)
+        setNoSelectDefaultColor(sortText, sortImg)
+    }
+
+    /**
+     * 设置选中的文本与图片为高亮颜色
+     */
+    private fun setSelectHighlightColor(textView: TextView, imageView: ImageView? = null) {
+        textView.setTextColor(mActivity.getColor(R.color.light_cyan))
+        imageView?.let {
+            it.animate().rotation(180f).setDuration(300).start()
+            it.backgroundTintList = ColorStateList.valueOf(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.light_cyan,
+                    null
+                )
+            )
+        }
+    }
+
+    /**
+     * 设置非选中的文本与图片为默认颜色
      */
     private fun setNoSelectDefaultColor(textView: TextView, imageView: ImageView? = null) {
         textView.setTextColor(mActivity.getColor(R.color.icon_or_text))
         imageView?.let {
-            it.animate().rotationBy(-180f).setDuration(500).start()
+            it.animate().rotation(0f).setDuration(300).start()
             it.backgroundTintList = ColorStateList.valueOf(
                 ResourcesCompat.getColor(
                     resources,
@@ -476,6 +379,178 @@ class SearchFragment : Fragment() {
                     null
                 )
             )
+        }
+    }
+
+    /**
+     * 筛选地区
+     */
+    private fun showLocationFilterPopup(view: View) {
+        // 若已有窗口则关闭
+        currentPopupWindow?.dismiss()
+
+        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
+            mActivity,
+            view,
+            R.layout.item_popup_filter_region,
+            R.style.PopupAnimation
+        ) { popupView, popupWindow ->
+            // 设置地区RecyclerView
+            setupProvinceRecyclerView(
+                popupView.findRecyclerViewById(R.id.item_rv_province),
+                popupView.findRecyclerViewById(R.id.item_rv_city),
+                popupView.findRecyclerViewById(R.id.item_rv_district)
+            )
+
+            // 取消与查找按钮
+            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
+            val findBtn = popupView.findButtonById(R.id.item_find_btn)
+            cancelBtn.setOnClickListener {
+                popupWindow.dismiss()
+                resetAllFilterViews()
+            }
+            findBtn.setOnClickListener {
+                popupWindow.dismiss()
+                resetAllFilterViews()
+                getRoomList(true, mCurrentPage, mPageSize)
+            }
+        }
+    }
+
+    /**
+     * 下拉筛选菜单展示
+     * @param view 具体的筛选条件的View
+     * @param stringArrayId string.xml文件内定义的固定字符串数组, 具体为每个筛选的条目值
+     * @param filterType 筛选方式枚举类, 地区筛选在showLocationFilterPopup()方法单独处理
+     */
+    private fun showFilterPopup(view: View, stringArrayId: Int, filterType: FilterType) {
+        currentPopupWindow?.dismiss()
+        val stringArray = resources.getStringArray(stringArrayId).toCollection(ArrayList())
+
+        currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
+            mActivity,
+            view,
+            R.layout.item_popup_filter_item
+        ) { popupView, popupWindow ->
+            val rv = popupView.findRecyclerViewById(R.id.filter_item_rv)
+
+            rv.layoutManager = GridLayoutManager(requireContext(), 3)
+            rv.addItemDecoration(SpaceItemDecoration(3, 20, true))
+            rv.adapter = RvAdapter(
+                requireContext(),
+                stringArray,
+                R.layout.item_filter_text
+            ) { holder, position ->
+                val itemView = holder.itemView as LinearLayout
+                val filterTextView = itemView.findTextViewById(R.id.filter_condition_text)
+
+                filterTextView.text = stringArray[position]
+                // 根据筛选类型获取上一次缓存的状态值, 若该值不为默认值或null, 那么就高亮该控件
+                val isCurrentItemSelected = when (filterType) {
+                    FilterType.PRICE -> {
+                        filterPayTypeId = -1
+                        filterSortType = -1
+                        if (position == 0) {
+                            // "不限"选项，当filterPriceList为null时应该高亮
+                            filterPriceList == null
+                        } else {
+                            // 其他价格范围选项
+                            val currentItemPriceList = stringArray[position].getNumber()
+                            filterPriceList != null &&
+                                    currentItemPriceList?.size == filterPriceList!!.size &&
+                                    currentItemPriceList.zip(filterPriceList!!)
+                                        .all { it.first == it.second }
+                        }
+                    }
+
+                    FilterType.PAY_TYPE -> {
+                        filterSortType = -1
+                        filterPriceList = null
+                        if (position == 0) {
+                            // "默认排序"选项，当filterPayTypeId为-1时高亮
+                            false
+                        } else {
+                            // 检查当前支付方式是否被选中
+                            val payTypeName = stringArray[position]
+                            val payTypeId = PayTypeId.getIdByType(payTypeName)
+                            filterPayTypeId == payTypeId
+                        }
+                    }
+
+                    FilterType.SORT_TYPE -> {
+                        filterPayTypeId = -1
+                        filterPriceList = null
+                        if (position == 0) {
+                            // "默认排序"选项，当filterSortType为-1时高亮
+                            false
+                        } else {
+                            // 其他排序方式选项
+                            filterSortType == position
+                        }
+                    }
+                }
+                // 设置当前项的选中控件高亮显示
+                setFilterPopupItemSelected(itemView, filterTextView, isCurrentItemSelected)
+                // 如果当前项是选中的，更新选中视图引用
+                if (isCurrentItemSelected) {
+                    selectedViewMap[filterType] = itemView
+                }
+
+                itemView.setOnClickListener {
+                    when (filterType) {
+                        FilterType.PRICE -> {
+                            // 获取筛选的价格
+                            filterPriceList =
+                                if (position == 0) null else stringArray[position].getNumber()
+                        }
+
+                        FilterType.PAY_TYPE -> {
+                            // 获取筛选的支付方式
+                            filterPayTypeId = PayTypeId.getIdByType(stringArray[position])
+                        }
+
+                        FilterType.SORT_TYPE -> {
+                            // 获取筛选的排序方式
+                            if (position in 0..2) {
+                                filterSortType = position
+                                Logger.d("排序id: $filterSortType")
+                            }
+                        }
+                    }
+                    // 重置之前选中项的样式
+                    selectedViewMap[filterType]?.let { oldSelectedView ->
+                        val oldTextView = oldSelectedView.getChildAt(0) as TextView
+                        setFilterPopupItemSelected(oldSelectedView, oldTextView, false)
+                    }
+
+                    // 设置当前选中项的样式
+                    setFilterPopupItemSelected(itemView, filterTextView, true)
+
+                    // 更新选中视图引用
+                    selectedViewMap[filterType] = itemView
+                }
+            }
+
+            // 取消与查找按钮
+            val cancelBtn = popupView.findButtonById(R.id.item_cancel_btn)
+            val findBtn = popupView.findButtonById(R.id.item_find_btn)
+            cancelBtn.setOnClickListener {
+                popupWindow.dismiss()
+                resetAllFilterViews()
+            }
+            findBtn.setOnClickListener {
+                popupWindow.dismiss()
+                resetAllFilterViews()
+                getRoomList(
+                    true,
+                    mCurrentPage,
+                    mPageSize,
+                    filterPriceList?.get(0),
+                    filterPriceList?.get(1),
+                    filterPayTypeId,
+                    filterSortType
+                )
+            }
         }
     }
 
@@ -537,7 +612,6 @@ class SearchFragment : Fragment() {
             }
         }
     }
-
 
     /**
      * 设置城市 RecyclerView
@@ -661,7 +735,7 @@ class SearchFragment : Fragment() {
      * @param minRent 最小租金
      * @param maxRent 最大租金
      * @param paymentTypeId 支付方式ID
-     * @param orderType 排序方式
+     * @param sortType 排序方式
      */
     private fun getRoomList(
         isUpdate: Boolean = false,
@@ -669,11 +743,11 @@ class SearchFragment : Fragment() {
         pageSize: Int,
         minRent: Int? = null,
         maxRent: Int? = null,
-        paymentTypeId: Int? = null,
-        orderType: Int? = null
+        paymentTypeId: Int = -1,
+        sortType: Int = -1
     ) {
+        Logger.d("minRent: $minRent, maxRent: $maxRent, paymentTypeId: $paymentTypeId, sortType: $sortType")
         mCurrentRequestJob?.cancel()
-        Logger.d("maxxx: $minRent, $maxRent")
         RetrofitUtil.get<RoomBean>(
             "/app/room/pageItem",
             mToken,
@@ -685,8 +759,8 @@ class SearchFragment : Fragment() {
                 "districtId" to if (districtId != 0L) districtId else "",
                 "minRent" to (minRent ?: ""),
                 "maxRent" to (maxRent ?: ""),
-                "paymentTypeId" to (paymentTypeId ?: ""),
-                "orderType" to (orderType ?: "")
+                "paymentTypeId" to (if (paymentTypeId != -1) paymentTypeId else ""),
+                "orderType" to (if (sortType == 0) "desc" else if (sortType == 1) "asc" else "")
             )
         ) { _, response ->
             response?.let {
