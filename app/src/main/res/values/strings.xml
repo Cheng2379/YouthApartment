@@ -19,13 +19,13 @@
         <item>6000–9000元</item>
         <item>9000–12000元</item>
     </string-array>
-    <string-array name="payment_method">
+    <string-array name="pay_type">
         <item>月付</item>
         <item>季付</item>
         <item>半年付</item>
         <item>年付</item>
     </string-array>
-    <string-array name="sort">
+    <string-array name="sort_type">
         <item>高价优先</item>
         <item>低价优先</item>
     </string-array>

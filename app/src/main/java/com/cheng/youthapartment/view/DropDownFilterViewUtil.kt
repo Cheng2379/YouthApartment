@@ -31,6 +31,7 @@ object DropDownFilterViewUtil {
         anchorView: View,
         layoutResId: Int,
         animationStyleResId: Int? = null,
+        onDismiss: (() -> Unit)? = null,
         setUpView: (popupView: View, popupWindow: PopupWindow) -> Unit
     ): PopupWindow {
         var popupWindow = PopupWindow()
@@ -77,6 +78,7 @@ object DropDownFilterViewUtil {
                 maskView.animate().alpha(0f).setDuration(300)
                     .withEndAction {
                         rootViewGroup.removeView(maskView)
+                        onDismiss?.invoke()
                     }
                     .start()
             }

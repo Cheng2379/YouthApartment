@@ -7,7 +7,7 @@ package com.cheng.youthapartment.entity.enums
  */
 enum class FilterType {
     // 价格
-    PRICE,
+    PRICE_TYPE,
     // 支付方式
     PAY_TYPE,
     // 排序方式

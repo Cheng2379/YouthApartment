@@ -111,9 +111,10 @@ class SearchFragment : Fragment() {
     private var districtId = 0L
 
     private var filterPayTypeId = -1
-
     // 0代表高价优先(倒序), 1代表低价优先(正序), 默认-1不排序
     private var filterSortType = -1
+
+    private var currentActiveFilter: LinearLayout? = null
 
 
     override fun onCreateView(
@@ -240,7 +241,6 @@ class SearchFragment : Fragment() {
 
     /**
      * 设置搜索过滤器
-     * TODO 重复点击控件时需要收起控件
      */
     private fun setSearchFilter() {
         regionText = mView.findTextViewById(R.id.search_region_text)
@@ -263,27 +263,51 @@ class SearchFragment : Fragment() {
 
         // 地区
         mLocationView.setOnClickListener {
-            updateFilterViewStates(mLocationView)
-            setFilterViewAppearance(regionText, regionImg)
-            showLocationFilterPopup(it)
+            handleFilterClick(mLocationView, regionText, regionImg) { view ->
+                showLocationFilterPopup(view)
+            }
         }
         // 价格
         mPriceView.setOnClickListener {
-            updateFilterViewStates(mPriceView)
-            setFilterViewAppearance(priceText, priceImg)
-            showFilterPopup(it, R.array.price_ranges, FilterType.PRICE)
+            handleFilterClick(mPriceView, priceText, priceImg) { view ->
+                showOtherFilterPopup(view, R.array.price_ranges, FilterType.PRICE_TYPE)
+            }
         }
         // 支付方式
         mPayTypeView.setOnClickListener {
-            updateFilterViewStates(mPayTypeView)
-            setFilterViewAppearance(payTypeText, payTypeImg)
-            showFilterPopup(it, R.array.payment_method, FilterType.PAY_TYPE)
+            handleFilterClick(mPayTypeView, payTypeText, payTypeImg) { view ->
+                showOtherFilterPopup(view, R.array.pay_type, FilterType.PAY_TYPE)
+            }
         }
         // 排序
         mSortView.setOnClickListener {
-            updateFilterViewStates(mSortView)
-            setFilterViewAppearance(sortText, sortImg)
-            showFilterPopup(it, R.array.sort, FilterType.SORT_TYPE)
+            handleFilterClick(mSortView, sortText, sortImg) { view ->
+                showOtherFilterPopup(view, R.array.sort_type, FilterType.SORT_TYPE)
+            }
+        }
+    }
+
+    private fun handleFilterClick(
+        filterView: LinearLayout,
+        textView: TextView,
+        imageView: ImageView,
+        showPopup: (View) -> Unit
+    ) {
+        val isCurrentFilterActive = filterViewStateMap[filterView] == true
+
+        currentPopupWindow?.dismiss()
+
+        if (isCurrentFilterActive) {
+            resetAllFilterViews()
+            filterViewStateMap.keys.forEach { view ->
+                filterViewStateMap[view] = false
+            }
+            currentActiveFilter = null
+        } else {
+            updateFilterViewStates(filterView)
+            setFilterViewAppearance(textView, imageView)
+            currentActiveFilter = filterView
+            showPopup(filterView)
         }
     }
 
@@ -423,8 +447,7 @@ class SearchFragment : Fragment() {
      * @param stringArrayId string.xml文件内定义的固定字符串数组, 具体为每个筛选的条目值
      * @param filterType 筛选方式枚举类, 地区筛选在showLocationFilterPopup()方法单独处理
      */
-    private fun showFilterPopup(view: View, stringArrayId: Int, filterType: FilterType) {
-        currentPopupWindow?.dismiss()
+    private fun showOtherFilterPopup(view: View, stringArrayId: Int, filterType: FilterType) {
         val stringArray = resources.getStringArray(stringArrayId).toCollection(ArrayList())
 
         currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
@@ -447,7 +470,7 @@ class SearchFragment : Fragment() {
                 filterTextView.text = stringArray[position]
                 // 根据筛选类型获取上一次缓存的状态值, 若该值不为默认值或null, 那么就高亮该控件
                 val isCurrentItemSelected = when (filterType) {
-                    FilterType.PRICE -> {
+                    FilterType.PRICE_TYPE -> {
                         filterPayTypeId = -1
                         filterSortType = -1
                         if (position == 0) {
@@ -498,7 +521,7 @@ class SearchFragment : Fragment() {
 
                 itemView.setOnClickListener {
                     when (filterType) {
-                        FilterType.PRICE -> {
+                        FilterType.PRICE_TYPE -> {
                             // 获取筛选的价格
                             filterPriceList =
                                 if (position == 0) null else stringArray[position].getNumber()
@@ -528,6 +551,9 @@ class SearchFragment : Fragment() {
 
                     // 更新选中视图引用
                     selectedViewMap[filterType] = itemView
+
+                    // 更新筛选控件状态，保持当前筛选控件为激活状态
+                    filterViewStateMap[currentActiveFilter!!] = true
                 }
             }
 
