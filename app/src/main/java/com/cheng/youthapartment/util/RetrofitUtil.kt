@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
  * @since 2024/12/24
  */
 object RetrofitUtil {
-    private const val BASE_URL: String = "http://106.55.104.120:8082"
+    private const val BASE_URL: String = "http://xxx.xxx.xxx.xxx:xxxx"
     const val TAG: String = "RetrofitUtil"
     var apiService: ApiService
     val gson = Gson()
