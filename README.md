@@ -9,8 +9,8 @@
 
 ## 技术亮点
 ### 架构设计
-- 采用MVC架构，确保代码结构清晰、易于维护
-- 模块化设计，各功能模块职责明确，降低耦合度
+- 采用MVC架构分层设计，Activity/Fragment负责UI展示，RetrofitUtil统一处理网络请求
+- 模块化设计，按功能划分包结构（activity, entity, util, view等），降低耦合度
 
 ### 工具与扩展
 - 集成并自定义了多种工具与扩展函数，包括：
@@ -19,20 +19,30 @@
   - **[DataUtil.kt](app/src/main/java/com/cheng/youthapartment/util/DataUtil.kt)**：提供日期处理、数据验证等通用数据处理功能，简化复杂逻辑
   - **[ExpandTool.kt](app/src/main/java/com/cheng/youthapartment/util/ExpandTool.kt)扩展函数**：为View、Activity等组件提供丰富的扩展功能，提高代码可读性
 
-### UI
-- 采用Material Design设计规范，提供现代化UI界面
-- 支持深色/浅色主题切换，通过ThemeModelManager实现主题无缝切换
-- 采用自定义View与动画
+### UI实现
+- 使用ViewPager2+自定义指示器实现房源图片轮播，支持自动滚动
+- 采用RecyclerView+GridLayoutManager实现标签流式布局
+- 通过ThemeModelManager实现深色/浅色主题无缝切换
+- 自定义RoomItemView复用组件，统一房源列表项样式
+- 采用自定义PopupWindow与动画，实现下拉筛选栏效果
 
-### 地图与定位
-- 集成高德地图SDK，提供房源位置可视化展示
-- 支持地图导航、位置搜索等功能，增强用户体验
-- 实现房源地理位置筛选，方便用户按区域查找房源
+### 地图功能
+- 集成高德地图SDK v10.1.201，提供房源位置可视化展示：
+  - 房源位置标记（Marker）
+  - 地图类型切换（日间/夜间模式）
+  - 15级缩放定位
+- 处理地图与滚动视图的滑动冲突
 
 ### 数据管理
-- 采用GSON进行JSON数据解析，高效处理API返回数据
-- 使用SharedPreferences存储用户配置和登录状态
-- 实现数据缓存机制，减少网络请求，提高应用响应速度
+- 采用BaseActivity与ActivityCollector单例对象管理所有Activity
+- 使用全局App管理上下文、SharedPreferences、登录状态、主题偏好等信息
+- Glide图片加载配合自定义SquareCrop变换实现圆角图片
+- 使用GSON解析嵌套JSON数据结构
+
+### 租约管理
+- 完整状态机设计（7种租约状态）
+- 支持续约逻辑：自动计算新租期
+- 退租确认对话框流程
 
 ### 用户体验优化
 - 实现ViewPager2轮播图，展示房源图片
