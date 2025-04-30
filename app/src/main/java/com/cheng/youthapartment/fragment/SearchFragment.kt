@@ -453,7 +453,8 @@ class SearchFragment : Fragment() {
         currentPopupWindow = DropDownFilterViewUtil.createDropDownPopupWindow(
             mActivity,
             view,
-            R.layout.item_popup_filter_item
+            R.layout.item_popup_filter_item,
+            R.style.PopupAnimation
         ) { popupView, popupWindow ->
             val rv = popupView.findRecyclerViewById(R.id.filter_item_rv)
 
