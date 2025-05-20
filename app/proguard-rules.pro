@@ -25,6 +25,9 @@
  -classobfuscationdictionary confusion_dict.txt
  -packageobfuscationdictionary confusion_dict.txt
 
+-keep,allowobfuscation class javax.lang.model.element.Modifier
+-dontwarn javax.lang.model.element.Modifier
+
  # 保留实体类
  -keep class com.cheng.youthapartment.entity.** { *; }
 
