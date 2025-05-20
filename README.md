@@ -15,7 +15,7 @@
 ### 工具与扩展
 - 集成并自定义了多种工具与扩展函数，包括：
   - **[RetrofitUtil.kt](app/src/main/java/com/cheng/youthapartment/util/RetrofitUtil.kt)**：封装网络请求，简化API调用流程，提高开发效率
-  - **[Logger.kt](app/src/main/java/com/cheng/youthapartment/util/Logger.kt)]**：自定义日志工具，可快速定位目标文件的日志行数，便于调试
+  - **[Logger.kt](app/src/main/java/com/cheng/youthapartment/util/Logger.kt)**：自定义日志工具，可快速定位目标文件的日志行数，便于调试
   - **[DataUtil.kt](app/src/main/java/com/cheng/youthapartment/util/DataUtil.kt)**：提供日期处理、数据验证等通用数据处理功能，简化复杂逻辑
   - **[ExpandTool.kt](app/src/main/java/com/cheng/youthapartment/util/ExpandTool.kt)扩展函数**：为View、Activity等组件提供丰富的扩展功能，提高代码可读性
 
